@@ -48,7 +48,7 @@
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="color" keyPath="iconBackgroundColor">
-                                                <color key="value" red="0.68515407859999999" green="0.87028154199999996" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="value" red="0.44495534968860562" green="0.70052780935722847" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                     </view>

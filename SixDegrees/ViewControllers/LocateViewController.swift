@@ -8,6 +8,7 @@
 
 import UIKit
 import FBSDKLoginKit
+//import FBSDKCoreKit
 
 class LocateViewController: UIViewController {
 
@@ -23,10 +24,9 @@ class LocateViewController: UIViewController {
 
         // User icon view
         self.userIconEncapsulatingView.backgroundColor = nil
-
-        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.userTapped(_:)))
-        self.userIconEncapsulatingView.addGestureRecognizer(tapGesture)
-        self.bounceUserIcon()
+//        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.userTapped(_:)))
+//        self.userIconEncapsulatingView.addGestureRecognizer(tapGesture)
+//        self.bounceUserIcon()
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -48,7 +48,7 @@ class LocateViewController: UIViewController {
     }
 
     func userTapped(sender: AnyObject?) {
-        showSimpleAlert("Alert", message: "You poked yourself!")
+        showSimpleAlert("Alert", message: "Yo")
     }
 
     // Slowly moves the icon slightly upwards and downwards indefinately

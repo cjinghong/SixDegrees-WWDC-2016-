@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		669C27C61CAF690C00F6E08B /* SDGRestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669C27C51CAF690C00F6E08B /* SDGRestAPI.swift */; };
+		669C27C81CAF695200F6E08B /* LocateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669C27C71CAF695200F6E08B /* LocateViewController.swift */; };
+		669C27CB1CAF6B7400F6E08B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669C27CA1CAF6B7400F6E08B /* User.swift */; };
 		66C801441CA977F7002C642A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C801431CA977F7002C642A /* AppDelegate.swift */; };
-		66C801461CA977F7002C642A /* UserIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C801451CA977F7002C642A /* UserIconView.swift */; };
 		66C801491CA977F7002C642A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66C801471CA977F7002C642A /* Main.storyboard */; };
 		66C8014C1CA977F7002C642A /* SixDegrees.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 66C8014A1CA977F7002C642A /* SixDegrees.xcdatamodeld */; };
 		66C801511CA977F7002C642A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66C8014F1CA977F7002C642A /* LaunchScreen.storyboard */; };
@@ -31,9 +33,11 @@
 
 /* Begin PBXFileReference section */
 		58B07128BE31C2831D6AD06E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		669C27C51CAF690C00F6E08B /* SDGRestAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGRestAPI.swift; sourceTree = "<group>"; };
+		669C27C71CAF695200F6E08B /* LocateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocateViewController.swift; sourceTree = "<group>"; };
+		669C27CA1CAF6B7400F6E08B /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		66C801401CA977F7002C642A /* SixDegrees.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SixDegrees.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66C801431CA977F7002C642A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		66C801451CA977F7002C642A /* UserIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIconView.swift; sourceTree = "<group>"; };
 		66C801481CA977F7002C642A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		66C8014B1CA977F7002C642A /* SixDegrees.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SixDegrees.xcdatamodel; sourceTree = "<group>"; };
 		66C801501CA977F7002C642A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -88,10 +92,26 @@
 			isa = PBXGroup;
 			children = (
 				66FAA3CF1CAE319E00CEF58E /* LoginViewController.swift */,
-				66C801451CA977F7002C642A /* UserIconView.swift */,
+				669C27C71CAF695200F6E08B /* LocateViewController.swift */,
 				66C801681CA97DA7002C642A /* UserIconView.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		669C27C41CAF68E100F6E08B /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				669C27C51CAF690C00F6E08B /* SDGRestAPI.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		669C27C91CAF6B5A00F6E08B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				669C27CA1CAF6B7400F6E08B /* User.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		66C801371CA977F7002C642A = {
@@ -119,6 +139,8 @@
 			children = (
 				66C801661CA97CD1002C642A /* Assets.xcassets */,
 				66C801431CA977F7002C642A /* AppDelegate.swift */,
+				669C27C91CAF6B5A00F6E08B /* Model */,
+				669C27C41CAF68E100F6E08B /* Controllers */,
 				669C27C31CAF66EA00F6E08B /* ViewControllers */,
 				66C801471CA977F7002C642A /* Main.storyboard */,
 				66C8014F1CA977F7002C642A /* LaunchScreen.storyboard */,
@@ -291,9 +313,11 @@
 			files = (
 				66C801691CA97DA7002C642A /* UserIconView.swift in Sources */,
 				66C8014C1CA977F7002C642A /* SixDegrees.xcdatamodeld in Sources */,
-				66C801461CA977F7002C642A /* UserIconView.swift in Sources */,
+				669C27C81CAF695200F6E08B /* LocateViewController.swift in Sources */,
+				669C27C61CAF690C00F6E08B /* SDGRestAPI.swift in Sources */,
 				66FAA3D01CAE319E00CEF58E /* LoginViewController.swift in Sources */,
 				66C801441CA977F7002C642A /* AppDelegate.swift in Sources */,
+				669C27CB1CAF6B7400F6E08B /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

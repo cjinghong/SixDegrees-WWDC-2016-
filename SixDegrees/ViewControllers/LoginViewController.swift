@@ -66,7 +66,10 @@ extension LoginViewController: FBSDKLoginButtonDelegate {
 
     func loginButton(loginButton: FBSDKLoginButton!, didCompleteWithResult result: FBSDKLoginManagerLoginResult!, error: NSError!) {
         // When user logs in
-        self.dismissViewControllerAnimated(true, completion: nil)
+
+        if result.token != nil {
+//            self.dismissViewControllerAnimated(true, completion: nil)
+        }
     }
 
     func loginButtonWillLogin(loginButton: FBSDKLoginButton!) -> Bool {
