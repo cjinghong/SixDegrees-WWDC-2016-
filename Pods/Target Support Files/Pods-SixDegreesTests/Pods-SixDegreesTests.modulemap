@@ -1,0 +1,6 @@
+framework module Pods_SixDegreesTests {
+  umbrella header "Pods-SixDegreesTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
