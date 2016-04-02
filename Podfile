@@ -8,6 +8,9 @@ pod "FBSDKLoginKit";
 pod "FBSDKShareKit";
 pod "FBSDKMessengerShareKit";
 
+pod "Alamofire";
+pod "SwiftyJSON";
+
 target 'SixDegrees' do
 
 end

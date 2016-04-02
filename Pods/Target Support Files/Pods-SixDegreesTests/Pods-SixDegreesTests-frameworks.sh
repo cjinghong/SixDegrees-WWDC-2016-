@@ -84,16 +84,20 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "Pods-SixDegreesTests/Alamofire.framework"
   install_framework "Pods-SixDegreesTests/Bolts.framework"
   install_framework "Pods-SixDegreesTests/FBSDKCoreKit.framework"
   install_framework "Pods-SixDegreesTests/FBSDKLoginKit.framework"
   install_framework "Pods-SixDegreesTests/FBSDKMessengerShareKit.framework"
   install_framework "Pods-SixDegreesTests/FBSDKShareKit.framework"
+  install_framework "Pods-SixDegreesTests/SwiftyJSON.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "Pods-SixDegreesTests/Alamofire.framework"
   install_framework "Pods-SixDegreesTests/Bolts.framework"
   install_framework "Pods-SixDegreesTests/FBSDKCoreKit.framework"
   install_framework "Pods-SixDegreesTests/FBSDKLoginKit.framework"
   install_framework "Pods-SixDegreesTests/FBSDKMessengerShareKit.framework"
   install_framework "Pods-SixDegreesTests/FBSDKShareKit.framework"
+  install_framework "Pods-SixDegreesTests/SwiftyJSON.framework"
 fi
