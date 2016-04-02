@@ -19,9 +19,12 @@ class UserIconView: UIView {
     var nameLabel: UILabel!
     var iconImageView: UIImageView!
 
-    var user: User? {
+    var user: SDGUser? {
         didSet {
-//            nameLabel.text = user.name
+            // Change user name
+            UIView.animateWithDuration(0.4, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: { 
+                self.nameLabel.text = self.user?.name
+                }, completion: nil)
         }
     }
 

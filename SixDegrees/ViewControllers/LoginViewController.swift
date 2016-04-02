@@ -9,6 +9,8 @@
 import UIKit
 import FBSDKLoginKit
 
+let FBAccessToken: String = "fbaccesstoken"
+
 class LoginViewController: UIViewController {
 
     var facebookLoginButton: FBSDKLoginButton!
@@ -47,18 +49,6 @@ class LoginViewController: UIViewController {
             }
         }
     }
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 // MARK: - FB Login button delegate
@@ -68,7 +58,12 @@ extension LoginViewController: FBSDKLoginButtonDelegate {
         // When user logs in
 
         if result.token != nil {
-//            self.dismissViewControllerAnimated(true, completion: nil)
+            let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+            userDefaults.setObject(result.token, forKey: FBAccessToken)
+            userDefaults.synchronize()
+
+            self.userDidLoginBlock?(token: result.token)
+            self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
 

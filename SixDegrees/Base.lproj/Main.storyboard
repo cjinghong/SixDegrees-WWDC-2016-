@@ -53,7 +53,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" red="0.78385913645038174" green="0.78385913645038174" blue="0.78385913645038174" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="4s7-xb-F8m"/>
                                     <constraint firstAttribute="width" constant="100" id="KcY-cE-bAY"/>
