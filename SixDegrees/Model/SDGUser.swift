@@ -20,16 +20,18 @@ class SDGUser {
     var name: String!
     var gender: Gender!
 
-    init(name: String, id: String, gender: String) {
+    var friends: [SDGUser]?
+
+    init(name: String, id: String, gender: Gender) {
         self.name = name
         self.id = id
-        self.gender = Gender(rawValue: gender)!
+        self.gender = gender
     }
 
     init?(json: JSON) {
-        self.id = json["id"].string!
-        self.name = json["name"].string!
-        self.gender = Gender(rawValue: json["gender"].string!)!
+        self.id = json["id"].string
+        self.name = json["name"].string
+        self.gender = Gender(rawValue: json["gender"].string ?? "None")
 
         if self.id == nil || self.name == nil || self.gender == nil {
             return nil

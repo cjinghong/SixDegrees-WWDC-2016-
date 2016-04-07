@@ -10,47 +10,27 @@ import UIKit
 import FBSDKLoginKit
 //import FBSDKCoreKit
 
+import Contacts
+
 class LocateViewController: UIViewController {
 
     @IBOutlet weak var userIconEncapsulatingView: UIView!
     @IBOutlet weak var userIconView: UserIconView!
-    var facebookLoginButton: FBSDKLoginButton!
+
     @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
 
-    var currentUser: SDGUser? {
-        didSet {
-            self.userIconView.user = currentUser
-        }
-    }
-    var token: FBSDKAccessToken? {
-        didSet {
-            SDGRestAPI.sharedClient.getUser(withUserID: "me", completionBlock: { (user, error) in
-                self.currentUser = user
-            })
-        }
-    }
+    let contactsController: SDGContactsController = SDGContactsController.sharedInstance
 
     override func viewDidLoad() {
         super.viewDidLoad()
-//        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.userTapped(_:)))
-//        self.userIconEncapsulatingView.addGestureRecognizer(tapGesture)
-//        self.bounceUserIcon()
-
-        if let token = FBSDKAccessToken.currentAccessToken() {
-            self.token = token
-        } else if let token = NSUserDefaults.standardUserDefaults().objectForKey(FBAccessToken) as? FBSDKAccessToken {
-            self.token = token
-        }
     }
 
     override func viewDidAppear(animated: Bool) {
-        // If user is not logged in, makes sure they do.
-        if self.token == nil {
-            let loginVC: LoginViewController = storyboard?.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
-            loginVC.userDidLoginBlock = {(token: FBSDKAccessToken) -> Void in
-                self.token = token
+
+        self.contactsController.promptForAddressBookAccessIfNeeded { (granted) in
+            if !granted {
+                self.contactsController.displayCantAddContactAlert(self)
             }
-            self.presentViewController(loginVC, animated: true, completion: nil)
         }
     }
 

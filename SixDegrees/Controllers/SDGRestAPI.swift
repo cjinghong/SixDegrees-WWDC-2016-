@@ -89,12 +89,80 @@ public class SDGRestAPI {
             if let value = response.result.value {
                 let json: JSON = JSON(value)
 
+                // Returns error if key expired etc.
+                if json["error"].dictionary != nil {
+                    completionBlock?(user: nil, error: nil)
+                    return
+                }
+
                 if let user: SDGUser = SDGUser(json: json) {
                     completionBlock?(user: user, error: nil)
                     return
                 }
             }
             completionBlock?(user: nil, error: nil)
+        }
+    }
+
+    // Get list of mutual friends with user id
+    func getMutualFriends(forUserId userId: String, completionBlock:((friends: [SDGUser]?, error: NSError?) -> Void) ) {
+        let path: String = "\(userId)/"
+
+        var params: [String : AnyObject] = [:]
+        params["fields"] = "context.fields(mutual_friends)" //"id,name,gender,picture"
+
+        // Used for testing
+//        params["access_token"] = "CAACEdEose0cBAGFCfPNUDJg74X6Gv6IPfmhNlNX0LGmoHJX3l1PyJYfeuMZBZB1uYrGZAg9oSpXX34AGbiZATaMjTPp5cVElsMXhkCoqZC1MBXSKaAuWyDDSf2pwKH5jDfQO1kluS2RdPNebLDhf11jASeyXXTTPzaVAaVktqWGAZBFFK45qAuxqem0MZCTFn6kVZBl3pYTXHvicny9CmhphZAsSS7GAQS0YZD"
+        if let tokenString = FBSDKAccessToken.currentAccessToken().tokenString {
+            params["access_token"] = tokenString
+        }
+
+        SDGRestAPI.request(method: .GET, path: path, parameters: params, contentType: .JSON, encoding: .URL, additionalHeaders: [:]).responseJSON { (response: Response<AnyObject, NSError>) in
+
+            if let error: NSError = response.result.error {
+                completionBlock(friends: nil, error: error)
+                return
+            }
+
+            var friends: [SDGUser] = []
+
+            if let value = response.result.value {
+                let json: JSON = JSON(value)
+
+                // Returns error if key expired etc.
+                if json["error"].dictionary != nil {
+                    completionBlock(friends: nil, error: nil)
+                    return
+                }
+
+                if let mutualFriendsData: [JSON] = json["context"]["mutal_friends"]["data"].array {
+
+                    var totalCount: Int = mutualFriendsData.count
+                    var count: Int = 0
+
+                    for mutualFriend: JSON in mutualFriendsData {
+                        let userId: String = mutualFriend["id"].string!
+
+                        self.getUser(withUserID: userId, completionBlock: { (user, error) in
+                            if let user = user {
+                                count += 1
+                                friends.append(user)
+                            } else {
+                                totalCount -= 1
+                            }
+                        })
+                    }
+                    if count == totalCount {
+                        completionBlock(friends: friends, error: nil)
+                    } else {
+                        completionBlock(friends: nil, error: nil)
+                    }
+                } else {
+                    completionBlock(friends: nil, error: nil)
+                }
+            } else {
+                completionBlock(friends: nil, error: nil)
+            }
         }
     }
 

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		66695E8E1CB61B80006E5489 /* SDGAddressBookController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66695E8D1CB61B80006E5489 /* SDGAddressBookController.swift */; };
+		66695E921CB64D52006E5489 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66695E911CB64D52006E5489 /* Contacts.framework */; };
+		66695E941CB64D5A006E5489 /* ContactsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66695E931CB64D5A006E5489 /* ContactsUI.framework */; };
 		669C27C61CAF690C00F6E08B /* SDGRestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669C27C51CAF690C00F6E08B /* SDGRestAPI.swift */; };
 		669C27C81CAF695200F6E08B /* LocateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669C27C71CAF695200F6E08B /* LocateViewController.swift */; };
 		669C27CB1CAF6B7400F6E08B /* SDGUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669C27CA1CAF6B7400F6E08B /* SDGUser.swift */; };
@@ -35,6 +38,11 @@
 
 /* Begin PBXFileReference section */
 		58B07128BE31C2831D6AD06E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		66695E891CB61A77006E5489 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		66695E8B1CB61A7A006E5489 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
+		66695E8D1CB61B80006E5489 /* SDGAddressBookController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGAddressBookController.swift; sourceTree = "<group>"; };
+		66695E911CB64D52006E5489 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
+		66695E931CB64D5A006E5489 /* ContactsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ContactsUI.framework; path = System/Library/Frameworks/ContactsUI.framework; sourceTree = SDKROOT; };
 		669C27C51CAF690C00F6E08B /* SDGRestAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGRestAPI.swift; sourceTree = "<group>"; };
 		669C27C71CAF695200F6E08B /* LocateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocateViewController.swift; sourceTree = "<group>"; };
 		669C27CA1CAF6B7400F6E08B /* SDGUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGUser.swift; sourceTree = "<group>"; };
@@ -60,6 +68,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66695E941CB64D5A006E5489 /* ContactsUI.framework in Frameworks */,
+				66695E921CB64D52006E5489 /* Contacts.framework in Frameworks */,
 				C7DF3F5B3CBE715A577BE9EA /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,6 +87,10 @@
 		00D047B8728E08844B7E415E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				66695E931CB64D5A006E5489 /* ContactsUI.framework */,
+				66695E911CB64D52006E5489 /* Contacts.framework */,
+				66695E8B1CB61A7A006E5489 /* AddressBookUI.framework */,
+				66695E891CB61A77006E5489 /* AddressBook.framework */,
 				E5EA12C7748DF44D08CFA0C7 /* Pods.framework */,
 			);
 			name = Frameworks;
@@ -105,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				669C27C51CAF690C00F6E08B /* SDGRestAPI.swift */,
+				66695E8D1CB61B80006E5489 /* SDGAddressBookController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -321,6 +336,7 @@
 				669C27C61CAF690C00F6E08B /* SDGRestAPI.swift in Sources */,
 				66FAA3D01CAE319E00CEF58E /* LoginViewController.swift in Sources */,
 				66C801441CA977F7002C642A /* AppDelegate.swift in Sources */,
+				66695E8E1CB61B80006E5489 /* SDGAddressBookController.swift in Sources */,
 				669C27CC1CAFA6D600F6E08B /* SixDegreesTests.swift in Sources */,
 				669C27CB1CAF6B7400F6E08B /* SDGUser.swift in Sources */,
 			);
