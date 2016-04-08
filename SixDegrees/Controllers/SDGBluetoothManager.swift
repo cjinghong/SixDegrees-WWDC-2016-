@@ -14,7 +14,7 @@ protocol SDGBluetoothManagerDelegate {
     func connectedDeviceChanged(manager: SDGBluetoothManager, connectedDevices: [String])
 
     func didReceiveInvitationFromPeer(peerId: MCPeerID, completionBlock:((accept: Bool)->Void))
-    func didReceiveContacts(contacts: [CNContact])
+    func didReceiveContacts(contacts: [CNContact], fromPeer peer: MCPeerID)
 
     func didUpdatePeers(peers: [MCPeerID])
 }
@@ -135,7 +135,7 @@ extension SDGBluetoothManager : MCSessionDelegate {
         print("Peer: \(peerID) Received data: \(data)")
 
         if let contacts: [CNContact] = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [CNContact] {
-            self.delegate?.didReceiveContacts(contacts)
+            self.delegate?.didReceiveContacts(contacts, fromPeer: peerID)
         }
     }
 

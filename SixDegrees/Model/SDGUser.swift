@@ -8,34 +8,26 @@
 
 import Foundation
 import SwiftyJSON
+import MultipeerConnectivity
+import Contacts
 
-class SDGUser {
+public class SDGUser {
 
-    enum Gender: String {
-        case Male = "male"
-        case Female = "female"
-    }
-
-    var id: String!
+    var peerId: MCPeerID!
     var name: String!
-    var gender: Gender!
 
-    var friends: [SDGUser]?
+    var contacts: [CNContact]?
 
-    init(name: String, id: String, gender: Gender) {
-        self.name = name
-        self.id = id
-        self.gender = gender
+    init(peerId: MCPeerID) {
+        self.peerId = peerId
+        self.name = peerId.displayName
     }
 
-    init?(json: JSON) {
-        self.id = json["id"].string
-        self.name = json["name"].string
-        self.gender = Gender(rawValue: json["gender"].string ?? "None")
+}
 
-        if self.id == nil || self.name == nil || self.gender == nil {
-            return nil
-        }
-    }
+extension SDGUser : Equatable {}
 
+public func == (lhs: SDGUser, rhs: SDGUser) -> Bool {
+    let sameUser: Bool = (lhs.peerId == rhs.peerId)
+    return sameUser
 }

@@ -23,10 +23,13 @@ class LocateViewController: UIViewController {
     let contactsController: SDGContactsController = SDGContactsController.sharedInstance
     let bluetoothManager: SDGBluetoothManager = SDGBluetoothManager()
 
-    var peers: [MCPeerID] = []
+    var users: [SDGUser] = []
+    var userIconViews: [UserIconView] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.userIconView.user = SDGUser(peerId: MCPeerID(displayName: UIDevice.currentDevice().name))
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -76,16 +79,55 @@ class LocateViewController: UIViewController {
                 })
         }
     }
+
+    func createAndAddUser(user: SDGUser) {
+        let userIconView: UserIconView = UserIconView(frame: CGRect(x: 40, y: 40, width: 70, height: 70))
+        userIconView.iconBackgroundColor = UIColor.lightGrayColor()
+        userIconView.user = user
+        userIconView.alpha = 0
+
+        self.userIconViews.append(userIconView)
+        self.view.addSubview(userIconView)
+
+        UIView.animateWithDuration(1, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: { 
+            userIconView.alpha = 1
+            }, completion: nil)
+    }
+
+    func removeUser(user: SDGUser) {
+        if let userIndex = self.users.indexOf(user) {
+            // Remove user icon view
+            UIView.animateWithDuration(1, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
+                self.userIconViews[userIndex].alpha = 0
+                }, completion: { (completed: Bool) in
+                    self.userIconViews[userIndex].removeFromSuperview()
+                    self.userIconViews.removeAtIndex(userIndex)
+
+                    self.users.removeAtIndex(userIndex)
+            })
+        }
+    }
 }
 
 extension LocateViewController : SDGBluetoothManagerDelegate {
 
     func didUpdatePeers(peers: [MCPeerID]) {
-        if self.peers == [] {
-            self.peers = peers
+        if self.users.isEmpty {
+            for peer in peers {
+                let user: SDGUser = SDGUser(peerId: peer)
+                self.users.append(user)
+                self.createAndAddUser(user)
+            }
         } else {
             // Compare the missing peers and make it disspear
+            for user: SDGUser in self.users {
+                // If the results doesn't contain that user, remove it
+                if !(peers.contains(user.peerId)) {
+                    self.removeUser(user)
+                }
+            }
         }
+
     }
 
     func didReceiveInvitationFromPeer(peerId: MCPeerID, completionBlock: ((accept: Bool) -> Void)) {
@@ -102,9 +144,16 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
         
     }
 
-    func didReceiveContacts(contacts: [CNContact]) {
-        
+    func didReceiveContacts(contacts: [CNContact], fromPeer peer: MCPeerID) {
+        let user: SDGUser? = self.users.filter { (aUser: SDGUser) -> Bool in
+            return aUser.peerId == peer
+        }.first
+
+        if let user = user {
+            user.contacts = contacts
+        }
     }
+
 }
 
 // MARK: - Utils

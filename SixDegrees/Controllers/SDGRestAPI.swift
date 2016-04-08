@@ -79,29 +79,29 @@ public class SDGRestAPI {
         // Used for testing
 //        params["access_token"] = "CAACEdEose0cBAGFCfPNUDJg74X6Gv6IPfmhNlNX0LGmoHJX3l1PyJYfeuMZBZB1uYrGZAg9oSpXX34AGbiZATaMjTPp5cVElsMXhkCoqZC1MBXSKaAuWyDDSf2pwKH5jDfQO1kluS2RdPNebLDhf11jASeyXXTTPzaVAaVktqWGAZBFFK45qAuxqem0MZCTFn6kVZBl3pYTXHvicny9CmhphZAsSS7GAQS0YZD"
 
-        SDGRestAPI.request(method: .GET, path: path, parameters: params, contentType: .JSON, encoding: .URL, additionalHeaders: [:]).responseJSON { (response: Response<AnyObject, NSError>) in
-
-            if let error: NSError = response.result.error {
-                completionBlock?(user: nil, error: error)
-                return
-            }
-
-            if let value = response.result.value {
-                let json: JSON = JSON(value)
-
-                // Returns error if key expired etc.
-                if json["error"].dictionary != nil {
-                    completionBlock?(user: nil, error: nil)
-                    return
-                }
-
-                if let user: SDGUser = SDGUser(json: json) {
-                    completionBlock?(user: user, error: nil)
-                    return
-                }
-            }
-            completionBlock?(user: nil, error: nil)
-        }
+//        SDGRestAPI.request(method: .GET, path: path, parameters: params, contentType: .JSON, encoding: .URL, additionalHeaders: [:]).responseJSON { (response: Response<AnyObject, NSError>) in
+//
+//            if let error: NSError = response.result.error {
+//                completionBlock?(user: nil, error: error)
+//                return
+//            }
+//
+//            if let value = response.result.value {
+//                let json: JSON = JSON(value)
+//
+//                // Returns error if key expired etc.
+//                if json["error"].dictionary != nil {
+//                    completionBlock?(user: nil, error: nil)
+//                    return
+//                }
+//
+//                if let user: SDGUser = SDGUser(json: json) {
+//                    completionBlock?(user: user, error: nil)
+//                    return
+//                }
+//            }
+//            completionBlock?(user: nil, error: nil)
+//        }
     }
 
     // Get list of mutual friends with user id
