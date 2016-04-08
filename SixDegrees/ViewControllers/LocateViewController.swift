@@ -11,6 +11,7 @@ import FBSDKLoginKit
 //import FBSDKCoreKit
 
 import Contacts
+import MultipeerConnectivity
 
 class LocateViewController: UIViewController {
 
@@ -20,6 +21,9 @@ class LocateViewController: UIViewController {
     @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
 
     let contactsController: SDGContactsController = SDGContactsController.sharedInstance
+    let bluetoothManager: SDGBluetoothManager = SDGBluetoothManager()
+
+    var peers: [MCPeerID] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +36,10 @@ class LocateViewController: UIViewController {
                 self.contactsController.displayCantAddContactAlert(self)
             }
         }
+        self.bluetoothManager.delegate = self
+
+        self.bluetoothManager.startAdvertising()
+        self.bluetoothManager.startBrowsing()
     }
 
     override func didReceiveMemoryWarning() {
@@ -70,6 +78,34 @@ class LocateViewController: UIViewController {
     }
 }
 
+extension LocateViewController : SDGBluetoothManagerDelegate {
+
+    func didUpdatePeers(peers: [MCPeerID]) {
+        if self.peers == [] {
+            self.peers = peers
+        } else {
+            // Compare the missing peers and make it disspear
+        }
+    }
+
+    func didReceiveInvitationFromPeer(peerId: MCPeerID, completionBlock: ((accept: Bool) -> Void)) {
+
+        let alertController: UIAlertController = UIAlertController(title: "Invitation", message: "Invitation from \(peerId.displayName)", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+            completionBlock(accept: true)
+        }))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        self.presentViewController(alertController, animated: true, completion: nil)
+    }
+
+    func connectedDeviceChanged(manager: SDGBluetoothManager, connectedDevices: [String]) {
+        
+    }
+
+    func didReceiveContacts(contacts: [CNContact]) {
+        
+    }
+}
 
 // MARK: - Utils
 extension UIViewController {
@@ -79,7 +115,6 @@ extension UIViewController {
         alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alertController, animated: true, completion: nil)
     }
-    
 }
 
 
