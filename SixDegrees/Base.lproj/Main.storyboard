@@ -36,42 +36,29 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="o1e-eR-rfa">
-                                <rect key="frame" x="250" y="250" width="100" height="100"/>
-                                <subviews>
-                                    <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e5O-1t-ZTS" customClass="UserIconView" customModule="SixDegrees" customModuleProvider="target">
-                                        <rect key="frame" x="15" y="15" width="70" height="70"/>
-                                        <color key="backgroundColor" red="0.68515407859999999" green="0.87028154199999996" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="70" id="4vv-BG-PDZ"/>
-                                            <constraint firstAttribute="width" constant="70" id="m0w-0b-bnM"/>
-                                        </constraints>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="iconBackgroundColor">
-                                                <color key="value" red="0.44495534968860562" green="0.70052780935722847" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e5O-1t-ZTS" customClass="UserIconView" customModule="SixDegrees" customModuleProvider="target">
+                                <rect key="frame" x="265" y="265" width="70" height="70"/>
+                                <color key="backgroundColor" red="0.68515407859999999" green="0.87028154199999996" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="4s7-xb-F8m"/>
-                                    <constraint firstAttribute="width" constant="100" id="KcY-cE-bAY"/>
-                                    <constraint firstItem="e5O-1t-ZTS" firstAttribute="centerY" secondItem="o1e-eR-rfa" secondAttribute="centerY" id="bz8-1P-E67"/>
-                                    <constraint firstItem="e5O-1t-ZTS" firstAttribute="centerX" secondItem="o1e-eR-rfa" secondAttribute="centerX" id="lPv-23-XbH"/>
+                                    <constraint firstAttribute="height" constant="70" id="4vv-BG-PDZ"/>
+                                    <constraint firstAttribute="width" constant="70" id="m0w-0b-bnM"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="iconBackgroundColor">
+                                        <color key="value" red="0.44495534968860562" green="0.70052780935722847" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="o1e-eR-rfa" firstAttribute="centerY" secondItem="x3c-nA-g2P" secondAttribute="centerY" id="5gY-qP-Csh"/>
-                            <constraint firstItem="o1e-eR-rfa" firstAttribute="centerX" secondItem="x3c-nA-g2P" secondAttribute="centerX" id="xBC-c7-xbu"/>
+                            <constraint firstItem="e5O-1t-ZTS" firstAttribute="centerX" secondItem="x3c-nA-g2P" secondAttribute="centerX" id="Fib-mx-PU2"/>
+                            <constraint firstItem="e5O-1t-ZTS" firstAttribute="centerY" secondItem="x3c-nA-g2P" secondAttribute="centerY" id="cNP-Lu-TRd"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Locate" image="locate" id="ela-JR-7sM"/>
                     <connections>
-                        <outlet property="userIconEncapsulatingView" destination="o1e-eR-rfa" id="CTl-bt-YUV"/>
-                        <outlet property="userIconHorizontalConstraint" destination="bz8-1P-E67" id="6G4-Pw-UwD"/>
+                        <outlet property="userIconHorizontalConstraint" destination="cNP-Lu-TRd" id="nx3-iw-fhC"/>
                         <outlet property="userIconView" destination="e5O-1t-ZTS" id="prp-jY-jbS"/>
                     </connections>
                 </viewController>

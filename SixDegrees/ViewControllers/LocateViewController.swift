@@ -15,7 +15,6 @@ import MultipeerConnectivity
 
 class LocateViewController: UIViewController {
 
-    @IBOutlet weak var userIconEncapsulatingView: UIView!
     @IBOutlet weak var userIconView: UserIconView!
     @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
 
@@ -87,6 +86,8 @@ class LocateViewController: UIViewController {
     }
 
     func createAndAddUser(user: SDGUser) {
+        // Append user to the array 
+        self.users.append(user)
 
         let userIconView: UserIconView = UserIconView(frame: CGRect(x: 40, y: 40, width: 70, height: 70))
 
@@ -146,20 +147,15 @@ class LocateViewController: UIViewController {
 // MARK: - SDGBluetoothManagerDelegate
 extension LocateViewController : SDGBluetoothManagerDelegate {
 
-    func didUpdatePeers(peers: [MCPeerID]) {
-        if self.users.isEmpty {
-            for peer in peers {
-                let user: SDGUser = SDGUser(peerId: peer)
-                self.users.append(user)
-                self.createAndAddUser(user)
-            }
-        } else {
-            // Compare the missing peers and make it disspear
-            // If the results doesn't contain that user, remove it
-            for user: SDGUser in self.users {
-                if !(peers.contains(user.peerId)) {
-                    self.removeUser(user)
-                }
+    func foundPeer(peer: MCPeerID) {
+        let user: SDGUser = SDGUser(peerId: peer)
+        self.createAndAddUser(user)
+    }
+
+    func lostPeer(peer: MCPeerID) {
+        for user in self.users {
+            if user.peerId == peer {
+                self.removeUser(user)
             }
         }
     }
@@ -190,4 +186,9 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
             self.compareContacts(withUser: user)
         }
     }
+
+    func peerDidChangeState(peerId: MCPeerID, state: MCSessionState) {
+        
+    }
+
 }

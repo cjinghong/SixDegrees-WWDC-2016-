@@ -13,8 +13,10 @@ import Contacts
 protocol SDGBluetoothManagerDelegate {
     func didReceiveInvitationFromPeer(peerId: MCPeerID, completionBlock:((accept: Bool)->Void))
     func didReceiveContacts(contacts: [CNContact], fromPeer peer: MCPeerID)
+    func foundPeer(peer: MCPeerID)
+    func lostPeer(peer: MCPeerID)
 
-    func didUpdatePeers(peers: [MCPeerID])
+    func peerDidChangeState(peerId: MCPeerID, state: MCSessionState)
 }
 
 class SDGBluetoothManager: NSObject {
@@ -77,7 +79,7 @@ class SDGBluetoothManager: NSObject {
 }
 
 extension SDGBluetoothManager : MCNearbyServiceAdvertiserDelegate {
-    
+
     func advertiser(advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: NSData?, invitationHandler: (Bool, MCSession) -> Void) {
         print("Receive invitation from peer: \(peerID)")
 
@@ -104,14 +106,14 @@ extension SDGBluetoothManager : MCNearbyServiceBrowserDelegate {
     func browser(browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         print("Found peer: \(peerID)")
         self.peersFound.append(peerID)
-        self.delegate?.didUpdatePeers(self.peersFound)
+        self.delegate?.foundPeer(peerID)
     }
 
     func browser(browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         print("Lost peer: \(peerID)")
         if let index: Int = self.peersFound.indexOf(peerID) {
             self.peersFound.removeAtIndex(index)
-            self.delegate?.didUpdatePeers(self.peersFound)
+            self.delegate?.lostPeer(peerID)
         }
     }
 
@@ -136,6 +138,7 @@ extension MCSessionState {
 extension SDGBluetoothManager : MCSessionDelegate {
     func session(session: MCSession, peer peerID: MCPeerID, didChangeState state: MCSessionState) {
         print("Peer: \(peerID) Changed state: \(state.toString())")
+        self.delegate?.peerDidChangeState(peerID, state: state)
     }
 
     func session(session: MCSession, didReceiveCertificate certificate: [AnyObject]?, fromPeer peerID: MCPeerID, certificateHandler: (Bool) -> Void) {
