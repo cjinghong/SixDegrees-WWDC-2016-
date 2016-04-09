@@ -86,13 +86,15 @@ class LocateViewController: UIViewController {
     }
 
     func createAndAddUser(user: SDGUser) {
-        // Append user to the array 
+        // Append user to the array
         self.users.append(user)
 
-        let userIconView: UserIconView = UserIconView(frame: CGRect(x: 40, y: 40, width: 70, height: 70))
+        let userIconView: UserIconView!
 
         if let anotherUserIconView = self.userIconViews.last {
-            userIconView.frame.origin.x = anotherUserIconView.frame.origin.x + 10
+            userIconView = UserIconView(frame: CGRect(x: anotherUserIconView.frame.origin.x + 10, y: 40, width: 70, height: 70))
+        } else {
+            userIconView = UserIconView(frame: CGRect(x: 40, y: 40, width: 70, height: 70))
         }
 
         userIconView.iconBackgroundColor = UIColor.lightGrayColor()
