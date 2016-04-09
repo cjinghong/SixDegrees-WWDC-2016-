@@ -17,7 +17,6 @@ class LocateViewController: UIViewController {
 
     @IBOutlet weak var userIconEncapsulatingView: UIView!
     @IBOutlet weak var userIconView: UserIconView!
-
     @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
 
     let contactsController: SDGContactsController = SDGContactsController.sharedInstance
@@ -29,7 +28,8 @@ class LocateViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.userIconView.user = SDGUser(peerId: MCPeerID(displayName: UIDevice.currentDevice().name))
+        self.userIconView.user = SDGUser.currentUser
+        self.bluetoothManager.delegate = self
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -39,25 +39,31 @@ class LocateViewController: UIViewController {
                 self.contactsController.displayCantAddContactAlert(self)
             }
         }
-        self.bluetoothManager.delegate = self
+        // Try to get access to all the contacts of the current device
+        SDGUser.currentUser.contacts = self.contactsController.contacts
 
+        // Start advertising and browsing for devices
         self.bluetoothManager.startAdvertising()
         self.bluetoothManager.startBrowsing()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
+    // MARK: - Functions
     func userTapped(sender: AnyObject?) {
-        showSimpleAlert("Alert", message: "Yo")
+        if let user: SDGUser = ((sender as? UITapGestureRecognizer)?.view as? UserIconView)?.user {
+
+            let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Do you wish to connect with \(user.name)?", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+                self.bluetoothManager.invitePeer(user.peerId)
+            }))
+            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+
+            self.presentViewController(alertController, animated: true, completion: nil)
+        }
     }
 
     // Slowly moves the icon slightly upwards and downwards indefinately
     func bounceUserIcon(upwardsDirection: Bool = true) {
         UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
-
             if upwardsDirection {
                 self.userIconHorizontalConstraint.constant += 10
             } else {
@@ -66,24 +72,34 @@ class LocateViewController: UIViewController {
             self.view.layoutIfNeeded()
 
         }) { (completed: Bool) in
-                UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
-                    if upwardsDirection {
-                        self.userIconHorizontalConstraint.constant -= 10
-                    } else {
-                        self.userIconHorizontalConstraint.constant += 10
-                    }
-                    self.view.layoutIfNeeded()
+            UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
+                if upwardsDirection {
+                    self.userIconHorizontalConstraint.constant -= 10
+                } else {
+                    self.userIconHorizontalConstraint.constant += 10
+                }
+                self.view.layoutIfNeeded()
 
-                    }, completion: { (completed: Bool) in
-                        self.bounceUserIcon(!upwardsDirection)
-                })
+                }, completion: { (completed: Bool) in
+                    self.bounceUserIcon(!upwardsDirection)
+            })
         }
     }
 
     func createAndAddUser(user: SDGUser) {
+
         let userIconView: UserIconView = UserIconView(frame: CGRect(x: 40, y: 40, width: 70, height: 70))
+
+        if let anotherUserIconView = self.userIconViews.last {
+            userIconView.frame.origin.x = anotherUserIconView.frame.origin.x + 10
+        }
+
         userIconView.iconBackgroundColor = UIColor.lightGrayColor()
         userIconView.user = user
+
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.userTapped(_:)))
+        userIconView.addGestureRecognizer(tapGesture)
+
         userIconView.alpha = 0
 
         self.userIconViews.append(userIconView)
@@ -102,13 +118,32 @@ class LocateViewController: UIViewController {
                 }, completion: { (completed: Bool) in
                     self.userIconViews[userIndex].removeFromSuperview()
                     self.userIconViews.removeAtIndex(userIndex)
-
                     self.users.removeAtIndex(userIndex)
             })
         }
     }
+
+    /*
+     Compare the contacts with on the current device with another user
+     **/
+    func compareContacts(withUser user: SDGUser) {
+        var connections: [SDGUser] = []
+
+        if SDGUser.currentUser.contacts != nil && user.contacts != nil {
+            for userContact in user.contacts! {
+                if SDGUser.currentUser.contacts!.contains(userContact) {
+                    // Contacts match, add to array
+                    let matchedUsername: String = "\(userContact.givenName) \(userContact.familyName)"
+                    let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername))
+                    connections.append(matchedUser)
+                }
+            }
+        }
+
+    }
 }
 
+// MARK: - SDGBluetoothManagerDelegate
 extension LocateViewController : SDGBluetoothManagerDelegate {
 
     func didUpdatePeers(peers: [MCPeerID]) {
@@ -120,50 +155,39 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
             }
         } else {
             // Compare the missing peers and make it disspear
+            // If the results doesn't contain that user, remove it
             for user: SDGUser in self.users {
-                // If the results doesn't contain that user, remove it
                 if !(peers.contains(user.peerId)) {
                     self.removeUser(user)
                 }
             }
         }
-
     }
 
     func didReceiveInvitationFromPeer(peerId: MCPeerID, completionBlock: ((accept: Bool) -> Void)) {
 
-        let alertController: UIAlertController = UIAlertController(title: "Invitation", message: "Invitation from \(peerId.displayName)", preferredStyle: UIAlertControllerStyle.Alert)
+        let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Invitation from \(peerId.displayName)", preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
             completionBlock(accept: true)
         }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { (action: UIAlertAction) in
+            completionBlock(accept: false)
+        }))
         self.presentViewController(alertController, animated: true, completion: nil)
     }
 
-    func connectedDeviceChanged(manager: SDGBluetoothManager, connectedDevices: [String]) {
-        
-    }
-
     func didReceiveContacts(contacts: [CNContact], fromPeer peer: MCPeerID) {
+        // Get the user that has the same peerID as the peer
         let user: SDGUser? = self.users.filter { (aUser: SDGUser) -> Bool in
             return aUser.peerId == peer
         }.first
 
+        // Assign the user contacts
         if let user = user {
             user.contacts = contacts
+
+            // Compare contacts
+            self.compareContacts(withUser: user)
         }
     }
-
 }
-
-// MARK: - Utils
-extension UIViewController {
-
-    func showSimpleAlert(title: String, message: String) {
-        let alertController: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(alertController, animated: true, completion: nil)
-    }
-}
-
-

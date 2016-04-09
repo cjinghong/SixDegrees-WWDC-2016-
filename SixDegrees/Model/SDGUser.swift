@@ -13,6 +13,8 @@ import Contacts
 
 public class SDGUser {
 
+    static let currentUser = SDGUser(peerId: MCPeerID(displayName: UIDevice.currentDevice().name))
+
     var peerId: MCPeerID!
     var name: String!
 

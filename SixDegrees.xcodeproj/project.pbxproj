@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		66160E681CB8A10A003A87AC /* UIViewController+JH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66160E671CB8A10A003A87AC /* UIViewController+JH.swift */; };
+		66160E6A1CB8A235003A87AC /* CNContact+JH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66160E691CB8A235003A87AC /* CNContact+JH.swift */; };
 		66695E8E1CB61B80006E5489 /* SDGAddressBookController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66695E8D1CB61B80006E5489 /* SDGAddressBookController.swift */; };
 		66695E921CB64D52006E5489 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66695E911CB64D52006E5489 /* Contacts.framework */; };
 		66695E941CB64D5A006E5489 /* ContactsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66695E931CB64D5A006E5489 /* ContactsUI.framework */; };
@@ -40,6 +42,8 @@
 
 /* Begin PBXFileReference section */
 		58B07128BE31C2831D6AD06E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		66160E671CB8A10A003A87AC /* UIViewController+JH.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+JH.swift"; sourceTree = "<group>"; };
+		66160E691CB8A235003A87AC /* CNContact+JH.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CNContact+JH.swift"; sourceTree = "<group>"; };
 		66695E891CB61A77006E5489 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		66695E8B1CB61A7A006E5489 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		66695E8D1CB61B80006E5489 /* SDGAddressBookController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGAddressBookController.swift; sourceTree = "<group>"; };
@@ -109,6 +113,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		66160E661CB8A0FA003A87AC /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				66160E671CB8A10A003A87AC /* UIViewController+JH.swift */,
+				66160E691CB8A235003A87AC /* CNContact+JH.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 		669C27C31CAF66EA00F6E08B /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -161,6 +174,7 @@
 		66C801421CA977F7002C642A /* SixDegrees */ = {
 			isa = PBXGroup;
 			children = (
+				66160E661CB8A0FA003A87AC /* Utils */,
 				66C801661CA97CD1002C642A /* Assets.xcassets */,
 				66C801431CA977F7002C642A /* AppDelegate.swift */,
 				669C27C91CAF6B5A00F6E08B /* Model */,
@@ -341,11 +355,13 @@
 				66C8014C1CA977F7002C642A /* SixDegrees.xcdatamodeld in Sources */,
 				669C27C81CAF695200F6E08B /* LocateViewController.swift in Sources */,
 				66695E961CB65A51006E5489 /* SDGParseRestAPI.swift in Sources */,
+				66160E6A1CB8A235003A87AC /* CNContact+JH.swift in Sources */,
 				669C27C61CAF690C00F6E08B /* SDGRestAPI.swift in Sources */,
 				66FAA3D01CAE319E00CEF58E /* LoginViewController.swift in Sources */,
 				66C801441CA977F7002C642A /* AppDelegate.swift in Sources */,
 				66695E8E1CB61B80006E5489 /* SDGAddressBookController.swift in Sources */,
 				669C27CC1CAFA6D600F6E08B /* SixDegreesTests.swift in Sources */,
+				66160E681CB8A10A003A87AC /* UIViewController+JH.swift in Sources */,
 				669C27CB1CAF6B7400F6E08B /* SDGUser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
