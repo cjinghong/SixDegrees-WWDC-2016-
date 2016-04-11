@@ -24,7 +24,7 @@ class SDGBluetoothManager: NSObject {
     private let ServiceType = "sixdegrees-cjh"
     private let myPeerId = MCPeerID(displayName: UIDevice.currentDevice().name)
 
-    let session: MCSession
+    var session: MCSession!
 //    lazy var session : MCSession = {
 //        let session = MCSession(peer: self.myPeerId, securityIdentity: nil, encryptionPreference: MCEncryptionPreference.Required)
 //        session.delegate = self
@@ -41,7 +41,7 @@ class SDGBluetoothManager: NSObject {
     override init() {
         self.serviceAdvetiser = MCNearbyServiceAdvertiser(peer: self.myPeerId, discoveryInfo: nil, serviceType: ServiceType)
         self.serviceBrowser = MCNearbyServiceBrowser(peer: self.myPeerId, serviceType: ServiceType)
-        self.session = MCSession(peer: self.myPeerId, securityIdentity: nil, encryptionPreference: MCEncryptionPreference.Required)
+        self.session = MCSession(peer: self.myPeerId, securityIdentity: nil, encryptionPreference: .Required)
 
         super.init()
 
@@ -71,7 +71,7 @@ class SDGBluetoothManager: NSObject {
         let contactsData: NSData = NSKeyedArchiver.archivedDataWithRootObject(contacts)
 
         do {
-            try self.session.sendData(NSKeyedArchiver.archivedDataWithRootObject(contactsData), toPeers: [peerId], withMode: MCSessionSendDataMode.Reliable)
+            try self.session.sendData(NSKeyedArchiver.archivedDataWithRootObject(contactsData), toPeers: self.session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
         } catch {
             print("Unable to send contacts data to \(peerId.displayName)")
         }
@@ -84,14 +84,16 @@ extension SDGBluetoothManager : MCNearbyServiceAdvertiserDelegate {
         print("Receive invitation from peer: \(peerID)")
 
         self.delegate?.didReceiveInvitationFromPeer(peerID, completionBlock: { (accept) in
+
+            // Sends contact to the requesting user
             if accept {
-                // Send contacts to the peer
-//                if let contacts = SDGUser.currentUser.contacts {
-//                    self.sendContactsToPeer(peerID, contacts: contacts)
-//                }
                 invitationHandler(true, self.session)
+
+                if let contacts = SDGUser.currentUser.contacts {
+                    self.sendContactsToPeer(peerID, contacts: contacts)
+                }
             } else {
-                invitationHandler(false, self.session)
+                invitationHandler(false, MCSession(peer: peerID))
             }
         })
     }
@@ -142,7 +144,7 @@ extension SDGBluetoothManager : MCSessionDelegate {
     }
 
     func session(session: MCSession, didReceiveCertificate certificate: [AnyObject]?, fromPeer peerID: MCPeerID, certificateHandler: (Bool) -> Void) {
-
+        certificateHandler(true)
     }
 
     func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {

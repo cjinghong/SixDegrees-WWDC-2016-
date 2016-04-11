@@ -21,10 +21,7 @@ class UserIconView: UIView {
 
     var user: SDGUser? {
         didSet {
-            // Change user name
-            UIView.animateWithDuration(0.4, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: { 
-                self.nameLabel.text = self.user?.name
-                }, completion: nil)
+            self.nameLabel.text = user?.name
         }
     }
 
@@ -57,7 +54,7 @@ class UserIconView: UIView {
         iconImageView.clipsToBounds = true
         iconImageView.contentMode = UIViewContentMode.ScaleAspectFit
         iconImageView.backgroundColor = self.iconBackgroundColor
-        iconImageView.image = UIImage(named: "gender_neutral_user_filled")
+        iconImageView.image = UIImage(named: "user")
         iconImageView.layer.cornerRadius = self.frame.height/2
         self.addSubview(iconImageView)
         self.iconImageView = iconImageView

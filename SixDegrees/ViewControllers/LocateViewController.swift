@@ -17,6 +17,7 @@ class LocateViewController: UIViewController {
 
     @IBOutlet weak var userIconView: UserIconView!
     @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
+    @IBOutlet weak var connectionStatusLabel: UILabel!
 
     let contactsController: SDGContactsController = SDGContactsController.sharedInstance
     let bluetoothManager: SDGBluetoothManager = SDGBluetoothManager()
@@ -29,6 +30,10 @@ class LocateViewController: UIViewController {
 
         self.userIconView.user = SDGUser.currentUser
         self.bluetoothManager.delegate = self
+
+        // Start advertising and browsing for devices
+        self.bluetoothManager.startAdvertising()
+        self.bluetoothManager.startBrowsing()
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -40,10 +45,6 @@ class LocateViewController: UIViewController {
         }
         // Try to get access to all the contacts of the current device
         SDGUser.currentUser.contacts = self.contactsController.contacts
-
-        // Start advertising and browsing for devices
-        self.bluetoothManager.startAdvertising()
-        self.bluetoothManager.startBrowsing()
     }
 
     // MARK: - Functions
@@ -92,7 +93,7 @@ class LocateViewController: UIViewController {
         let userIconView: UserIconView!
 
         if let anotherUserIconView = self.userIconViews.last {
-            userIconView = UserIconView(frame: CGRect(x: anotherUserIconView.frame.origin.x + 10, y: 40, width: 70, height: 70))
+            userIconView = UserIconView(frame: CGRect(x: anotherUserIconView.frame.origin.x + 70 + 38, y: 40, width: 70, height: 70))
         } else {
             userIconView = UserIconView(frame: CGRect(x: 40, y: 40, width: 70, height: 70))
         }
@@ -151,7 +152,9 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
 
     func foundPeer(peer: MCPeerID) {
         let user: SDGUser = SDGUser(peerId: peer)
-        self.createAndAddUser(user)
+        if !self.users.contains(user) {
+            self.createAndAddUser(user)
+        }
     }
 
     func lostPeer(peer: MCPeerID) {
@@ -190,7 +193,15 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
     }
 
     func peerDidChangeState(peerId: MCPeerID, state: MCSessionState) {
-        
+        self.connectionStatusLabel.text = "Connection status: \(state.toString())"
+
+        if state == .Connected {
+            // Send contact
+//            if let contacts = SDGUser.currentUser.contacts {
+//                self.bluetoothManager.sendContactsToPeer(peerId, contacts: contacts)
+//            }
+        }
+
     }
 
 }

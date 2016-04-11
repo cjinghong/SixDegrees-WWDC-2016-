@@ -49,15 +49,24 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Connection status: None" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JGU-fm-eFs">
+                                <rect key="frame" x="185" y="522" width="190" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="e5O-1t-ZTS" firstAttribute="centerX" secondItem="x3c-nA-g2P" secondAttribute="centerX" id="Fib-mx-PU2"/>
+                            <constraint firstItem="MvL-mw-BEu" firstAttribute="top" secondItem="JGU-fm-eFs" secondAttribute="bottom" constant="8" id="YEU-Hh-KV7"/>
+                            <constraint firstItem="JGU-fm-eFs" firstAttribute="centerX" secondItem="x3c-nA-g2P" secondAttribute="centerX" id="bSc-I4-m8M"/>
                             <constraint firstItem="e5O-1t-ZTS" firstAttribute="centerY" secondItem="x3c-nA-g2P" secondAttribute="centerY" id="cNP-Lu-TRd"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Locate" image="locate" id="ela-JR-7sM"/>
                     <connections>
+                        <outlet property="connectionStatusLabel" destination="JGU-fm-eFs" id="snt-rX-YbL"/>
                         <outlet property="userIconHorizontalConstraint" destination="cNP-Lu-TRd" id="nx3-iw-fhC"/>
                         <outlet property="userIconView" destination="e5O-1t-ZTS" id="prp-jY-jbS"/>
                     </connections>
