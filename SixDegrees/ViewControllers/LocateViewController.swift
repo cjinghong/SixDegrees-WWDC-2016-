@@ -134,12 +134,22 @@ class LocateViewController: UIViewController {
         var connections: [SDGUser] = []
 
         if SDGUser.currentUser.contacts != nil && user.contacts != nil {
-            for userContact in user.contacts! {
-                if SDGUser.currentUser.contacts!.contains(userContact) {
-                    // Contacts match, add to array
-                    let matchedUsername: String = "\(userContact.givenName) \(userContact.familyName)"
-                    let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername))
-                    connections.append(matchedUser)
+            for myContact: CNContact in SDGUser.currentUser.contacts! {
+                for userContact: CNContact in user.contacts! {
+                    let results: (matched: Bool, identifier: String?) = myContact.compareAndGetIdentifier(userContact)
+
+                    if results.matched {
+                        let matchedUsername: String = "\(myContact.givenName) \(myContact.familyName)"
+                        let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername))
+                        matchedUser.identifierString = results.identifier
+
+                        // Only appends if it is not a repeating user contact
+                        if !connections.contains({ (aUser: SDGUser) -> Bool in
+                            return aUser.identifierString == matchedUser.identifierString
+                        }) {
+                            connections.append(matchedUser)
+                        }
+                    }
                 }
             }
         }
@@ -195,11 +205,12 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
     func peerDidChangeState(peerId: MCPeerID, state: MCSessionState) {
         self.connectionStatusLabel.text = "Connection status: \(state.toString())"
 
+        // TODO: This will run on both parties, both device will be sending to each other. Find a better place to put this.
         if state == .Connected {
             // Send contact
-//            if let contacts = SDGUser.currentUser.contacts {
-//                self.bluetoothManager.sendContactsToPeer(peerId, contacts: contacts)
-//            }
+            if let contacts = SDGUser.currentUser.contacts {
+                self.bluetoothManager.sendContactsToPeer(peerId, contacts: contacts)
+            }
         }
 
     }

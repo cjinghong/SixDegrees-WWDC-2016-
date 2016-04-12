@@ -69,12 +69,13 @@ class SDGBluetoothManager: NSObject {
 
     func sendContactsToPeer(peerId: MCPeerID, contacts: [CNContact]) {
         let contactsData: NSData = NSKeyedArchiver.archivedDataWithRootObject(contacts)
-
         do {
             try self.session.sendData(NSKeyedArchiver.archivedDataWithRootObject(contactsData), toPeers: self.session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
         } catch {
             print("Unable to send contacts data to \(peerId.displayName)")
         }
+
+
     }
 }
 
@@ -88,10 +89,6 @@ extension SDGBluetoothManager : MCNearbyServiceAdvertiserDelegate {
             // Sends contact to the requesting user
             if accept {
                 invitationHandler(true, self.session)
-
-                if let contacts = SDGUser.currentUser.contacts {
-                    self.sendContactsToPeer(peerID, contacts: contacts)
-                }
             } else {
                 invitationHandler(false, MCSession(peer: peerID))
             }
@@ -147,12 +144,17 @@ extension SDGBluetoothManager : MCSessionDelegate {
         certificateHandler(true)
     }
 
+    // TODO: - Figure out why unable to convert NSData back to CNContact (http://stackoverflow.com/questions/36546221/converting-cncontact-to-nsdata-and-vice-versa)
     func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
-        print("Peer: \(peerID) Received data: \(data)")
+        print("Received data: \(data) From Peer: \(peerID)")
 
-        if let contacts: [CNContact] = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [CNContact] {
-            self.delegate?.didReceiveContacts(contacts, fromPeer: peerID)
+        if let contactsData: NSData = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSData {
+            if let contacts: [CNContact] = NSKeyedUnarchiver.unarchiveObjectWithData(contactsData) as? [CNContact] {
+                self.delegate?.didReceiveContacts(contacts, fromPeer: peerID)
+            }
         }
+
+//        let keyedUnarchiver = NSKeyedUnarchiver(forReadingWithData: data)
     }
 
     func session(session: MCSession, didReceiveStream stream: NSInputStream, withName streamName: String, fromPeer peerID: MCPeerID) {

@@ -17,8 +17,11 @@ public class SDGUser {
 
     var peerId: MCPeerID!
     var name: String!
-
     var contacts: [CNContact]?
+
+    // This is used to identify the user when matching contacts. Could be an email, phone number, or other details
+    // TODO: - Encrypt this?
+    var identifierString: String?
 
     init(peerId: MCPeerID) {
         self.peerId = peerId

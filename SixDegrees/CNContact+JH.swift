@@ -10,28 +10,61 @@ import Foundation
 import Contacts
 
 extension CNContact {
-    func compare(contact: CNContact) {
+    func compareAndGetIdentifier(contact: CNContact) -> (matched: Bool, identifier: String?) {
+        // Compare phone numbers
+        if self.isKeyAvailable(CNContactPhoneNumbersKey) && contact.isKeyAvailable(CNContactPhoneNumbersKey) {
 
+            for myPhoneNumber: CNLabeledValue in self.phoneNumbers {
+
+                for userPhoneNumber: CNLabeledValue in contact.phoneNumbers {
+
+                    // Tries to remove country code from the numbers (If applicable)
+                    var myPhoneNumberFormatted: String = (myPhoneNumber.value as! CNPhoneNumber).valueForKey("formattedStringValue") as! String
+                    if myPhoneNumberFormatted.containsString("+") {
+                        if let spaceIndex = myPhoneNumberFormatted.rangeOfString(" ")?.startIndex {
+                            let index: Int = myPhoneNumberFormatted.startIndex.distanceTo(spaceIndex)
+                            myPhoneNumberFormatted = myPhoneNumberFormatted.substringWithRange(myPhoneNumberFormatted.startIndex.advancedBy(index+1)..<myPhoneNumberFormatted.endIndex)
+                        }
+                    }
+                    var userPhoneNumberFormatted: String = (userPhoneNumber.value as! CNPhoneNumber).valueForKey("formattedStringValue") as! String
+                    if userPhoneNumberFormatted.containsString("+") {
+                        if let spaceIndex = userPhoneNumberFormatted.rangeOfString(" ")?.startIndex {
+                            let index: Int = userPhoneNumberFormatted.startIndex.distanceTo(spaceIndex)
+                            userPhoneNumberFormatted = userPhoneNumberFormatted.substringWithRange(userPhoneNumberFormatted.startIndex.advancedBy(index+1)..<userPhoneNumberFormatted.endIndex)
+                        }
+                    }
+
+                    // Strips off the spaces
+                    myPhoneNumberFormatted = myPhoneNumberFormatted.stringByReplacingOccurrencesOfString(" ", withString: "")
+                    userPhoneNumberFormatted = userPhoneNumberFormatted.stringByReplacingOccurrencesOfString(" ", withString: "")
+
+                    // Removes the first 0 if applicable
+                    if myPhoneNumberFormatted[myPhoneNumberFormatted.startIndex] == "0" {
+                        myPhoneNumberFormatted.removeAtIndex(myPhoneNumberFormatted.startIndex)
+                    }
+                    if userPhoneNumberFormatted[userPhoneNumberFormatted.startIndex] == "0" {
+                        userPhoneNumberFormatted.removeAtIndex(userPhoneNumberFormatted.startIndex)
+                    }
+
+                    if myPhoneNumberFormatted == userPhoneNumberFormatted {
+                        return (true, myPhoneNumberFormatted)
+                    }
+
+                }
+            }
+        }
+        // Compare email address
+        if self.isKeyAvailable(CNContactEmailAddressesKey) && contact.isKeyAvailable(CNContactEmailAddressesKey) {
+            for myEmail: CNLabeledValue in self.emailAddresses {
+                for userEmail: CNLabeledValue in contact.emailAddresses {
+                    if (myEmail.value as? String) == (userEmail.value as? String) {
+                        return (true, (myEmail.value as! String))
+                    }
+                }
+            }
+        }
+        return (false, nil)
     }
 }
 
-public func == (lhs: CNContact, rhs: CNContact) -> Bool {
-    // Compare phone numbers
-    if lhs.isKeyAvailable(CNContactPhoneNumbersKey) && rhs.isKeyAvailable(CNContactPhoneNumbersKey) {
-        for phoneNumber: CNLabeledValue in lhs.phoneNumbers {
-            if rhs.phoneNumbers.contains(phoneNumber) {
-                return true
-            }
-        }
-    }
-    // Compare email address
-    if lhs.isKeyAvailable(CNContactEmailAddressesKey) && rhs.isKeyAvailable(CNContactEmailAddressesKey) {
-        for email: CNLabeledValue in lhs.emailAddresses {
-            if rhs.emailAddresses.contains(email) {
-                return true
-            }
-        }
-    }
-    return false
-}
 

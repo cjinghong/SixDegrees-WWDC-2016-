@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		66160E681CB8A10A003A87AC /* UIViewController+JH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66160E671CB8A10A003A87AC /* UIViewController+JH.swift */; };
 		66160E6A1CB8A235003A87AC /* CNContact+JH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66160E691CB8A235003A87AC /* CNContact+JH.swift */; };
-		66695E8E1CB61B80006E5489 /* SDGAddressBookController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66695E8D1CB61B80006E5489 /* SDGAddressBookController.swift */; };
+		66695E8E1CB61B80006E5489 /* SDGContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66695E8D1CB61B80006E5489 /* SDGContactsController.swift */; };
 		66695E921CB64D52006E5489 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66695E911CB64D52006E5489 /* Contacts.framework */; };
 		66695E941CB64D5A006E5489 /* ContactsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66695E931CB64D5A006E5489 /* ContactsUI.framework */; };
 		66695E961CB65A51006E5489 /* SDGParseRestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66695E951CB65A51006E5489 /* SDGParseRestAPI.swift */; };
@@ -46,7 +46,7 @@
 		66160E691CB8A235003A87AC /* CNContact+JH.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CNContact+JH.swift"; sourceTree = "<group>"; };
 		66695E891CB61A77006E5489 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		66695E8B1CB61A7A006E5489 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
-		66695E8D1CB61B80006E5489 /* SDGAddressBookController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGAddressBookController.swift; sourceTree = "<group>"; };
+		66695E8D1CB61B80006E5489 /* SDGContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGContactsController.swift; sourceTree = "<group>"; };
 		66695E911CB64D52006E5489 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		66695E931CB64D5A006E5489 /* ContactsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ContactsUI.framework; path = System/Library/Frameworks/ContactsUI.framework; sourceTree = SDKROOT; };
 		66695E951CB65A51006E5489 /* SDGParseRestAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGParseRestAPI.swift; sourceTree = "<group>"; };
@@ -137,7 +137,7 @@
 			children = (
 				669C27C51CAF690C00F6E08B /* SDGRestAPI.swift */,
 				66695E951CB65A51006E5489 /* SDGParseRestAPI.swift */,
-				66695E8D1CB61B80006E5489 /* SDGAddressBookController.swift */,
+				66695E8D1CB61B80006E5489 /* SDGContactsController.swift */,
 				66695E971CB792A8006E5489 /* SDGBluetoothManager.swift */,
 			);
 			path = Controllers;
@@ -360,7 +360,7 @@
 				669C27C61CAF690C00F6E08B /* SDGRestAPI.swift in Sources */,
 				66FAA3D01CAE319E00CEF58E /* LoginViewController.swift in Sources */,
 				66C801441CA977F7002C642A /* AppDelegate.swift in Sources */,
-				66695E8E1CB61B80006E5489 /* SDGAddressBookController.swift in Sources */,
+				66695E8E1CB61B80006E5489 /* SDGContactsController.swift in Sources */,
 				669C27CC1CAFA6D600F6E08B /* SixDegreesTests.swift in Sources */,
 				66160E681CB8A10A003A87AC /* UIViewController+JH.swift in Sources */,
 				669C27CB1CAF6B7400F6E08B /* SDGUser.swift in Sources */,
@@ -501,7 +501,7 @@
 					"$(PROJECT_DIR)/SixDegrees",
 				);
 				INFOPLIST_FILE = SixDegrees/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinghong.SixDegrees;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -521,7 +521,7 @@
 					"$(PROJECT_DIR)/SixDegrees",
 				);
 				INFOPLIST_FILE = SixDegrees/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinghong.SixDegrees;
 				PRODUCT_NAME = "$(TARGET_NAME)";
