@@ -10,6 +10,9 @@ import Foundation
 import Contacts
 
 extension CNContact {
+    /// Compare self with another CNContact. Returns true if they are the same.
+    /// - Parameter contact: The CNContact to compare with
+    /// - Returns: matched: Boolean value. True if both contacts are the same, false if not. identifier: If phone number matches, the identifier will be the phone number. If the email matches, the identifier will be the email
     func compareAndGetIdentifier(contact: CNContact) -> (matched: Bool, identifier: String?) {
         // Compare phone numbers
         if self.isKeyAvailable(CNContactPhoneNumbersKey) && contact.isKeyAvailable(CNContactPhoneNumbersKey) {
