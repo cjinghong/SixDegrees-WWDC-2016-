@@ -153,8 +153,6 @@ extension SDGBluetoothManager : MCSessionDelegate {
                 self.delegate?.didReceiveContacts(contacts, fromPeer: peerID)
             }
         }
-
-//        let keyedUnarchiver = NSKeyedUnarchiver(forReadingWithData: data)
     }
 
     func session(session: MCSession, didReceiveStream stream: NSInputStream, withName streamName: String, fromPeer peerID: MCPeerID) {

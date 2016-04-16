@@ -17,7 +17,9 @@ class LocateViewController: UIViewController {
 
     @IBOutlet weak var userIconView: UserIconView!
     @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
-    @IBOutlet weak var connectionStatusLabel: UILabel!
+    var originalUserIconHorizontalConstraint: CGFloat?
+    @IBOutlet weak var findConnectionsButton: UIButton!
+    @IBOutlet weak var findConnectionsBottomConstraint: NSLayoutConstraint!
 
     let contactsController: SDGContactsController = SDGContactsController.sharedInstance
     let bluetoothManager: SDGBluetoothManager = SDGBluetoothManager()
@@ -34,6 +36,17 @@ class LocateViewController: UIViewController {
         // Start advertising and browsing for devices
         self.bluetoothManager.startAdvertising()
         self.bluetoothManager.startBrowsing()
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        // Store reference of the userIconHorizontalConstraint
+        self.originalUserIconHorizontalConstraint = self.userIconHorizontalConstraint.constant
+
+        if self.bluetoothManager.session.connectedPeers.count > 0 {
+            self.showConnectButton()
+        } else {
+            self.hideConnectButton()
+        }
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -61,28 +74,11 @@ class LocateViewController: UIViewController {
         }
     }
 
-    // Slowly moves the icon slightly upwards and downwards indefinately
-    func bounceUserIcon(upwardsDirection: Bool = true) {
-        UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
-            if upwardsDirection {
-                self.userIconHorizontalConstraint.constant += 10
-            } else {
-                self.userIconHorizontalConstraint.constant -= 10
+    @IBAction func findConnections(sender: AnyObject) {
+        if let contacts = SDGUser.currentUser.contacts {
+            if let connectedPeer = self.bluetoothManager.session.connectedPeers.first {
+                self.bluetoothManager.sendContactsToPeer(connectedPeer, contacts: contacts)
             }
-            self.view.layoutIfNeeded()
-
-        }) { (completed: Bool) in
-            UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
-                if upwardsDirection {
-                    self.userIconHorizontalConstraint.constant -= 10
-                } else {
-                    self.userIconHorizontalConstraint.constant += 10
-                }
-                self.view.layoutIfNeeded()
-
-                }, completion: { (completed: Bool) in
-                    self.bounceUserIcon(!upwardsDirection)
-            })
         }
     }
 
@@ -127,10 +123,76 @@ class LocateViewController: UIViewController {
         }
     }
 
+    func animateUserToOriginalPosition() {
+        UIView.animateWithDuration(0.6, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
+            self.userIconHorizontalConstraint.constant = 0
+            self.view.layoutIfNeeded()
+            }, completion: nil)
+    }
+
+    func animateConnectingToUser(user: SDGUser?) {
+        if let user = user {
+            // Find the respective user icon view
+            let index: Int? = self.users.indexOf(user)
+            if let index = index {
+                let chosenUserIcon: UserIconView = self.userIconViews[index]
+
+                // Remove all users except for that user icon view
+                for userIconView in self.userIconViews {
+                    if userIconView != chosenUserIcon {
+                        UIView.animateWithDuration(1, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
+                            userIconView.alpha = 0
+                            }, completion: { (success: Bool) in
+                                userIconView.removeFromSuperview()
+                        })
+                    }
+                }
+                let chosenIconDistanceFromTop: CGFloat = chosenUserIcon.frame.origin.y
+                let userIconDistanceFromBottom: CGFloat = self.view.frame.height - self.userIconView.frame.origin.y - self.userIconView.frame.height - 28 // 28 is the height of the name label
+
+                // Find out what should the distance of the icons should be
+                let equalDistance: CGFloat = (userIconDistanceFromBottom + chosenIconDistanceFromTop) / 2
+
+                if chosenUserIcon.frame.origin.y != equalDistance && self.userIconHorizontalConstraint.constant == 0 {
+                    UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                        // Center user icons
+                        chosenUserIcon.frame.origin.x = self.userIconView.frame.origin.x
+                        self.userIconHorizontalConstraint.constant = equalDistance - 20
+                        chosenUserIcon.frame.origin.y = equalDistance
+
+                        self.view.layoutIfNeeded()
+                        }, completion: nil)
+                }
+            }
+        }
+    }
+
+    func showConnectButton() {
+        // Check if button is already hidden
+        if self.findConnectionsBottomConstraint.constant < 8 {
+            UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
+                self.findConnectionsBottomConstraint.constant = 8
+                self.findConnectionsButton.alpha = 1
+            }) { (success: Bool) in
+            }
+        }
+    }
+
+    func hideConnectButton() {
+        // Check if button is already hidden
+        if self.findConnectionsBottomConstraint.constant == 8 {
+            UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
+                self.findConnectionsBottomConstraint.constant = -38
+                self.findConnectionsButton.alpha = 0
+            }) { (success: Bool) in
+            }
+        }
+    }
+
     /*
      Compare the contacts with on the current device with another user
      **/
-    func compareContacts(withUser user: SDGUser) {
+    func compareContacts(withUser user: SDGUser) -> [SDGUser] {
         var connections: [SDGUser] = []
 
         if SDGUser.currentUser.contacts != nil && user.contacts != nil {
@@ -153,7 +215,7 @@ class LocateViewController: UIViewController {
                 }
             }
         }
-
+        return connections
     }
 }
 
@@ -163,14 +225,21 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
     func foundPeer(peer: MCPeerID) {
         let user: SDGUser = SDGUser(peerId: peer)
         if !self.users.contains(user) {
-            self.createAndAddUser(user)
+            // Animation should be pushed to the main queue
+            dispatch_async(dispatch_get_main_queue(), { 
+                self.createAndAddUser(user)
+            })
         }
     }
 
     func lostPeer(peer: MCPeerID) {
         for user in self.users {
             if user.peerId == peer {
-                self.removeUser(user)
+                // Animation should be pushed to the main queue
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.removeUser(user)
+                    self.animateUserToOriginalPosition()
+                })
             }
         }
     }
@@ -198,19 +267,31 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
             user.contacts = contacts
 
             // Compare contacts
-            self.compareContacts(withUser: user)
+            let connections: [SDGUser] = self.compareContacts(withUser: user)
+            // TODO: Draw connections
         }
     }
 
     func peerDidChangeState(peerId: MCPeerID, state: MCSessionState) {
-        self.connectionStatusLabel.text = "Connection status: \(state.toString())"
-
-        // TODO: This will run on both parties, both device will be sending to each other. Find a better place to put this.
         if state == .Connected {
-            // Send contact
-            if let contacts = SDGUser.currentUser.contacts {
-                self.bluetoothManager.sendContactsToPeer(peerId, contacts: contacts)
-            }
+            // Animation should be pushed to the main queue
+            dispatch_async(dispatch_get_main_queue(), {
+                self.showConnectButton()
+            })
+        } else if state == .Connecting {
+            let user: SDGUser? = self.users.filter({ (user: SDGUser) -> Bool in
+                user.peerId == peerId
+            }).first
+            // Animation should be pushed to the main queue
+            dispatch_async(dispatch_get_main_queue(), {
+                self.animateConnectingToUser(user)
+            })
+        } else {
+            // Animation should be pushed to the main queue
+            dispatch_async(dispatch_get_main_queue(), {
+                self.hideConnectButton()
+                self.animateUserToOriginalPosition()
+            })
         }
 
     }
