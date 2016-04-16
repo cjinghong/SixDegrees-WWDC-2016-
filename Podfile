@@ -7,6 +7,7 @@ pod "FBSDKCoreKit";
 pod "FBSDKLoginKit";
 pod "FBSDKShareKit";
 pod "FBSDKMessengerShareKit";
+pod 'PhoneNumberKit', '~> 0.7'
 
 pod "Alamofire";
 pod "SwiftyJSON";

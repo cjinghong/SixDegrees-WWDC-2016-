@@ -26,6 +26,7 @@ class LocateViewController: UIViewController {
 
     var users: [SDGUser] = []
     var userIconViews: [UserIconView] = []
+    var originalChosenUserIconFrame: CGRect?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,7 +124,18 @@ class LocateViewController: UIViewController {
         }
     }
 
-    func animateUserToOriginalPosition() {
+    func animateUserToOriginalPosition(user: SDGUser?) {
+        if let user = user {
+            let index: Int? = self.users.indexOf(user)
+            if let index: Int = index {
+                if let frame = self.originalChosenUserIconFrame {
+                    UIView.animateWithDuration(0.6, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
+                    self.userIconViews[index].frame = frame
+                    self.view.layoutIfNeeded()
+                    }, completion: nil)
+                }
+            }
+        }
         UIView.animateWithDuration(0.6, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
             self.userIconHorizontalConstraint.constant = 0
             self.view.layoutIfNeeded()
@@ -147,6 +159,8 @@ class LocateViewController: UIViewController {
                         })
                     }
                 }
+                // Store reference of the chosen user icon's frame
+                self.originalChosenUserIconFrame = chosenUserIcon.frame
                 let chosenIconDistanceFromTop: CGFloat = chosenUserIcon.frame.origin.y
                 let userIconDistanceFromBottom: CGFloat = self.view.frame.height - self.userIconView.frame.origin.y - self.userIconView.frame.height - 28 // 28 is the height of the name label
 
@@ -237,8 +251,8 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
             if user.peerId == peer {
                 // Animation should be pushed to the main queue
                 dispatch_async(dispatch_get_main_queue(), {
+                    self.animateUserToOriginalPosition(user)
                     self.removeUser(user)
-                    self.animateUserToOriginalPosition()
                 })
             }
         }
@@ -288,9 +302,12 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
             })
         } else {
             // Animation should be pushed to the main queue
+            let user: SDGUser? = self.users.filter({ (user: SDGUser) -> Bool in
+                user.peerId == peerId
+            }).first
             dispatch_async(dispatch_get_main_queue(), {
                 self.hideConnectButton()
-                self.animateUserToOriginalPosition()
+                self.animateUserToOriginalPosition(user)
             })
         }
 

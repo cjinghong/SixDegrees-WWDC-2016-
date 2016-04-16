@@ -90,6 +90,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-SixDegrees/FBSDKLoginKit.framework"
   install_framework "Pods-SixDegrees/FBSDKMessengerShareKit.framework"
   install_framework "Pods-SixDegrees/FBSDKShareKit.framework"
+  install_framework "Pods-SixDegrees/PhoneNumberKit.framework"
   install_framework "Pods-SixDegrees/SwiftyJSON.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -99,5 +100,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-SixDegrees/FBSDKLoginKit.framework"
   install_framework "Pods-SixDegrees/FBSDKMessengerShareKit.framework"
   install_framework "Pods-SixDegrees/FBSDKShareKit.framework"
+  install_framework "Pods-SixDegrees/PhoneNumberKit.framework"
   install_framework "Pods-SixDegrees/SwiftyJSON.framework"
 fi
