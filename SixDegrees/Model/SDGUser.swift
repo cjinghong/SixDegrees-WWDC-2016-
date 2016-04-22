@@ -13,19 +13,28 @@ import Contacts
 
 public class SDGUser {
 
-    static let currentUser = SDGUser(peerId: MCPeerID(displayName: UIDevice.currentDevice().name))
+    static let currentUser = SDGUser(peerId: MCPeerID(displayName: UIDevice.currentDevice().name), color: UIColor.SDGPeach())
 
     var peerId: MCPeerID!
     var name: String!
     var contacts: [CNContact]?
 
+    var color: UIColor?
+
     // This is used to identify the user when matching contacts. Could be an email, phone number, or other details
     // TODO: - Encrypt this?
     var identifierString: String?
 
-    init(peerId: MCPeerID) {
+//    init(peerId: MCPeerID) {
+//        self.peerId = peerId
+//        self.name = peerId.displayName
+//    }
+
+    init(peerId: MCPeerID, color: UIColor) {
         self.peerId = peerId
         self.name = peerId.displayName
+
+        self.color = color
     }
 
 }

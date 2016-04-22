@@ -22,6 +22,7 @@ class UserIconView: UIView {
     var user: SDGUser? {
         didSet {
             self.nameLabel.text = user?.name
+            self.iconBackgroundColor = user?.color ?? UIColor.clearColor()
         }
     }
 
