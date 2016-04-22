@@ -17,5 +17,4 @@ class UserCollectionViewCell: UICollectionViewCell {
     }
 
     @IBOutlet weak var userIconView: UserIconView!
-
 }

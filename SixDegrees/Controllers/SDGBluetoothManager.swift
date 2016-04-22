@@ -25,11 +25,6 @@ class SDGBluetoothManager: NSObject {
     private let myPeerId = MCPeerID(displayName: UIDevice.currentDevice().name)
 
     var session: MCSession!
-//    lazy var session : MCSession = {
-//        let session = MCSession(peer: self.myPeerId, securityIdentity: nil, encryptionPreference: MCEncryptionPreference.Required)
-//        session.delegate = self
-//        return session
-//    }()
 
     private let serviceAdvetiser: MCNearbyServiceAdvertiser
     private let serviceBrowser: MCNearbyServiceBrowser
@@ -135,6 +130,7 @@ extension MCSessionState {
 }
 
 extension SDGBluetoothManager : MCSessionDelegate {
+
     func session(session: MCSession, peer peerID: MCPeerID, didChangeState state: MCSessionState) {
         print("Peer: \(peerID) Changed state: \(state.toString())")
         self.delegate?.peerDidChangeState(peerID, state: state)

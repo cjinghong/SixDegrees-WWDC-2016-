@@ -48,7 +48,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UNT-nH-XZn">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UNT-nH-XZn">
                                 <rect key="frame" x="8" y="513" width="584" height="30"/>
                                 <state key="normal" title="Find connections"/>
                                 <connections>
@@ -163,17 +163,27 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="guF-ci-Jc8">
+                                <rect key="frame" x="8" y="513" width="584" height="30"/>
+                                <state key="normal" title="Find connections"/>
+                                <connections>
+                                    <action selector="findConnections:" destination="fpf-5n-qIO" eventType="touchUpInside" id="dsE-GM-Up3"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.61176470589999998" green="0.87450980389999999" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="guF-ci-Jc8" firstAttribute="leading" secondItem="ka3-T8-eTy" secondAttribute="leading" constant="8" id="4sy-oZ-541"/>
                             <constraint firstItem="VFX-RS-c5R" firstAttribute="centerY" secondItem="ka3-T8-eTy" secondAttribute="centerY" constant="65" id="7kg-Ub-o0r"/>
+                            <constraint firstAttribute="trailing" secondItem="guF-ci-Jc8" secondAttribute="trailing" constant="8" id="Flm-KQ-Bix"/>
                             <constraint firstItem="ePG-8i-oKm" firstAttribute="centerY" secondItem="ka3-T8-eTy" secondAttribute="centerY" constant="-65" id="Fra-a6-89s"/>
                             <constraint firstItem="ePG-8i-oKm" firstAttribute="centerX" secondItem="ka3-T8-eTy" secondAttribute="centerX" id="QKJ-Qb-5Ab"/>
+                            <constraint firstItem="U4B-5z-Qzf" firstAttribute="top" secondItem="guF-ci-Jc8" secondAttribute="bottom" constant="8" id="iNu-4g-QGl"/>
                             <constraint firstItem="VFX-RS-c5R" firstAttribute="centerX" secondItem="ka3-T8-eTy" secondAttribute="centerX" id="zGR-fC-5eT"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="connectingUserIconView" destination="ePG-8i-oKm" id="Qq7-xB-WKg"/>
+                        <outlet property="connectingUserIconView" destination="ePG-8i-oKm" id="cdS-Ke-eeg"/>
                         <outlet property="userIconView" destination="VFX-RS-c5R" id="9HS-9J-Fhc"/>
                     </connections>
                 </viewController>

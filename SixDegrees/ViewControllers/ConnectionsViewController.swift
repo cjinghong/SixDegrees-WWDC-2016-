@@ -13,24 +13,31 @@ class ConnectionsViewController: UIViewController {
     @IBOutlet weak var connectingUserIconView: UserIconView!
     @IBOutlet weak var userIconView: UserIconView!
 
-    var connectingUser: SDGUser! {
-        didSet {
-            self.connectingUserIconView.user = connectingUser
-        }
-    }
+    var connectingUser: SDGUser!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         self.userIconView.user = SDGUser.currentUser
+        self.connectingUserIconView.user = self.connectingUser
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        // Disconnect MCsession when user tapped on the back button
+        if self.isMovingFromParentViewController() {
+            if let locateVC: LocateViewController = self.parentViewController as? LocateViewController {
+                locateVC.bluetoothManager.session.disconnect()
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
     /*
     // MARK: - Navigation

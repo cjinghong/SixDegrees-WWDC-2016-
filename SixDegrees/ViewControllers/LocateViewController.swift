@@ -221,8 +221,8 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
             if user.peerId == peer {
                 // Animation should be pushed to the main queue
                 dispatch_async(dispatch_get_main_queue(), {
-//                    self.animateUserToOriginalPosition(user)
-                    self.discoveredUsersCollectionView.reloadData()
+                    self.discoveredUsers.removeAtIndex(self.discoveredUsers.indexOf(user)!)
+                    self.discoveredUsersCollectionView.reloadSections(NSIndexSet(indexesInRange: NSMakeRange(0, self.discoveredUsersCollectionView.numberOfSections())))
                 })
             }
         }
@@ -266,7 +266,16 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
         if state == .Connected {
             // Animation should be pushed to the main queue
             dispatch_async(dispatch_get_main_queue(), {
-                self.showConnectButton()
+                let user = self.discoveredUsers.filter({ (aUser: SDGUser) -> Bool in
+                    return aUser.peerId == peerId
+                }).first
+
+                if let user = user {
+                    // TODO: Take snippet, transition to another screen
+                    let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ConnectionsViewController") as! ConnectionsViewController
+                    connectionsVC.connectingUser = self.discoveredUsers[self.discoveredUsers.indexOf(user)!]
+                    self.navigationController?.pushViewController(connectionsVC, animated: true)
+                }
             })
         } else if state == .Connecting {
             let user: SDGUser? = self.discoveredUsers.filter({ (user: SDGUser) -> Bool in
@@ -274,8 +283,7 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
             }).first
             // Animation should be pushed to the main queue
             dispatch_async(dispatch_get_main_queue(), {
-                // TODO: Animate connecting to user
-//                self.animateConnectingToUser(user)
+                // TODO: Show HUD Connecting to user
             })
         } else {
             // Animation should be pushed to the main queue
@@ -284,14 +292,7 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
             }).first
             dispatch_async(dispatch_get_main_queue(), {
                 self.hideConnectButton()
-//                self.animateUserToOriginalPosition(user)
 
-                // TODO: Move cell from the index path back to its original position
-                if self.userCurrentIndexPath != nil && self.userOriginalIndexPath != nil {
-                    self.discoveredUsersCollectionView.moveItemAtIndexPath(self.userCurrentIndexPath!, toIndexPath: self.userOriginalIndexPath!)
-                    self.userCurrentIndexPath = nil
-                    self.userOriginalIndexPath = nil
-                }
             })
         }
 
@@ -312,9 +313,7 @@ extension LocateViewController: UICollectionViewDataSource, UICollectionViewDele
     }
 
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // Collection view will have at least enough cell to fill up the rows
         return self.discoveredUsers.count
-//        return 20
     }
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -332,7 +331,6 @@ extension LocateViewController: UICollectionViewDataSource, UICollectionViewDele
         if indexPath.row < self.discoveredUsers.count {
             cell.user = self.discoveredUsers[indexPath.row]
         } else {
-            // Hide cells if not enough user to fill it up.
             cell.hidden = true
         }
         return cell
@@ -352,10 +350,13 @@ extension LocateViewController: UICollectionViewDataSource, UICollectionViewDele
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
 
-        // TODO: Take snippet, transition to another screen
-        let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ConnectionsViewController") as! ConnectionsViewController
-        connectionsVC.connectingUser = self.discoveredUsers[indexPath.row]
-        self.navigationController?.pushViewController(connectionsVC, animated: true)
+        let user: SDGUser = self.discoveredUsers[indexPath.row]
+        let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Do you wish to connect with \(user.name)?", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+            self.bluetoothManager.invitePeer(user.peerId)
+        }))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
 
 
