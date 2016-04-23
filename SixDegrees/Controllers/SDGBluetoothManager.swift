@@ -21,6 +21,8 @@ protocol SDGBluetoothManagerDelegate {
 
 class SDGBluetoothManager: NSObject {
 
+    static let sharedInstance = SDGBluetoothManager()
+    
     private let ServiceType = "sixdegrees-cjh"
     private let myPeerId = MCPeerID(displayName: UIDevice.currentDevice().name)
 
@@ -140,7 +142,6 @@ extension SDGBluetoothManager : MCSessionDelegate {
         certificateHandler(true)
     }
 
-    // TODO: - Figure out why unable to convert NSData back to CNContact (http://stackoverflow.com/questions/36546221/converting-cncontact-to-nsdata-and-vice-versa)
     func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
         print("Received data: \(data) From Peer: \(peerID)")
 

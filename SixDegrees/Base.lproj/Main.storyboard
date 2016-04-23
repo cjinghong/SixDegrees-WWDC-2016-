@@ -137,19 +137,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VFX-RS-c5R" customClass="UserIconView" customModule="SixDegrees" customModuleProvider="target">
-                                <rect key="frame" x="265" y="330" width="70" height="70"/>
-                                <color key="backgroundColor" red="0.47954644099999999" green="0.78496410419999996" blue="0.20567711359999999" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="70" id="TtP-iU-FGt"/>
-                                    <constraint firstAttribute="height" constant="70" id="zmy-hL-XhS"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="iconBackgroundColor">
-                                        <color key="value" red="0.4449553497" green="0.70052780940000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePG-8i-oKm" customClass="UserIconView" customModule="SixDegrees" customModuleProvider="target">
                                 <rect key="frame" x="265" y="200" width="70" height="70"/>
                                 <color key="backgroundColor" red="0.84456380208333337" green="0.78496410419999996" blue="0.20567711359999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -167,9 +154,23 @@
                                 <rect key="frame" x="8" y="513" width="584" height="30"/>
                                 <state key="normal" title="Find connections"/>
                                 <connections>
+                                    <action selector="findConnections:" destination="uxH-81-kuC" eventType="touchUpInside" id="H1U-EH-SPS"/>
                                     <action selector="findConnections:" destination="fpf-5n-qIO" eventType="touchUpInside" id="dsE-GM-Up3"/>
                                 </connections>
                             </button>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VFX-RS-c5R" customClass="UserIconView" customModule="SixDegrees" customModuleProvider="target">
+                                <rect key="frame" x="265" y="330" width="70" height="70"/>
+                                <color key="backgroundColor" red="0.47954644099999999" green="0.78496410419999996" blue="0.20567711359999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="TtP-iU-FGt"/>
+                                    <constraint firstAttribute="height" constant="70" id="zmy-hL-XhS"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="iconBackgroundColor">
+                                        <color key="value" red="0.4449553497" green="0.70052780940000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.61176470589999998" green="0.87450980389999999" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -184,6 +185,7 @@
                     </view>
                     <connections>
                         <outlet property="connectingUserIconView" destination="ePG-8i-oKm" id="cdS-Ke-eeg"/>
+                        <outlet property="findConnectionsButton" destination="guF-ci-Jc8" id="j1h-Cd-dO1"/>
                         <outlet property="userIconView" destination="VFX-RS-c5R" id="9HS-9J-Fhc"/>
                     </connections>
                 </viewController>

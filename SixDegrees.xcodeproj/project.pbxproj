@@ -12,24 +12,19 @@
 		66695E8E1CB61B80006E5489 /* SDGContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66695E8D1CB61B80006E5489 /* SDGContactsController.swift */; };
 		66695E921CB64D52006E5489 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66695E911CB64D52006E5489 /* Contacts.framework */; };
 		66695E941CB64D5A006E5489 /* ContactsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66695E931CB64D5A006E5489 /* ContactsUI.framework */; };
-		66695E961CB65A51006E5489 /* SDGParseRestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66695E951CB65A51006E5489 /* SDGParseRestAPI.swift */; };
 		66695E981CB792A8006E5489 /* SDGBluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66695E971CB792A8006E5489 /* SDGBluetoothManager.swift */; };
+		667AFE861CCB105100D0DDE7 /* SDGTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667AFE851CCB105100D0DDE7 /* SDGTests.swift */; };
 		668990F21CC22BE2001C6CB3 /* UserCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668990F11CC22BE2001C6CB3 /* UserCollectionViewCell.swift */; };
 		668990F41CC23521001C6CB3 /* UIColor+JH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668990F31CC23521001C6CB3 /* UIColor+JH.swift */; };
-		669C27C61CAF690C00F6E08B /* SDGRestAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669C27C51CAF690C00F6E08B /* SDGRestAPI.swift */; };
 		669C27C81CAF695200F6E08B /* LocateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669C27C71CAF695200F6E08B /* LocateViewController.swift */; };
 		669C27CB1CAF6B7400F6E08B /* SDGUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669C27CA1CAF6B7400F6E08B /* SDGUser.swift */; };
-		669C27CC1CAFA6D600F6E08B /* SixDegreesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C8015B1CA977F7002C642A /* SixDegreesTests.swift */; };
-		669C27CE1CAFA78A00F6E08B /* SDGAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669C27CD1CAFA78A00F6E08B /* SDGAPITests.swift */; };
 		66C801441CA977F7002C642A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C801431CA977F7002C642A /* AppDelegate.swift */; };
 		66C801491CA977F7002C642A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66C801471CA977F7002C642A /* Main.storyboard */; };
 		66C8014C1CA977F7002C642A /* SixDegrees.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 66C8014A1CA977F7002C642A /* SixDegrees.xcdatamodeld */; };
 		66C801511CA977F7002C642A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 66C8014F1CA977F7002C642A /* LaunchScreen.storyboard */; };
-		66C8015C1CA977F7002C642A /* SixDegreesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C8015B1CA977F7002C642A /* SixDegreesTests.swift */; };
 		66C801671CA97CD1002C642A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66C801661CA97CD1002C642A /* Assets.xcassets */; };
 		66C801691CA97DA7002C642A /* UserIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66C801681CA97DA7002C642A /* UserIconView.swift */; };
 		66E6F3531CC7948700FA4BFF /* ConnectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E6F3521CC7948700FA4BFF /* ConnectionsViewController.swift */; };
-		66FAA3D01CAE319E00CEF58E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66FAA3CF1CAE319E00CEF58E /* LoginViewController.swift */; };
 		C7DF3F5B3CBE715A577BE9EA /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5EA12C7748DF44D08CFA0C7 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -52,14 +47,12 @@
 		66695E8D1CB61B80006E5489 /* SDGContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGContactsController.swift; sourceTree = "<group>"; };
 		66695E911CB64D52006E5489 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		66695E931CB64D5A006E5489 /* ContactsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ContactsUI.framework; path = System/Library/Frameworks/ContactsUI.framework; sourceTree = SDKROOT; };
-		66695E951CB65A51006E5489 /* SDGParseRestAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGParseRestAPI.swift; sourceTree = "<group>"; };
 		66695E971CB792A8006E5489 /* SDGBluetoothManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGBluetoothManager.swift; sourceTree = "<group>"; };
+		667AFE851CCB105100D0DDE7 /* SDGTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGTests.swift; sourceTree = "<group>"; };
 		668990F11CC22BE2001C6CB3 /* UserCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCollectionViewCell.swift; sourceTree = "<group>"; };
 		668990F31CC23521001C6CB3 /* UIColor+JH.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+JH.swift"; sourceTree = "<group>"; };
-		669C27C51CAF690C00F6E08B /* SDGRestAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGRestAPI.swift; sourceTree = "<group>"; };
 		669C27C71CAF695200F6E08B /* LocateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocateViewController.swift; sourceTree = "<group>"; };
 		669C27CA1CAF6B7400F6E08B /* SDGUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGUser.swift; sourceTree = "<group>"; };
-		669C27CD1CAFA78A00F6E08B /* SDGAPITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGAPITests.swift; sourceTree = "<group>"; };
 		66C801401CA977F7002C642A /* SixDegrees.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SixDegrees.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66C801431CA977F7002C642A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		66C801481CA977F7002C642A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -67,12 +60,10 @@
 		66C801501CA977F7002C642A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		66C801521CA977F7002C642A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66C801571CA977F7002C642A /* SixDegreesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SixDegreesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		66C8015B1CA977F7002C642A /* SixDegreesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SixDegreesTests.swift; sourceTree = "<group>"; };
 		66C8015D1CA977F7002C642A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		66C801661CA97CD1002C642A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		66C801681CA97DA7002C642A /* UserIconView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserIconView.swift; sourceTree = "<group>"; };
 		66E6F3521CC7948700FA4BFF /* ConnectionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionsViewController.swift; sourceTree = "<group>"; };
-		66FAA3CF1CAE319E00CEF58E /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		E2E56A98444BE836AC35BD9A /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		E5EA12C7748DF44D08CFA0C7 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -132,7 +123,6 @@
 		669C27C31CAF66EA00F6E08B /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				66FAA3CF1CAE319E00CEF58E /* LoginViewController.swift */,
 				669C27C71CAF695200F6E08B /* LocateViewController.swift */,
 				66E6F3521CC7948700FA4BFF /* ConnectionsViewController.swift */,
 				66C801681CA97DA7002C642A /* UserIconView.swift */,
@@ -144,8 +134,6 @@
 		669C27C41CAF68E100F6E08B /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				669C27C51CAF690C00F6E08B /* SDGRestAPI.swift */,
-				66695E951CB65A51006E5489 /* SDGParseRestAPI.swift */,
 				66695E8D1CB61B80006E5489 /* SDGContactsController.swift */,
 				66695E971CB792A8006E5489 /* SDGBluetoothManager.swift */,
 			);
@@ -200,8 +188,7 @@
 		66C8015A1CA977F7002C642A /* SixDegreesTests */ = {
 			isa = PBXGroup;
 			children = (
-				66C8015B1CA977F7002C642A /* SixDegreesTests.swift */,
-				669C27CD1CAFA78A00F6E08B /* SDGAPITests.swift */,
+				667AFE851CCB105100D0DDE7 /* SDGTests.swift */,
 				66C8015D1CA977F7002C642A /* Info.plist */,
 			);
 			path = SixDegreesTests;
@@ -364,16 +351,12 @@
 				66C801691CA97DA7002C642A /* UserIconView.swift in Sources */,
 				66C8014C1CA977F7002C642A /* SixDegrees.xcdatamodeld in Sources */,
 				669C27C81CAF695200F6E08B /* LocateViewController.swift in Sources */,
-				66695E961CB65A51006E5489 /* SDGParseRestAPI.swift in Sources */,
 				668990F21CC22BE2001C6CB3 /* UserCollectionViewCell.swift in Sources */,
 				66160E6A1CB8A235003A87AC /* CNContact+JH.swift in Sources */,
 				668990F41CC23521001C6CB3 /* UIColor+JH.swift in Sources */,
-				669C27C61CAF690C00F6E08B /* SDGRestAPI.swift in Sources */,
-				66FAA3D01CAE319E00CEF58E /* LoginViewController.swift in Sources */,
 				66C801441CA977F7002C642A /* AppDelegate.swift in Sources */,
 				66695E8E1CB61B80006E5489 /* SDGContactsController.swift in Sources */,
 				66E6F3531CC7948700FA4BFF /* ConnectionsViewController.swift in Sources */,
-				669C27CC1CAFA6D600F6E08B /* SixDegreesTests.swift in Sources */,
 				66160E681CB8A10A003A87AC /* UIViewController+JH.swift in Sources */,
 				669C27CB1CAF6B7400F6E08B /* SDGUser.swift in Sources */,
 			);
@@ -383,8 +366,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66C8015C1CA977F7002C642A /* SixDegreesTests.swift in Sources */,
-				669C27CE1CAFA78A00F6E08B /* SDGAPITests.swift in Sources */,
+				667AFE861CCB105100D0DDE7 /* SDGTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

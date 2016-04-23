@@ -21,10 +21,14 @@ extension CNContact {
             for myPhoneNumberCN: CNLabeledValue in self.phoneNumbers {
                 for userPhoneNumberCN: CNLabeledValue in contact.phoneNumbers {
 
-                    if myPhoneNumberCN.valueForKey("digits") != nil && userPhoneNumberCN.valueForKey("digits") != nil {
+                    let myPhoneNumberValue: String? = (myPhoneNumberCN.value as? CNPhoneNumber)?.stringValue
+                    let userPhoneNumberValue: String? = (userPhoneNumberCN.value as? CNPhoneNumber)?.stringValue
+
+                    if myPhoneNumberValue != nil && userPhoneNumberValue != nil {
                         do {
-                            let myPhoneNumber: PhoneNumber = try PhoneNumber(rawNumber: myPhoneNumberCN.valueForKey("digits") as! String)
-                            let userPhoneNumber: PhoneNumber = try PhoneNumber(rawNumber: userPhoneNumberCN.valueForKey("digits") as! String)
+                            // TODO: Figure out why unable to go through try block
+                            let myPhoneNumber: PhoneNumber = try PhoneNumber(rawNumber: myPhoneNumberValue!)
+                            let userPhoneNumber: PhoneNumber = try PhoneNumber(rawNumber: userPhoneNumberValue!)
 
                             let myPhoneNumberString: String = myPhoneNumber.toInternational()
                             let userPhoneNumberString: String = userPhoneNumber.toInternational()

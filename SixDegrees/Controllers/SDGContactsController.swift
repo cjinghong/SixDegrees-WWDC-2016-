@@ -50,7 +50,6 @@ class SDGContactsController {
     }()
 
     func promptForAddressBookAccessIfNeeded(completionBlock: ((granted: Bool) -> Void)) {
-
         let authorizationStatus: CNAuthorizationStatus = CNContactStore.authorizationStatusForEntityType(CNEntityType.Contacts)
 
         switch authorizationStatus {
@@ -59,7 +58,7 @@ class SDGContactsController {
                 completionBlock(granted: granted)
             })
         default:
-            break
+            completionBlock(granted: true)
         }
     }
 

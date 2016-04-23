@@ -7,10 +7,10 @@
 //
 
 import UIKit
-import FBSDKLoginKit
 
 import Contacts
 import MultipeerConnectivity
+import MBProgressHUD
 
 class LocateViewController: UIViewController {
 
@@ -23,7 +23,7 @@ class LocateViewController: UIViewController {
     @IBOutlet weak var discoveredUsersCollectionView: UICollectionView!
 
     let contactsController: SDGContactsController = SDGContactsController.sharedInstance
-    let bluetoothManager: SDGBluetoothManager = SDGBluetoothManager()
+    let bluetoothManager: SDGBluetoothManager = SDGBluetoothManager.sharedInstance
 
     var discoveredUsers: [SDGUser] = []
     var userIconViews: [UserIconView] = []
@@ -32,6 +32,9 @@ class LocateViewController: UIViewController {
     // Collectionview animation variables
     var userOriginalIndexPath: NSIndexPath?
     var userCurrentIndexPath: NSIndexPath?
+
+    // Loading HUD
+    var hud: MBProgressHUD?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,40 +56,24 @@ class LocateViewController: UIViewController {
         let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.customizeAppearance(UIApplication.sharedApplication())
 
+        self.bluetoothManager.delegate = self
+
         // Store reference of the userIconHorizontalConstraint
         self.originalUserIconHorizontalConstraint = self.userIconHorizontalConstraint.constant
-
-        if self.bluetoothManager.session.connectedPeers.count > 0 {
-            self.showConnectButton()
-        } else {
-            self.hideConnectButton()
-        }
     }
 
     override func viewDidAppear(animated: Bool) {
-
+        // Try to get access to all the contacts of the current device
         self.contactsController.promptForAddressBookAccessIfNeeded { (granted) in
             if !granted {
                 self.contactsController.displayCantAddContactAlert(self)
+            } else {
+                SDGUser.currentUser.contacts = self.contactsController.contacts
             }
         }
-        // Try to get access to all the contacts of the current device
-        SDGUser.currentUser.contacts = self.contactsController.contacts
     }
 
     // MARK: - Functions
-//    func userTapped(sender: AnyObject?) {
-//        if let user: SDGUser = ((sender as? UITapGestureRecognizer)?.view as? UserIconView)?.user {
-//
-//            let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Do you wish to connect with \(user.name)?", preferredStyle: UIAlertControllerStyle.Alert)
-//            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
-//                self.bluetoothManager.invitePeer(user.peerId)
-//            }))
-//            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
-//
-//            self.presentViewController(alertController, animated: true, completion: nil)
-//        }
-//    }
 
     @IBAction func findConnections(sender: AnyObject) {
         if let contacts = SDGUser.currentUser.contacts {
@@ -95,63 +82,6 @@ class LocateViewController: UIViewController {
             }
         }
     }
-
-//    func animateUserToOriginalPosition(user: SDGUser?) {
-//        if let user = user {
-//            let index: Int? = self.discoveredUsers.indexOf(user)
-//            if let index: Int = index {
-//                if let frame = self.originalChosenUserIconFrame {
-//                    UIView.animateWithDuration(0.6, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
-//                    self.userIconViews[index].frame = frame
-//                    self.view.layoutIfNeeded()
-//                    }, completion: nil)
-//                }
-//            }
-//        }
-//        UIView.animateWithDuration(0.6, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
-//            self.userIconHorizontalConstraint.constant = self.originalUserIconHorizontalConstraint ?? 0
-//            self.view.layoutIfNeeded()
-//            }, completion: nil)
-//    }
-
-//    func animateConnectingToUser(user: SDGUser?) {
-//        if let user = user {
-//            // Find the respective user icon view
-//            let index: Int? = self.discoveredUsers.indexOf(user)
-//            if let index = index {
-//                let chosenUserIcon: UserIconView = self.userIconViews[index]
-//
-//                // Remove all users except for that user icon view
-//                for userIconView in self.userIconViews {
-//                    if userIconView != chosenUserIcon {
-//                        UIView.animateWithDuration(1, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
-//                            userIconView.alpha = 0
-//                            }, completion: { (success: Bool) in
-//                                userIconView.removeFromSuperview()
-//                        })
-//                    }
-//                }
-//                // Store reference of the chosen user icon's frame
-//                self.originalChosenUserIconFrame = chosenUserIcon.frame
-//                let chosenIconDistanceFromTop: CGFloat = chosenUserIcon.frame.origin.y
-//                let userIconDistanceFromBottom: CGFloat = self.view.frame.height - self.userIconView.frame.origin.y - self.userIconView.frame.height - 28 // 28 is the height of the name label
-//
-//                // Find out what should the distance of the icons should be
-//                let equalDistance: CGFloat = (userIconDistanceFromBottom + chosenIconDistanceFromTop) / 2
-//
-//                if chosenUserIcon.frame.origin.y != equalDistance && self.userIconHorizontalConstraint.constant == 0 {
-//                    UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-//                        // Center user icons
-//                        chosenUserIcon.frame.origin.x = self.userIconView.frame.origin.x
-//                        self.userIconHorizontalConstraint.constant = equalDistance - 20
-//                        chosenUserIcon.frame.origin.y = equalDistance
-//
-//                        self.view.layoutIfNeeded()
-//                        }, completion: nil)
-//                }
-//            }
-//        }
-//    }
 
     func showConnectButton() {
         // Check if button is already hidden
@@ -173,35 +103,6 @@ class LocateViewController: UIViewController {
             }) { (success: Bool) in
             }
         }
-    }
-
-    /*
-     Compare the contacts with on the current device with another user
-     **/
-    func compareContacts(withUser user: SDGUser) -> [SDGUser] {
-        var connections: [SDGUser] = []
-
-        if SDGUser.currentUser.contacts != nil && user.contacts != nil {
-            for myContact: CNContact in SDGUser.currentUser.contacts! {
-                for userContact: CNContact in user.contacts! {
-                    let results: (matched: Bool, identifier: String?) = myContact.compareAndGetIdentifier(userContact)
-
-                    if results.matched {
-                        let matchedUsername: String = "\(myContact.givenName) \(myContact.familyName)"
-                        let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername), color: UIColor.randomSDGColor())
-                        matchedUser.identifierString = results.identifier
-
-                        // Only appends if it is not a repeating user contact
-                        if !connections.contains({ (aUser: SDGUser) -> Bool in
-                            return aUser.identifierString == matchedUser.identifierString
-                        }) {
-                            connections.append(matchedUser)
-                        }
-                    }
-                }
-            }
-        }
-        return connections
     }
 }
 
@@ -247,25 +148,15 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
     }
 
     func didReceiveContacts(contacts: [CNContact], fromPeer peer: MCPeerID) {
-        // Get the user that has the same peerID as the peer
-        let user: SDGUser? = self.discoveredUsers.filter { (aUser: SDGUser) -> Bool in
-            return aUser.peerId == peer
-        }.first
-
-        // Assign the user contacts
-        if let user = user {
-            user.contacts = contacts
-
-            // Compare contacts
-            let connections: [SDGUser] = self.compareContacts(withUser: user)
-            // TODO: Draw connections
-        }
+        return
     }
 
     func peerDidChangeState(peerId: MCPeerID, state: MCSessionState) {
         if state == .Connected {
             // Animation should be pushed to the main queue
             dispatch_async(dispatch_get_main_queue(), {
+                self.hud?.hide(true)
+
                 let user = self.discoveredUsers.filter({ (aUser: SDGUser) -> Bool in
                     return aUser.peerId == peerId
                 }).first
@@ -274,28 +165,42 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
                     // TODO: Take snippet, transition to another screen
                     let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ConnectionsViewController") as! ConnectionsViewController
                     connectionsVC.connectingUser = self.discoveredUsers[self.discoveredUsers.indexOf(user)!]
-                    self.navigationController?.pushViewController(connectionsVC, animated: true)
+//                    self.navigationController?.pushViewController(connectionsVC, animated: true)
+                    self.presentViewController(connectionsVC, animated: true, completion: nil)
                 }
             })
         } else if state == .Connecting {
             let user: SDGUser? = self.discoveredUsers.filter({ (user: SDGUser) -> Bool in
                 user.peerId == peerId
             }).first
+
             // Animation should be pushed to the main queue
+            // Fade out all cells, except the connecting user
             dispatch_async(dispatch_get_main_queue(), {
-                // TODO: Show HUD Connecting to user
+                if let user = user {
+
+                    for i in 0..<self.discoveredUsersCollectionView.numberOfItemsInSection(0) {
+                        if i != self.discoveredUsers.indexOf(user)! {
+                            let cell: UICollectionViewCell = self.discoveredUsersCollectionView.cellForItemAtIndexPath(NSIndexPath(forItem: i, inSection: 0))!
+                            UIView.animateWithDuration(1, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
+                                cell.alpha = 0
+                            }, completion: nil)
+                        }
+                    }
+                }
+                self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                self.hud?.labelText = "Connecting"
+            })
+        } else if state == .NotConnected {
+            // TODO: Show unable to connect to user alert
+            dispatch_async(dispatch_get_main_queue(), {
+                self.hud?.hide(true)
             })
         } else {
-            // Animation should be pushed to the main queue
-            let user: SDGUser? = self.discoveredUsers.filter({ (user: SDGUser) -> Bool in
-                user.peerId == peerId
-            }).first
             dispatch_async(dispatch_get_main_queue(), {
-                self.hideConnectButton()
-
+                self.hud?.hide(true)
             })
         }
-
     }
 }
 
@@ -321,13 +226,6 @@ extension LocateViewController: UICollectionViewDataSource, UICollectionViewDele
 
         // Reset cell
         cell.hidden = false
-
-        // Testing purpose
-//        if !self.discoveredUsers.isEmpty {
-//            cell.user = self.discoveredUsers[0]
-//        } else {
-//            cell.user = nil
-//        }
         if indexPath.row < self.discoveredUsers.count {
             cell.user = self.discoveredUsers[indexPath.row]
         } else {
@@ -357,6 +255,10 @@ extension LocateViewController: UICollectionViewDataSource, UICollectionViewDele
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
         self.presentViewController(alertController, animated: true, completion: nil)
+
+//        let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ConnectionsViewController") as! ConnectionsViewController
+//        connectionsVC.connectingUser = SDGUser.currentUser
+//        self.navigationController?.pushViewController(connectionsVC, animated: true)
     }
 
 
