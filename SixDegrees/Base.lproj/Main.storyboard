@@ -97,25 +97,68 @@
                                     <outlet property="delegate" destination="fpf-5n-qIO" id="o7o-ij-WVX"/>
                                 </connections>
                             </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hmh-4s-y88">
+                                <rect key="frame" x="211" y="260" width="179" height="80"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connection failed." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AA1-56-gB4">
+                                        <rect key="frame" x="20" y="30" width="139" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="RG6-BY-HGD"/>
+                                    <constraint firstItem="AA1-56-gB4" firstAttribute="centerX" secondItem="hmh-4s-y88" secondAttribute="centerX" id="cFt-y8-JRr"/>
+                                    <constraint firstItem="AA1-56-gB4" firstAttribute="centerY" secondItem="hmh-4s-y88" secondAttribute="centerY" id="hCA-zd-lwF"/>
+                                    <constraint firstAttribute="width" constant="179" id="rix-Mh-Sa1"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Searching for nearby devices ..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lgp-EY-kJA">
+                                <rect key="frame" x="180" y="72" width="241" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Please ensure the wifi is turned on" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ujT-uO-QOR">
+                                <rect key="frame" x="165" y="101" width="262" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="UNT-nH-XZn" firstAttribute="leading" secondItem="x3c-nA-g2P" secondAttribute="leading" constant="8" id="02x-zZ-SCH"/>
                             <constraint firstItem="BHs-pG-2Sv" firstAttribute="top" secondItem="Yu8-yI-gkL" secondAttribute="bottom" constant="8" id="312-f6-fUq"/>
+                            <constraint firstItem="hmh-4s-y88" firstAttribute="centerY" secondItem="x3c-nA-g2P" secondAttribute="centerY" id="Aj9-ZP-ioe"/>
                             <constraint firstItem="e5O-1t-ZTS" firstAttribute="centerX" secondItem="x3c-nA-g2P" secondAttribute="centerX" id="Fib-mx-PU2"/>
                             <constraint firstItem="BHs-pG-2Sv" firstAttribute="leading" secondItem="x3c-nA-g2P" secondAttribute="leading" id="HjW-Iy-5Tr"/>
+                            <constraint firstItem="Lgp-EY-kJA" firstAttribute="centerX" secondItem="x3c-nA-g2P" secondAttribute="centerX" id="LsD-ox-SkJ"/>
                             <constraint firstItem="MvL-mw-BEu" firstAttribute="top" secondItem="UNT-nH-XZn" secondAttribute="bottom" constant="8" id="OGo-LH-TB4"/>
+                            <constraint firstItem="Lgp-EY-kJA" firstAttribute="top" secondItem="Yu8-yI-gkL" secondAttribute="bottom" constant="8" id="UPh-mo-SS3"/>
                             <constraint firstAttribute="trailing" secondItem="UNT-nH-XZn" secondAttribute="trailing" constant="8" id="Utp-O9-EkM"/>
                             <constraint firstAttribute="trailing" secondItem="BHs-pG-2Sv" secondAttribute="trailing" id="VY1-C6-ViK"/>
                             <constraint firstItem="e5O-1t-ZTS" firstAttribute="top" secondItem="BHs-pG-2Sv" secondAttribute="bottom" constant="40" id="XAq-Gy-4G7"/>
+                            <constraint firstItem="hmh-4s-y88" firstAttribute="centerX" secondItem="x3c-nA-g2P" secondAttribute="centerX" id="Z8J-rq-cRu"/>
                             <constraint firstItem="e5O-1t-ZTS" firstAttribute="centerY" secondItem="x3c-nA-g2P" secondAttribute="centerY" constant="50" id="cNP-Lu-TRd"/>
+                            <constraint firstItem="ujT-uO-QOR" firstAttribute="top" secondItem="Lgp-EY-kJA" secondAttribute="bottom" constant="8" id="nF1-Je-92W"/>
+                            <constraint firstItem="ujT-uO-QOR" firstAttribute="centerX" secondItem="x3c-nA-g2P" secondAttribute="centerX" id="sLM-Tm-mcd"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Six Degrees" id="CeE-yC-8M7"/>
                     <connections>
+                        <outlet property="connectionFailedView" destination="hmh-4s-y88" id="Lvr-fX-DgQ"/>
                         <outlet property="discoveredUsersCollectionView" destination="BHs-pG-2Sv" id="iiE-uz-L7b"/>
                         <outlet property="findConnectionsBottomConstraint" destination="OGo-LH-TB4" id="k5T-aU-w85"/>
                         <outlet property="findConnectionsButton" destination="UNT-nH-XZn" id="fFK-Yx-ClI"/>
+                        <outlet property="searchingForDevicesLabel" destination="Lgp-EY-kJA" id="6TZ-LW-WTf"/>
                         <outlet property="userIconHorizontalConstraint" destination="cNP-Lu-TRd" id="nx3-iw-fhC"/>
                         <outlet property="userIconView" destination="e5O-1t-ZTS" id="prp-jY-jbS"/>
                         <segue destination="uxH-81-kuC" kind="show" identifier="showConnectionsSegue" id="9Pa-AG-W1s"/>
@@ -152,10 +195,11 @@
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="guF-ci-Jc8">
                                 <rect key="frame" x="8" y="513" width="584" height="30"/>
-                                <state key="normal" title="Find connections"/>
+                                <state key="normal" title="Disconnect">
+                                    <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                                 <connections>
-                                    <action selector="findConnections:" destination="uxH-81-kuC" eventType="touchUpInside" id="H1U-EH-SPS"/>
-                                    <action selector="findConnections:" destination="fpf-5n-qIO" eventType="touchUpInside" id="dsE-GM-Up3"/>
+                                    <action selector="disconnect:" destination="uxH-81-kuC" eventType="touchUpInside" id="Cmh-DY-PCt"/>
                                 </connections>
                             </button>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VFX-RS-c5R" customClass="UserIconView" customModule="SixDegrees" customModuleProvider="target">
@@ -184,8 +228,10 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="connectingUserHorizontalConstraint" destination="Fra-a6-89s" id="5Ru-Pq-MSN"/>
                         <outlet property="connectingUserIconView" destination="ePG-8i-oKm" id="cdS-Ke-eeg"/>
-                        <outlet property="findConnectionsButton" destination="guF-ci-Jc8" id="j1h-Cd-dO1"/>
+                        <outlet property="disconnectButton" destination="guF-ci-Jc8" id="cBM-kY-O1l"/>
+                        <outlet property="userIconHorizontalConstraint" destination="7kg-Ub-o0r" id="AqV-Lb-QhN"/>
                         <outlet property="userIconView" destination="VFX-RS-c5R" id="9HS-9J-Fhc"/>
                     </connections>
                 </viewController>

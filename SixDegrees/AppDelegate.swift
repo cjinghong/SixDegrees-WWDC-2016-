@@ -115,7 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 // Customize theme
 extension AppDelegate {
     /**
-     Applies Ink theme color across app
+     Applies Six degrees theme color across app
      */
     func customizeAppearance(application: UIApplication) {
         application.setStatusBarStyle(UIStatusBarStyle.LightContent, animated: false)
@@ -126,7 +126,6 @@ extension AppDelegate {
         navBarAppearance.barTintColor = color
         navBarAppearance.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         navBarAppearance.tintColor = UIColor.whiteColor()
-//        navBarAppearance.font
 
         self.window?.tintColor = color
 

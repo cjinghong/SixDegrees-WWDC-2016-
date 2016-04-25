@@ -21,6 +21,8 @@ class LocateViewController: UIViewController {
     @IBOutlet weak var findConnectionsBottomConstraint: NSLayoutConstraint!
 
     @IBOutlet weak var discoveredUsersCollectionView: UICollectionView!
+    @IBOutlet weak var connectionFailedView: UIView!
+    @IBOutlet weak var searchingForDevicesLabel: UILabel!
 
     let contactsController: SDGContactsController = SDGContactsController.sharedInstance
     let bluetoothManager: SDGBluetoothManager = SDGBluetoothManager.sharedInstance
@@ -47,6 +49,10 @@ class LocateViewController: UIViewController {
         // Start advertising and browsing for devices
         self.bluetoothManager.startAdvertising()
         self.bluetoothManager.startBrowsing()
+
+        // Setup
+        self.connectionFailedView.hidden = true
+        self.searchingForDevicesLabel.hidden = true
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -60,6 +66,12 @@ class LocateViewController: UIViewController {
 
         // Store reference of the userIconHorizontalConstraint
         self.originalUserIconHorizontalConstraint = self.userIconHorizontalConstraint.constant
+
+        if self.discoveredUsers.isEmpty {
+            self.showSearchingForNearbyDevices()
+        } else {
+            self.hideSearchingForNearbyDevices()
+        }
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -83,25 +95,41 @@ class LocateViewController: UIViewController {
         }
     }
 
-    func showConnectButton() {
-        // Check if button is already hidden
-        if self.findConnectionsBottomConstraint.constant < 8 {
-            UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
-                self.findConnectionsBottomConstraint.constant = 8
-                self.findConnectionsButton.alpha = 1
-            }) { (success: Bool) in
-            }
+    func showConnectionFailedView() {
+        self.connectionFailedView.alpha = 0
+        self.connectionFailedView.transform = CGAffineTransformMakeScale(0.1, 0.1)
+        self.connectionFailedView.hidden = false
+
+        UIView.animateWithDuration(0.6, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 4, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+            self.connectionFailedView.transform = CGAffineTransformIdentity
+            self.connectionFailedView.alpha = 1
+            }, completion: {(success: Bool) in
+                UIView.animateWithDuration(0.6, delay: 3, usingSpringWithDamping: 0.4, initialSpringVelocity: 4, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                    self.connectionFailedView.transform = CGAffineTransformMakeScale(0.1, 0.1)
+                    self.connectionFailedView.alpha = 0
+                    }, completion: {(success: Bool) in
+                        self.connectionFailedView.hidden = true
+                })
+        })
+    }
+
+    func showSearchingForNearbyDevices() {
+        self.searchingForDevicesLabel.alpha = 0
+        self.searchingForDevicesLabel.hidden = false
+
+        UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: { 
+            self.searchingForDevicesLabel.alpha = 1
+        }) { (success: Bool) in
         }
     }
 
-    func hideConnectButton() {
-        // Check if button is already hidden
-        if self.findConnectionsBottomConstraint.constant == 8 {
-            UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
-                self.findConnectionsBottomConstraint.constant = -38
-                self.findConnectionsButton.alpha = 0
-            }) { (success: Bool) in
-            }
+    func hideSearchingForNearbyDevices() {
+        self.searchingForDevicesLabel.layer.removeAllAnimations()
+
+        UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: { 
+            self.searchingForDevicesLabel.alpha = 0
+        }) { (success: Bool) in
+                self.searchingForDevicesLabel.hidden = true
         }
     }
 }
@@ -110,6 +138,14 @@ class LocateViewController: UIViewController {
 extension LocateViewController : SDGBluetoothManagerDelegate {
 
     func foundPeer(peer: MCPeerID) {
+        dispatch_async(dispatch_get_main_queue(), {
+            if self.discoveredUsers.isEmpty {
+                self.showSearchingForNearbyDevices()
+            } else {
+                self.hideSearchingForNearbyDevices()
+            }
+        })
+
         let user: SDGUser = SDGUser(peerId: peer, color: UIColor.randomSDGColor())
         if !self.discoveredUsers.contains(user) {
             self.discoveredUsers.append(user)
@@ -118,6 +154,15 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
     }
 
     func lostPeer(peer: MCPeerID) {
+
+        dispatch_async(dispatch_get_main_queue(), {
+            if self.discoveredUsers.isEmpty {
+                self.showSearchingForNearbyDevices()
+            } else {
+                self.hideSearchingForNearbyDevices()
+            }
+        })
+
         for user in self.discoveredUsers {
             if user.peerId == peer {
                 // Animation should be pushed to the main queue
@@ -192,9 +237,9 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
                 self.hud?.labelText = "Connecting"
             })
         } else if state == .NotConnected {
-            // TODO: Show unable to connect to user alert
             dispatch_async(dispatch_get_main_queue(), {
                 self.hud?.hide(true)
+                self.showConnectionFailedView()
             })
         } else {
             dispatch_async(dispatch_get_main_queue(), {

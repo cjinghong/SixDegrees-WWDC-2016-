@@ -143,8 +143,6 @@ extension SDGBluetoothManager : MCSessionDelegate {
     }
 
     func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
-        print("Received data: \(data) From Peer: \(peerID)")
-
         if let contactsData: NSData = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSData {
             if let contacts: [CNContact] = NSKeyedUnarchiver.unarchiveObjectWithData(contactsData) as? [CNContact] {
                 self.delegate?.didReceiveContacts(contacts, fromPeer: peerID)

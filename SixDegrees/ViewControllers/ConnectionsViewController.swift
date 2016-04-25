@@ -9,15 +9,22 @@
 import UIKit
 import Contacts
 import MultipeerConnectivity
+import MBProgressHUD
 
 class ConnectionsViewController: UIViewController {
 
     @IBOutlet weak var connectingUserIconView: UserIconView!
+    @IBOutlet weak var connectingUserHorizontalConstraint: NSLayoutConstraint!
+
     @IBOutlet weak var userIconView: UserIconView!
-    @IBOutlet weak var findConnectionsButton: UIButton!
+    @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
+
+    @IBOutlet weak var disconnectButton: UIButton!
 
     var connectingUser: SDGUser!
     let bluetoothManager: SDGBluetoothManager = SDGBluetoothManager.sharedInstance
+
+    var hud: MBProgressHUD?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +55,8 @@ class ConnectionsViewController: UIViewController {
                     SDGContactsController.sharedInstance.displayCantAddContactAlert(self)
                 } else {
                     self.bluetoothManager.sendContactsToPeer(connectedPeer, contacts: SDGUser.currentUser.contacts ?? [])
+
+                    self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 }
             }
         }
@@ -85,8 +94,33 @@ class ConnectionsViewController: UIViewController {
         return connections
     }
 
-    @IBAction func findConnections(sender: AnyObject) {
-        
+    func createAndAddUser(user: SDGUser) {
+        // Append user to the array
+        let userIconView: UserIconView!
+        userIconView = UserIconView(frame: CGRect(x: self.view.center.x - 35, y: self.view.center.y - 35, width: 70, height: 70))
+
+        userIconView.iconBackgroundColor = UIColor.lightGrayColor()
+        userIconView.user = user
+
+        userIconView.alpha = 0
+
+        self.view.addSubview(userIconView)
+
+        UIView.animateWithDuration(1, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
+            userIconView.alpha = 1
+            }, completion: nil)
+    }
+
+    @IBAction func disconnect(sender: AnyObject) {
+        let alertController: UIAlertController = UIAlertController(title: "Disconnect", message: "Are you sure you want to disconnect from the current session?", preferredStyle: UIAlertControllerStyle.Alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+            // Disconnect self, then pop back to vc.
+            self.bluetoothManager.session.disconnect()
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { (action: UIAlertAction) in
+        }))
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
 
 }
@@ -98,7 +132,20 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
     }
 
     func lostPeer(peer: MCPeerID) {
-        return
+        // If the lost peer is the connecting user, disconnect
+        if peer == self.connectingUser.peerId {
+            dispatch_async(dispatch_get_main_queue(), {
+                self.hud?.hide(true)
+                
+                let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "You have disconnected from \(peer.displayName). Please do not turn off the wifi of both the devices.", preferredStyle: UIAlertControllerStyle.Alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+                    // Disconnect self, then pop back to vc.
+                    self.bluetoothManager.session.disconnect()
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }))
+                self.presentViewController(alertController, animated: true, completion: nil)
+            })
+        }
     }
 
     func didReceiveInvitationFromPeer(peerId: MCPeerID, completionBlock:((accept: Bool)->Void)) {
@@ -114,7 +161,19 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
 
         // TODO: Draw connections
         if !connections.isEmpty {
-            
+            dispatch_async(dispatch_get_main_queue(), {
+                self.hud?.hide(true)
+
+                UIView.animateWithDuration(1, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 0.2, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                    self.connectingUserHorizontalConstraint.constant -= 75
+                    self.userIconHorizontalConstraint.constant += 75
+
+                    let connection: SDGUser = SDGUser(peerId: connections.first!.peerId, color: UIColor.randomSDGColor())
+                    self.createAndAddUser(connection)
+
+                    self.view.layoutIfNeeded()
+                    }, completion: nil)
+            })
         }
     }
 
@@ -122,14 +181,17 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
         // If state is not connected, pop back to previous vc
 
         if state != .Connected {
-            let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "You have disconnected from \(peerId.displayName). Please do not turn off the wifi of both the devices.", preferredStyle: UIAlertControllerStyle.Alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
-                // Disconnect self, then pop back to vc.
-                self.bluetoothManager.session.disconnect()
-//                self.navigationController?.popViewControllerAnimated(true)
-                self.dismissViewControllerAnimated(true, completion: nil)
-            }))
-            self.presentViewController(alertController, animated: true, completion: nil)
+            dispatch_async(dispatch_get_main_queue(), {
+                self.hud?.hide(true)
+
+                let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "You have disconnected from \(peerId.displayName). Please do not turn off the wifi of both the devices.", preferredStyle: UIAlertControllerStyle.Alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+                    // Disconnect self, then pop back to vc.
+                    self.bluetoothManager.session.disconnect()
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }))
+                self.presentViewController(alertController, animated: true, completion: nil)
+            })
         }
     }
 }
