@@ -41,10 +41,11 @@ class UserIconView: UIView {
         self.backgroundColor = nil
 
         // Add label
-        let nameLabel: UILabel = UILabel(frame: CGRect(x: -((100-self.frame.width)/2), y: self.frame.height + 8, width: 100, height: 20))
+        let nameLabel: UILabel = UILabel(frame: CGRect(x: 0, y: self.frame.height, width: self.frame.width, height: 20))
         nameLabel.textAlignment = NSTextAlignment.Center
         nameLabel.font = UIFont.systemFontOfSize(14)
         nameLabel.adjustsFontSizeToFitWidth = true
+        nameLabel.numberOfLines = 2
         self.addSubview(nameLabel)
         self.nameLabel = nameLabel
 

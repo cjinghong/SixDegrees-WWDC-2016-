@@ -24,6 +24,7 @@ class LocateViewController: UIViewController {
     @IBOutlet weak var discoveredUsersCollectionView: UICollectionView!
     @IBOutlet weak var connectionFailedView: UIView!
     @IBOutlet weak var searchingForDevicesLabel: UILabel!
+    @IBOutlet weak var turnOnWifiReminderLabel: UILabel!
 
     let contactsController: SDGContactsController = SDGContactsController.sharedInstance
     let bluetoothManager: SDGBluetoothManager = SDGBluetoothManager.sharedInstance
@@ -55,6 +56,8 @@ class LocateViewController: UIViewController {
         // Setup
         self.connectionFailedView.hidden = true
         self.searchingForDevicesLabel.hidden = true
+        self.turnOnWifiReminderLabel.hidden = true
+
         self.pulsator.numPulse = 4
         self.pulsator.radius = self.view.frame.width/2 - 10
         self.pulsator.backgroundColor = UIColor.SDGDarkBlue().CGColor
@@ -132,17 +135,40 @@ class LocateViewController: UIViewController {
         UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: { 
             self.searchingForDevicesLabel.alpha = 1
         }) { (success: Bool) in
+            // Wait 10 seconds and show wifi label
+            let time = dispatch_time(DISPATCH_TIME_NOW, Int64(10 * NSEC_PER_SEC))
+            dispatch_after(time, dispatch_get_main_queue(), {
+                self.showTurnOnWifiReminderLabel()
+            })
         }
     }
 
     func hideSearchingForNearbyDevices() {
         self.searchingForDevicesLabel.layer.removeAllAnimations()
 
-        UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: { 
+        self.hideTurnOnWifiReminderLabel()
+        UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
             self.searchingForDevicesLabel.alpha = 0
         }) { (success: Bool) in
                 self.searchingForDevicesLabel.hidden = true
         }
+    }
+
+    func showTurnOnWifiReminderLabel() {
+        self.turnOnWifiReminderLabel.alpha = 0
+        self.turnOnWifiReminderLabel.hidden = false
+
+        UIView.animateWithDuration(0.5, animations: {
+            self.turnOnWifiReminderLabel.alpha = 1
+            }, completion: nil)
+    }
+
+    func hideTurnOnWifiReminderLabel() {
+        UIView.animateWithDuration(0.3, animations: {
+            self.turnOnWifiReminderLabel.alpha = 0
+            }, completion: {(success: Bool) in
+                self.turnOnWifiReminderLabel.hidden = true
+        })
     }
 }
 
@@ -167,14 +193,6 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
 
     func lostPeer(peer: MCPeerID) {
 
-        dispatch_async(dispatch_get_main_queue(), {
-            if self.discoveredUsers.isEmpty {
-                self.showSearchingForNearbyDevices()
-            } else {
-                self.hideSearchingForNearbyDevices()
-            }
-        })
-
         for user in self.discoveredUsers {
             if user.peerId == peer {
                 // Animation should be pushed to the main queue
@@ -184,6 +202,14 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
                 })
             }
         }
+
+        dispatch_async(dispatch_get_main_queue(), {
+            if self.discoveredUsers.isEmpty {
+                self.showSearchingForNearbyDevices()
+            } else {
+                self.hideSearchingForNearbyDevices()
+            }
+        })
     }
 
     func didReceiveInvitationFromPeer(peerId: MCPeerID, completionBlock: ((accept: Bool) -> Void)) {
