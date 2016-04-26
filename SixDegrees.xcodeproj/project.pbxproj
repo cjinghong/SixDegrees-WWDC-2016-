@@ -14,6 +14,9 @@
 		66695E941CB64D5A006E5489 /* ContactsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66695E931CB64D5A006E5489 /* ContactsUI.framework */; };
 		66695E981CB792A8006E5489 /* SDGBluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66695E971CB792A8006E5489 /* SDGBluetoothManager.swift */; };
 		667AFE861CCB105100D0DDE7 /* SDGTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667AFE851CCB105100D0DDE7 /* SDGTests.swift */; };
+		667B4FE71CCEFBE500B1B993 /* SDGConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667B4FE61CCEFBE500B1B993 /* SDGConnection.swift */; };
+		667B4FE91CCF0E6400B1B993 /* HistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667B4FE81CCF0E6400B1B993 /* HistoryTableViewCell.swift */; };
+		667B4FEB1CCF11BA00B1B993 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667B4FEA1CCF11BA00B1B993 /* HistoryViewController.swift */; };
 		668990F21CC22BE2001C6CB3 /* UserCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668990F11CC22BE2001C6CB3 /* UserCollectionViewCell.swift */; };
 		668990F41CC23521001C6CB3 /* UIColor+JH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668990F31CC23521001C6CB3 /* UIColor+JH.swift */; };
 		669C27C81CAF695200F6E08B /* LocateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669C27C71CAF695200F6E08B /* LocateViewController.swift */; };
@@ -49,6 +52,9 @@
 		66695E931CB64D5A006E5489 /* ContactsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ContactsUI.framework; path = System/Library/Frameworks/ContactsUI.framework; sourceTree = SDKROOT; };
 		66695E971CB792A8006E5489 /* SDGBluetoothManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGBluetoothManager.swift; sourceTree = "<group>"; };
 		667AFE851CCB105100D0DDE7 /* SDGTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGTests.swift; sourceTree = "<group>"; };
+		667B4FE61CCEFBE500B1B993 /* SDGConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGConnection.swift; sourceTree = "<group>"; };
+		667B4FE81CCF0E6400B1B993 /* HistoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewCell.swift; sourceTree = "<group>"; };
+		667B4FEA1CCF11BA00B1B993 /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		668990F11CC22BE2001C6CB3 /* UserCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCollectionViewCell.swift; sourceTree = "<group>"; };
 		668990F31CC23521001C6CB3 /* UIColor+JH.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+JH.swift"; sourceTree = "<group>"; };
 		669C27C71CAF695200F6E08B /* LocateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocateViewController.swift; sourceTree = "<group>"; };
@@ -127,6 +133,8 @@
 				66E6F3521CC7948700FA4BFF /* ConnectionsViewController.swift */,
 				66C801681CA97DA7002C642A /* UserIconView.swift */,
 				668990F11CC22BE2001C6CB3 /* UserCollectionViewCell.swift */,
+				667B4FEA1CCF11BA00B1B993 /* HistoryViewController.swift */,
+				667B4FE81CCF0E6400B1B993 /* HistoryTableViewCell.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -144,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				669C27CA1CAF6B7400F6E08B /* SDGUser.swift */,
+				667B4FE61CCEFBE500B1B993 /* SDGConnection.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -348,6 +357,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				66695E981CB792A8006E5489 /* SDGBluetoothManager.swift in Sources */,
+				667B4FE71CCEFBE500B1B993 /* SDGConnection.swift in Sources */,
+				667B4FE91CCF0E6400B1B993 /* HistoryTableViewCell.swift in Sources */,
+				667B4FEB1CCF11BA00B1B993 /* HistoryViewController.swift in Sources */,
 				66C801691CA97DA7002C642A /* UserIconView.swift in Sources */,
 				66C8014C1CA977F7002C642A /* SixDegrees.xcdatamodeld in Sources */,
 				669C27C81CAF695200F6E08B /* LocateViewController.swift in Sources */,

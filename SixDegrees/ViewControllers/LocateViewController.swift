@@ -11,6 +11,7 @@ import UIKit
 import Contacts
 import MultipeerConnectivity
 import MBProgressHUD
+import Pulsator
 
 class LocateViewController: UIViewController {
 
@@ -37,6 +38,7 @@ class LocateViewController: UIViewController {
 
     // Loading HUD
     var hud: MBProgressHUD?
+    let pulsator: Pulsator = Pulsator()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +55,11 @@ class LocateViewController: UIViewController {
         // Setup
         self.connectionFailedView.hidden = true
         self.searchingForDevicesLabel.hidden = true
+        self.pulsator.numPulse = 4
+        self.pulsator.radius = self.view.frame.width/2 - 10
+        self.pulsator.backgroundColor = UIColor.SDGDarkBlue().CGColor
+        self.pulsator.frame.origin.x += 35
+        self.pulsator.frame.origin.y += 35
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -75,6 +82,11 @@ class LocateViewController: UIViewController {
     }
 
     override func viewDidAppear(animated: Bool) {
+
+        self.userIconView.layer.insertSublayer(self.pulsator, below: userIconView.iconImageView.layer)
+
+        self.pulsator.start()
+
         // Try to get access to all the contacts of the current device
         self.contactsController.promptForAddressBookAccessIfNeeded { (granted) in
             if !granted {
@@ -300,10 +312,6 @@ extension LocateViewController: UICollectionViewDataSource, UICollectionViewDele
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
         self.presentViewController(alertController, animated: true, completion: nil)
-
-//        let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ConnectionsViewController") as! ConnectionsViewController
-//        connectionsVC.connectingUser = SDGUser.currentUser
-//        self.navigationController?.pushViewController(connectionsVC, animated: true)
     }
 
 

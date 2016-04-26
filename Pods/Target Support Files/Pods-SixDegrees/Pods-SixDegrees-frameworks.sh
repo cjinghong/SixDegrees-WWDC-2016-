@@ -84,14 +84,12 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "Pods-SixDegrees/Alamofire.framework"
   install_framework "Pods-SixDegrees/MBProgressHUD.framework"
   install_framework "Pods-SixDegrees/PhoneNumberKit.framework"
-  install_framework "Pods-SixDegrees/SwiftyJSON.framework"
+  install_framework "Pods-SixDegrees/Pulsator.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "Pods-SixDegrees/Alamofire.framework"
   install_framework "Pods-SixDegrees/MBProgressHUD.framework"
   install_framework "Pods-SixDegrees/PhoneNumberKit.framework"
-  install_framework "Pods-SixDegrees/SwiftyJSON.framework"
+  install_framework "Pods-SixDegrees/Pulsator.framework"
 fi

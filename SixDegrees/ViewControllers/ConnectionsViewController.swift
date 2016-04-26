@@ -10,11 +10,13 @@ import UIKit
 import Contacts
 import MultipeerConnectivity
 import MBProgressHUD
+import CoreData
 
 class ConnectionsViewController: UIViewController {
 
     @IBOutlet weak var connectingUserIconView: UserIconView!
     @IBOutlet weak var connectingUserHorizontalConstraint: NSLayoutConstraint!
+    @IBOutlet weak var mutualUsersCollectionView: UICollectionView!
 
     @IBOutlet weak var userIconView: UserIconView!
     @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
@@ -22,8 +24,9 @@ class ConnectionsViewController: UIViewController {
     @IBOutlet weak var disconnectButton: UIButton!
 
     var connectingUser: SDGUser!
-    let bluetoothManager: SDGBluetoothManager = SDGBluetoothManager.sharedInstance
+    var mutualUsers: [SDGUser] = []
 
+    let bluetoothManager: SDGBluetoothManager = SDGBluetoothManager.sharedInstance
     var hud: MBProgressHUD?
 
     override func viewDidLoad() {
@@ -57,6 +60,7 @@ class ConnectionsViewController: UIViewController {
                     self.bluetoothManager.sendContactsToPeer(connectedPeer, contacts: SDGUser.currentUser.contacts ?? [])
 
                     self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                    self.hud?.labelText = "Finding connections...\nThis may take awhile"
                 }
             }
         }
@@ -156,25 +160,44 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
     func didReceiveContacts(contacts: [CNContact], fromPeer peer: MCPeerID) {
         self.connectingUser.contacts = contacts
 
-        // Compare contacts
-        let connections: [SDGUser] = self.compareContacts(withUser: self.connectingUser)
+        // Compare contacts, and populate array
+        let mutualUsers: [SDGUser] = self.compareContacts(withUser: self.connectingUser)
+        self.mutualUsers = mutualUsers
+        self.mutualUsersCollectionView.reloadData()
 
-        // TODO: Draw connections
-        if !connections.isEmpty {
-            dispatch_async(dispatch_get_main_queue(), {
-                self.hud?.hide(true)
-
-                UIView.animateWithDuration(1, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 0.2, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                    self.connectingUserHorizontalConstraint.constant -= 75
-                    self.userIconHorizontalConstraint.constant += 75
-
-                    let connection: SDGUser = SDGUser(peerId: connections.first!.peerId, color: UIColor.randomSDGColor())
-                    self.createAndAddUser(connection)
-
-                    self.view.layoutIfNeeded()
-                    }, completion: nil)
-            })
+        // Save connection to Core Data
+        let MOC: NSManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        let connection: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("Connection", inManagedObjectContext: MOC) as! SDGConnection
+        connection.myUserName = SDGUser.currentUser.name
+        connection.targetUserName = self.connectingUser.name
+        var usernames: [String] = []
+        for user: SDGUser in mutualUsers {
+            usernames.append(user.name)
         }
+        connection.mutualUserNames = usernames
+        do {
+            try MOC.save()
+        } catch {
+            print("Error trying to save to Core Data. \(error)")
+        }
+
+
+//        // TODO: Draw connections
+//        if !mutualUsers.isEmpty {
+//            dispatch_async(dispatch_get_main_queue(), {
+//                self.hud?.hide(true)
+//
+//                UIView.animateWithDuration(1, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 0.2, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+//                    self.connectingUserHorizontalConstraint.constant -= 75
+//                    self.userIconHorizontalConstraint.constant += 75
+//
+//                    let connection: SDGUser = SDGUser(peerId: mutualUsers.first!.peerId, color: UIColor.randomSDGColor())
+//                    self.createAndAddUser(connection)
+//
+//                    self.view.layoutIfNeeded()
+//                    }, completion: nil)
+//            })
+//        }
     }
 
     func peerDidChangeState(peerId: MCPeerID, state: MCSessionState) {
@@ -196,6 +219,18 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
     }
 }
 
+extension ConnectionsViewController: UICollectionViewDataSource, UICollectionViewDelegate {
 
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.mutualUsers.count
+    }
+
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell: UserCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("UserCollectionViewCell", forIndexPath: indexPath) as! UserCollectionViewCell
+        cell.user = self.mutualUsers[indexPath.row]
+        return cell
+    }
+
+}
 
 

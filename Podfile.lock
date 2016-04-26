@@ -1,19 +1,16 @@
 PODS:
-  - Alamofire (3.3.1)
   - MBProgressHUD (0.9.2)
   - PhoneNumberKit (0.7)
-  - SwiftyJSON (2.3.2)
+  - Pulsator (0.1.0)
 
 DEPENDENCIES:
-  - Alamofire
   - MBProgressHUD (~> 0.9.2)
   - PhoneNumberKit (~> 0.7)
-  - SwiftyJSON
+  - Pulsator
 
 SPEC CHECKSUMS:
-  Alamofire: 369bc67b6f5ac33ded3648d7bd21c5bfb91c2ecc
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   PhoneNumberKit: 0c726536585867d4877f496fa57473c6449f45a9
-  SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
+  Pulsator: da87aa289b30b5e0cc7e03b21d9f2cb58277f601
 
 COCOAPODS: 0.39.0
