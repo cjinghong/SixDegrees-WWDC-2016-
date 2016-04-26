@@ -16,9 +16,9 @@ class HistoryTableViewCell: UITableViewCell {
             self.targetUserIconView.user = connection.targetUser
 
             // Setup views
-            self.dotView.layer.cornerRadius = self.dotView.frame.width/2
+            self.dotView.layer.cornerRadius = self.dotView.frame.height/2
             self.dotView.backgroundColor = self.myUserIconView.iconBackgroundColor
-            self.lineView.backgroundColor = self.targetUserIconView.iconBackgroundColor
+            self.lineView.backgroundColor = self.myUserIconView.iconBackgroundColor
         }
     }
 
@@ -39,16 +39,18 @@ class HistoryTableViewCell: UITableViewCell {
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
+
     }
 
     func animateDot() {
-        self.dotView.transform = CGAffineTransformMakeScale(0.1, 0.1)
+        let minimumScale: CGFloat = 0.5
+
+        self.dotView.transform = CGAffineTransformMakeScale(minimumScale, minimumScale)
         self.dotHorizontalConstraint.constant = -self.lineView.frame.width/2
         self.layoutIfNeeded()
 
         // Go from left to center
-        UIView.animateWithDuration(0.5, delay: 0, options: .CurveLinear, animations: {
+        UIView.animateWithDuration(0.5, delay: 1, options: .CurveLinear, animations: {
             self.dotView.transform = CGAffineTransformIdentity
             self.dotHorizontalConstraint.constant = 0
             self.layoutIfNeeded()
@@ -56,7 +58,7 @@ class HistoryTableViewCell: UITableViewCell {
 
             // From center to right
             UIView.animateWithDuration(0.5, delay: 0, options: .CurveEaseOut, animations: {
-                self.dotView.transform = CGAffineTransformMakeScale(0.1, 0.1)
+                self.dotView.transform = CGAffineTransformMakeScale(minimumScale, minimumScale)
                 self.dotHorizontalConstraint.constant = self.lineView.frame.width/2
                 self.layoutIfNeeded()
                 }, completion: { (success: Bool) in
@@ -70,10 +72,11 @@ class HistoryTableViewCell: UITableViewCell {
 
                         // From center to left
                         UIView.animateWithDuration(0.5, delay: 0, options: .CurveEaseOut, animations: {
-                            self.dotView.transform = CGAffineTransformMakeScale(0.1, 0.1)
+                            self.dotView.transform = CGAffineTransformMakeScale(minimumScale, minimumScale)
                             self.dotHorizontalConstraint.constant = -self.lineView.frame.width/2
                             self.layoutIfNeeded()
                             }, completion: { (success: Bool) in
+                                self.animateDot()
                         })
                     }
             })

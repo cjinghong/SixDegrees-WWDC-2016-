@@ -24,7 +24,20 @@ class HistoryViewController: UIViewController {
         connection1.targetUserName = "Hong Jing Chan"
         connection1.mutualUserNames = []
 
-        self.connections.append(connection1)
+        let connection2: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
+        connection2.myUserName = "Chan Jing Hong"
+        connection2.targetUserName = "Hong Jing Chan"
+        connection2.mutualUserNames = []
+
+        let connection3: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
+        connection3.myUserName = "Chan Jing Hong"
+        connection3.targetUserName = "Hong Jing Chan"
+        connection3.mutualUserNames = []
+
+        self.connections = [connection1, connection2, connection3]
+
+        // Setup table
+        self.historyTableView.separatorStyle = .None
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,7 +65,7 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 140
+        return 135
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -62,6 +75,6 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
     }
 }
