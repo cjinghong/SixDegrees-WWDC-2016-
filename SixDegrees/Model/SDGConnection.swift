@@ -12,6 +12,7 @@ import MultipeerConnectivity
 
 class SDGConnection: NSManagedObject {
 
+    @NSManaged var date: NSDate
     @NSManaged var myUserName: String
     @NSManaged var targetUserName: String
     @NSManaged var mutualUserNames: [String]

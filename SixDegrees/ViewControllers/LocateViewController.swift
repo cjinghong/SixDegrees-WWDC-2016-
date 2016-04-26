@@ -135,17 +135,17 @@ class LocateViewController: UIViewController {
         UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: { 
             self.searchingForDevicesLabel.alpha = 1
         }) { (success: Bool) in
-            // Wait 10 seconds and show wifi label
+            // Wait 10 seconds, if users still empty, suggest to turn on wifi
             let time = dispatch_time(DISPATCH_TIME_NOW, Int64(10 * NSEC_PER_SEC))
             dispatch_after(time, dispatch_get_main_queue(), {
-                self.showTurnOnWifiReminderLabel()
+                if self.discoveredUsers.isEmpty {
+                    self.showTurnOnWifiReminderLabel()
+                }
             })
         }
     }
 
     func hideSearchingForNearbyDevices() {
-        self.searchingForDevicesLabel.layer.removeAllAnimations()
-
         self.hideTurnOnWifiReminderLabel()
         UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
             self.searchingForDevicesLabel.alpha = 0

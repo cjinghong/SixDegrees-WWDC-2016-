@@ -70,8 +70,8 @@
                                                                 </userDefinedRuntimeAttribute>
                                                             </userDefinedRuntimeAttributes>
                                                         </view>
-                                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q3u-oH-Mig">
-                                                            <rect key="frame" x="102" y="80" width="7" height="7"/>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q3u-oH-Mig">
+                                                            <rect key="frame" x="102" y="59" width="7" height="7"/>
                                                             <color key="backgroundColor" red="0.41069115782192356" green="0.11541832467165491" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="7" id="2Zy-7A-BFJ"/>
@@ -92,6 +92,11 @@
                                                         <constraint firstItem="9Bg-z6-57f" firstAttribute="top" secondItem="Uvf-Zj-i48" secondAttribute="top" constant="8" id="sZn-bq-s1y"/>
                                                         <constraint firstItem="NdF-E8-hk6" firstAttribute="leading" secondItem="ZDc-uw-f5J" secondAttribute="trailing" constant="-8" id="xch-l9-qqD"/>
                                                     </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                            <integer key="value" value="10"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
                                                 </view>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -108,8 +113,8 @@
                                             <outlet property="dotHorizontalConstraint" destination="StG-cT-4fd" id="3G4-kH-Lqw"/>
                                             <outlet property="dotView" destination="Q3u-oH-Mig" id="rdV-ka-9ZP"/>
                                             <outlet property="lineView" destination="ZDc-uw-f5J" id="qzK-fz-g1p"/>
-                                            <outlet property="myUserIconView" destination="NdF-E8-hk6" id="X9q-zr-g0R"/>
-                                            <outlet property="targetUserIconView" destination="6vt-4J-xqy" id="m4a-nw-pFV"/>
+                                            <outlet property="myUserIconView" destination="6vt-4J-xqy" id="fwr-j0-U2D"/>
+                                            <outlet property="targetUserIconView" destination="NdF-E8-hk6" id="36f-5h-5if"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

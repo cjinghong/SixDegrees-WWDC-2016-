@@ -167,9 +167,11 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
 
         // Save connection to Core Data
         let MOC: NSManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-        let connection: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("Connection", inManagedObjectContext: MOC) as! SDGConnection
+        let connection: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
+        connection.date = NSDate()
         connection.myUserName = SDGUser.currentUser.name
         connection.targetUserName = self.connectingUser.name
+        
         var usernames: [String] = []
         for user: SDGUser in mutualUsers {
             usernames.append(user.name)

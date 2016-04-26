@@ -18,33 +18,51 @@ class HistoryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        let connection1: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
-        connection1.myUserName = "Chan Jing Hong"
-        connection1.targetUserName = "Hong Jing Chan"
-        connection1.mutualUserNames = []
-
-        let connection2: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
-        connection2.myUserName = "Chan Jing Hong"
-        connection2.targetUserName = "Hong Jing Chan"
-        connection2.mutualUserNames = []
-
-        let connection3: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
-        connection3.myUserName = "Chan Jing Hong"
-        connection3.targetUserName = "Hong Jing Chan"
-        connection3.mutualUserNames = []
-
-        self.connections = [connection1, connection2, connection3]
+//        let connection1: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
+//        connection1.myUserName = "Chan Jing Hong"
+//        connection1.targetUserName = "Hong Jing Chan"
+//        connection1.mutualUserNames = []
+//
+//        let connection2: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
+//        connection2.myUserName = "Chan Jing Hong"
+//        connection2.targetUserName = "Hong Jing Chan"
+//        connection2.mutualUserNames = []
+//
+//        let connection3: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
+//        connection3.myUserName = "Chan Jing Hong"
+//        connection3.targetUserName = "Hong Jing Chan"
+//        connection3.mutualUserNames = []
+//
+//        self.connections = [connection1, connection2, connection3]
 
         // Setup table
         self.historyTableView.separatorStyle = .None
+
+        // TODO: Only use this next time
+        self.fetchConnectionsFromCoreData()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+    override func viewWillAppear(animated: Bool) {
+        self.fetchConnectionsFromCoreData()
+    }
     
+    func fetchConnectionsFromCoreData() {
+        let fetchRequest: NSFetchRequest = NSFetchRequest(entityName: "SDGConnection")
+
+        do {
+            if let results: [SDGConnection] = try (self.MOC.executeFetchRequest(fetchRequest)) as? [SDGConnection] {
+                self.connections = results
+                self.historyTableView.reloadData()
+            }
+        } catch {
+            print("Error retrieving history")
+        }
+    }
 
     /*
     // MARK: - Navigation
@@ -71,10 +89,17 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let historyCell: HistoryTableViewCell = tableView.dequeueReusableCellWithIdentifier("HistoryTableViewCell", forIndexPath: indexPath) as! HistoryTableViewCell
         historyCell.connection = self.connections[indexPath.row]
+        // TODO: Enable this when done
+        historyCell.userInteractionEnabled = false
+
         return historyCell
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
+    }
+
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "Connections"
     }
 }
