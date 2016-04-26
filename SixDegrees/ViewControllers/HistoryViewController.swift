@@ -12,6 +12,7 @@ import CoreData
 class HistoryViewController: UIViewController {
     let MOC: NSManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 
+    var expandIndexPath: NSIndexPath?
     var connections: [SDGConnection] = []
     @IBOutlet weak var historyTableView: UITableView!
 
@@ -83,20 +84,39 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 135
+        if indexPath == self.expandIndexPath {
+            return 350
+        } else {
+            return 135
+        }
     }
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let historyCell: HistoryTableViewCell = tableView.dequeueReusableCellWithIdentifier("HistoryTableViewCell", forIndexPath: indexPath) as! HistoryTableViewCell
         historyCell.connection = self.connections[indexPath.row]
-        // TODO: Enable this when done
-        historyCell.userInteractionEnabled = false
+        historyCell.selectionStyle = .None
 
         return historyCell
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+
+        if indexPath == self.expandIndexPath {
+            self.expandIndexPath = nil
+        } else {
+            self.expandIndexPath = indexPath
+        }
+
+        tableView.beginUpdates()
+        tableView.endUpdates()
+
+        tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Top, animated: true)
+
+//        // TODO: Actually show the mutual friends
+//        UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 5, options: [.CurveEaseOut, .AllowUserInteraction], animations: {
+//            tableView.cellForRowAtIndexPath(indexPath)?.frame.size.height = 200
+//            }, completion: nil)
+
     }
 
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

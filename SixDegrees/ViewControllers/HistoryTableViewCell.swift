@@ -58,7 +58,7 @@ class HistoryTableViewCell: UITableViewCell {
         self.layoutIfNeeded()
 
         // Go from left to center
-        UIView.animateWithDuration(0.5, delay: 1, options: .CurveLinear, animations: {
+        UIView.animateWithDuration(0.5, delay: 1, options: [.CurveLinear, .AllowUserInteraction], animations: {
             self.dotView.transform = CGAffineTransformIdentity
             self.dotHorizontalConstraint.constant = 0
 
@@ -70,7 +70,7 @@ class HistoryTableViewCell: UITableViewCell {
         }) { (success: Bool) in
 
             // From center to right
-            UIView.animateWithDuration(0.5, delay: 0, options: .CurveEaseOut, animations: {
+            UIView.animateWithDuration(0.5, delay: 0, options: [.CurveEaseOut, .AllowUserInteraction], animations: {
                 self.dotView.transform = CGAffineTransformMakeScale(minimumScale, minimumScale)
                 self.dotHorizontalConstraint.constant = self.lineView.frame.width/2
 
@@ -81,7 +81,7 @@ class HistoryTableViewCell: UITableViewCell {
                 }, completion: { (success: Bool) in
 
                     // From right to center
-                    UIView.animateWithDuration(0.5, delay: 0, options: .CurveLinear, animations: {
+                    UIView.animateWithDuration(0.5, delay: 0, options: [.CurveLinear, .AllowUserInteraction], animations: {
                         self.dotView.transform = CGAffineTransformIdentity
                         self.dotHorizontalConstraint.constant = 0
 
@@ -93,7 +93,7 @@ class HistoryTableViewCell: UITableViewCell {
                     }) { (success: Bool) in
 
                         // From center to left
-                        UIView.animateWithDuration(0.5, delay: 0, options: .CurveEaseOut, animations: {
+                        UIView.animateWithDuration(0.5, delay: 0, options: [.CurveEaseOut, .AllowUserInteraction], animations: {
                             self.dotView.transform = CGAffineTransformMakeScale(minimumScale, minimumScale)
                             self.dotHorizontalConstraint.constant = -self.lineView.frame.width/2
 

@@ -184,22 +184,22 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
         }
 
 
-//        // TODO: Draw connections
-//        if !mutualUsers.isEmpty {
-//            dispatch_async(dispatch_get_main_queue(), {
-//                self.hud?.hide(true)
-//
-//                UIView.animateWithDuration(1, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 0.2, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-//                    self.connectingUserHorizontalConstraint.constant -= 75
-//                    self.userIconHorizontalConstraint.constant += 75
-//
-//                    let connection: SDGUser = SDGUser(peerId: mutualUsers.first!.peerId, color: UIColor.randomSDGColor())
-//                    self.createAndAddUser(connection)
-//
-//                    self.view.layoutIfNeeded()
-//                    }, completion: nil)
-//            })
-//        }
+        // TODO: Draw connections with collection view to be able to see multiple connections
+        if !mutualUsers.isEmpty {
+            dispatch_async(dispatch_get_main_queue(), {
+                self.hud?.hide(true)
+
+                UIView.animateWithDuration(1, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 0.2, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                    self.connectingUserHorizontalConstraint.constant -= 75
+                    self.userIconHorizontalConstraint.constant += 75
+
+                    let connection: SDGUser = SDGUser(peerId: mutualUsers.first!.peerId, color: UIColor.randomSDGColor())
+                    self.createAndAddUser(connection)
+
+                    self.view.layoutIfNeeded()
+                    }, completion: nil)
+            })
+        }
     }
 
     func peerDidChangeState(peerId: MCPeerID, state: MCSessionState) {
