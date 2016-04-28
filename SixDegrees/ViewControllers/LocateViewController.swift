@@ -23,6 +23,7 @@ class LocateViewController: UIViewController {
 
     @IBOutlet weak var discoveredUsersCollectionView: UICollectionView!
     @IBOutlet weak var connectionFailedView: UIView!
+    @IBOutlet weak var simulationReminderTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchingForDevicesLabel: UILabel!
     @IBOutlet weak var turnOnWifiReminderLabel: UILabel!
 
@@ -82,6 +83,15 @@ class LocateViewController: UIViewController {
         } else {
             self.hideSearchingForNearbyDevices()
         }
+
+        // Show/hide simulation enabled label
+        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
+        if simulationEnabled {
+            self.simulationReminderTopConstraint.constant = 0
+        } else {
+            self.simulationReminderTopConstraint.constant = -20
+        }
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -110,20 +120,35 @@ class LocateViewController: UIViewController {
         }
     }
 
+    // MARK: - Animation functions
     func showConnectionFailedView() {
+
+        // Grey subview
+        let greySubview: UIView = UIView(frame: self.view.bounds)
+        greySubview.backgroundColor = UIColor.blackColor()
+        greySubview.alpha = 0
+        self.view.addSubview(greySubview)
+
+        // Error view
         self.connectionFailedView.alpha = 0
         self.connectionFailedView.transform = CGAffineTransformMakeScale(0.1, 0.1)
         self.connectionFailedView.hidden = false
 
+        // Animation block
         UIView.animateWithDuration(0.6, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 4, options: UIViewAnimationOptions.CurveEaseOut, animations: {
             self.connectionFailedView.transform = CGAffineTransformIdentity
             self.connectionFailedView.alpha = 1
+            greySubview.alpha = 0.7
+
             }, completion: {(success: Bool) in
                 UIView.animateWithDuration(0.6, delay: 3, usingSpringWithDamping: 0.4, initialSpringVelocity: 4, options: UIViewAnimationOptions.CurveEaseOut, animations: {
                     self.connectionFailedView.transform = CGAffineTransformMakeScale(0.1, 0.1)
                     self.connectionFailedView.alpha = 0
+                    greySubview.alpha = 0
+
                     }, completion: {(success: Bool) in
                         self.connectionFailedView.hidden = true
+                        greySubview.removeFromSuperview()
                 })
         })
     }
@@ -213,13 +238,7 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
     }
 
     func didReceiveInvitationFromPeer(peerId: MCPeerID, completionBlock: ((accept: Bool) -> Void)) {
-
-        // Automatically accepts all connections IF self current device is a simulator for testing purpose
-        if SDGUser.currentUser.name == "iPhone Simulator" {
-            completionBlock(accept: true)
-            return
-        }
-
+        
         let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Invitation from \(peerId.displayName)", preferredStyle: UIAlertControllerStyle.Alert)
         alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
             completionBlock(accept: true)

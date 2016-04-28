@@ -16,9 +16,34 @@ class HistoryTableViewCell: UITableViewCell {
             self.myUserIconView.user = connection.myUser
             self.targetUserIconView.user = connection.targetUser
 
+            if self.connection.mutualUsers.count <= 99 {
+                self.numberOfConnectionsLabel.text = "\(self.connection.mutualUsers.count)"
+                self.sadIconImageView.hidden = true
+            } else if self.connection.mutualUsers.count == 0 {
+                self.numberOfConnectionsLabel.text = ""
+                self.sadIconImageView.hidden = false
+            } else {
+                self.numberOfConnectionsLabel.text = "99+"
+                self.sadIconImageView.hidden = true
+            }
             let dateFormatter: NSDateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "MMM dd, hh:mm aa"
             self.dateLabel.text = dateFormatter.stringFromDate(connection.date)
+
+            self.mutualUserCollectionView.dataSource = self
+            self.mutualUserCollectionView.delegate = self
+            self.mutualUserCollectionView.reloadSections(NSIndexSet(index: 0))
+
+            // UI Stuff
+            // Drop shadow on number of connections
+            self.numberOfConnectionsLabel.layer.shadowOpacity = 1
+            self.numberOfConnectionsLabel.layer.shadowRadius = 0
+            self.numberOfConnectionsLabel.layer.shadowColor = UIColor.blackColor().CGColor
+            self.numberOfConnectionsLabel.layer.shadowOffset = CGSize(width: -1, height: 1)
+
+            // Make sad icon white
+            self.sadIconImageView.image = self.sadIconImageView.image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+            self.sadIconImageView.tintColor = UIColor.whiteColor()
 
             // Bring the 2 views infront. 
             // For some reason the dot view managed to go above them
@@ -33,8 +58,12 @@ class HistoryTableViewCell: UITableViewCell {
     }
 
     @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var numberOfConnectionsLabel: UILabel!
+    @IBOutlet weak var sadIconImageView: UIImageView!
     @IBOutlet weak var myUserIconView: UserIconView!
     @IBOutlet weak var targetUserIconView: UserIconView!
+    @IBOutlet weak var mutualUserCollectionView: UICollectionView!
+
     @IBOutlet weak var lineView: UIView!
     @IBOutlet weak var dotView: UIView!
     @IBOutlet weak var dotHorizontalConstraint: NSLayoutConstraint!
@@ -110,3 +139,20 @@ class HistoryTableViewCell: UITableViewCell {
         }
     }
 }
+
+extension HistoryTableViewCell: UICollectionViewDataSource, UICollectionViewDelegate {
+
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.connection.mutualUsers.count
+    }
+
+    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+        let cell: UserCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("UserCollectionViewCell", forIndexPath: indexPath) as! UserCollectionViewCell
+        cell.user = self.connection.mutualUsers[indexPath.row]
+        return cell
+    }
+}
+
+
+
+

@@ -18,6 +18,7 @@ class ConnectionsViewController: UIViewController {
     @IBOutlet weak var connectingUserHorizontalConstraint: NSLayoutConstraint!
     @IBOutlet weak var mutualUsersCollectionView: UICollectionView!
 
+    @IBOutlet weak var simulationReminderTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var userIconView: UserIconView!
     @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
 
@@ -46,6 +47,15 @@ class ConnectionsViewController: UIViewController {
         // Customize app theme
         let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.customizeAppearance(UIApplication.sharedApplication())
+
+        // Show/hide simulation enabled label
+        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
+        if simulationEnabled {
+            self.simulationReminderTopConstraint.constant = 0
+        } else {
+            self.simulationReminderTopConstraint.constant = -20
+        }
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -75,44 +85,15 @@ class ConnectionsViewController: UIViewController {
     func compareContacts(withUser user: SDGUser) -> [SDGUser] {
         var connections: [SDGUser] = []
 
-        if SDGUser.currentUser.contacts != nil && user.contacts != nil {
-            for myContact: CNContact in SDGUser.currentUser.contacts! {
-                for userContact: CNContact in user.contacts! {
-                    let results: (matched: Bool, identifier: String?) = myContact.compareAndGetIdentifier(userContact)
+        let contactsController: SDGContactsController = SDGContactsController.sharedInstance
+        let matchedContacts: [CNContact] = contactsController.compareContactsWith(user.contacts ?? [])
 
-                    if results.matched {
-                        let matchedUsername: String = "\(myContact.givenName) \(myContact.familyName)"
-                        let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername), color: UIColor.randomSDGColor())
-                        matchedUser.identifierString = results.identifier
-
-                        // Only appends if it is not a repeating user contact
-                        if !connections.contains({ (aUser: SDGUser) -> Bool in
-                            return aUser.identifierString == matchedUser.identifierString
-                        }) {
-                            connections.append(matchedUser)
-                        }
-                    }
-                }
-            }
+        for contact: CNContact in matchedContacts {
+            let matchedUsername: String = "\(contact.givenName) \(contact.familyName)"
+            let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername), color: UIColor.randomSDGColor())
+            connections.append(matchedUser)
         }
         return connections
-    }
-
-    func createAndAddUser(user: SDGUser) {
-        // Append user to the array
-        let userIconView: UserIconView!
-        userIconView = UserIconView(frame: CGRect(x: self.view.center.x - 35, y: self.view.center.y - 35, width: 70, height: 70))
-
-        userIconView.iconBackgroundColor = UIColor.lightGrayColor()
-        userIconView.user = user
-
-        userIconView.alpha = 0
-
-        self.view.addSubview(userIconView)
-
-        UIView.animateWithDuration(1, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
-            userIconView.alpha = 1
-            }, completion: nil)
     }
 
     @IBAction func disconnect(sender: AnyObject) {
@@ -163,7 +144,6 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
         // Compare contacts, and populate array
         let mutualUsers: [SDGUser] = self.compareContacts(withUser: self.connectingUser)
         self.mutualUsers = mutualUsers
-        self.mutualUsersCollectionView.reloadData()
 
         // Save connection to Core Data
         let MOC: NSManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
@@ -183,21 +163,23 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
             print("Error trying to save to Core Data. \(error)")
         }
 
-
         // TODO: Draw connections with collection view to be able to see multiple connections
         if !mutualUsers.isEmpty {
             dispatch_async(dispatch_get_main_queue(), {
                 self.hud?.hide(true)
 
-                UIView.animateWithDuration(1, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 0.2, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+                UIView.animateWithDuration(1, delay: 0, options: .CurveLinear, animations: {
                     self.connectingUserHorizontalConstraint.constant -= 75
                     self.userIconHorizontalConstraint.constant += 75
-
-                    let connection: SDGUser = SDGUser(peerId: mutualUsers.first!.peerId, color: UIColor.randomSDGColor())
-                    self.createAndAddUser(connection)
-
+                    self.mutualUsersCollectionView.reloadSections(NSIndexSet(index: 0))
                     self.view.layoutIfNeeded()
                     }, completion: nil)
+                })
+        } else {
+            dispatch_async(dispatch_get_main_queue(), {
+                self.hud?.hide(true)
+
+                self.showSimpleAlert("Connection", message: "No common connection.")
             })
         }
     }
@@ -234,5 +216,6 @@ extension ConnectionsViewController: UICollectionViewDataSource, UICollectionVie
     }
 
 }
+
 
 

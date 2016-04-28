@@ -9,11 +9,11 @@
 import Foundation
 import UIKit
 import Contacts
+import PhoneNumberKit
 
 class SDGContactsController {
 
     static let sharedInstance: SDGContactsController = SDGContactsController()
-
     let contactStore: CNContactStore = CNContactStore()
 
     lazy var contacts: [CNContact] = {
@@ -21,9 +21,7 @@ class SDGContactsController {
         let keysToFetch = [
             CNContactFormatter.descriptorForRequiredKeysForStyle(CNContactFormatterStyle.FullName),
             CNContactEmailAddressesKey,
-            CNContactPhoneNumbersKey,
-            CNContactImageDataAvailableKey,
-            CNContactThumbnailImageDataKey]
+            CNContactPhoneNumbersKey]
 
         // Get all containers
         var containers: [CNContainer] = []
@@ -70,4 +68,68 @@ class SDGContactsController {
         }))
         noAccessToContactAlert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
     }
+
+    func compareContactsWith(targetUserContacts: [CNContact]) -> [CNContact] {
+
+        var matchedContacts: [CNContact] = []
+
+        // TODO: - Important
+        // Comparing contacts
+        for myContact: CNContact in self.contacts {
+            targetContactsLoop: for targetContact: CNContact in targetUserContacts {
+
+                // Comparing phone numbers
+                for myPhoneNumberCN: CNLabeledValue in myContact.phoneNumbers {
+                    for userPhoneNumberCN: CNLabeledValue in targetContact.phoneNumbers {
+
+                        let myPhoneNumberValue: String? = (myPhoneNumberCN.value as? CNPhoneNumber)?.stringValue
+                        let userPhoneNumberValue: String? = (userPhoneNumberCN.value as? CNPhoneNumber)?.stringValue
+
+                        var myPhoneNumberString: String?
+                        var userPhoneNumberString: String?
+
+                        do {
+                            let myPhoneNumber: PhoneNumber = try PhoneNumber(rawNumber: myPhoneNumberValue ?? "")
+                            myPhoneNumberString = myPhoneNumber.toInternational()
+                            let userPhoneNumber: PhoneNumber = try PhoneNumber(rawNumber: userPhoneNumberValue ?? "")
+                            userPhoneNumberString = userPhoneNumber.toInternational()
+                        } catch {
+                            // If failed to parse any contact, just strip the symbols and whitespaces
+                            myPhoneNumberString = myPhoneNumberValue?.stringByTrimmingCharactersInSet(NSCharacterSet.symbolCharacterSet())
+                            myPhoneNumberString = myPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
+                            myPhoneNumberString = myPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
+
+                            userPhoneNumberString = userPhoneNumberValue?.stringByTrimmingCharactersInSet(NSCharacterSet.symbolCharacterSet())
+                            userPhoneNumberString = userPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
+                            userPhoneNumberString = userPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
+                        }
+
+                        if myPhoneNumberString != nil && userPhoneNumberString != nil {
+                            if myPhoneNumberString == userPhoneNumberString {
+                                matchedContacts.append(myContact)
+                                // Break from looping the target contacts loop once the same contact with MyContact is found.
+                                break targetContactsLoop
+                            }
+                        }
+                    }
+                }
+
+                for myEmail: CNLabeledValue in myContact.emailAddresses {
+                    for userEmail: CNLabeledValue in targetContact.emailAddresses {
+                        if (myEmail.value as? String) == (userEmail.value as? String) {
+                            matchedContacts.append(myContact)
+                            break targetContactsLoop
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return matchedContacts
+    }
+
+
+
+
 }

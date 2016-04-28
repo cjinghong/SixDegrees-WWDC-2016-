@@ -12,7 +12,7 @@ import CoreData
 class HistoryViewController: UIViewController {
     let MOC: NSManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 
-    var expandIndexPath: NSIndexPath?
+    var expandIndex: Int?
     var connections: [SDGConnection] = []
     @IBOutlet weak var historyTableView: UITableView!
 
@@ -36,10 +36,13 @@ class HistoryViewController: UIViewController {
 //
 //        self.connections = [connection1, connection2, connection3]
 
+        // Register for 3D touch peek and pop
+//        if self.traitCollection.forceTouchCapability == .Available {
+//            self.registerForPreviewingWithDelegate(self, sourceView: self.view)
+//        }
+
         // Setup table
         self.historyTableView.separatorStyle = .None
-
-        // TODO: Only use this next time
         self.fetchConnectionsFromCoreData()
     }
 
@@ -65,27 +68,36 @@ class HistoryViewController: UIViewController {
         }
     }
 
-    /*
-    // MARK: - Navigation
+    func historyCellTapped(sender: UIGestureRecognizer?) {
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if let tag = sender?.view?.tag {
+            if tag == self.expandIndex {
+                self.expandIndex = nil
+            } else {
+                self.expandIndex = tag
+            }
+
+            self.historyTableView.beginUpdates()
+            self.historyTableView.endUpdates()
+            self.historyTableView.scrollToRowAtIndexPath(NSIndexPath(forRow: tag, inSection: 0), atScrollPosition: UITableViewScrollPosition.Middle, animated: true)
+        }
     }
-    */
+
 
 }
 
 extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if self.connections.count == 0 {
+            // TODO: Show placeholder
+        }
         return self.connections.count
     }
 
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if indexPath == self.expandIndexPath {
-            return 350
+        if indexPath.row == self.expandIndex {
+            return 220
         } else {
             return 135
         }
@@ -96,30 +108,49 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
         historyCell.connection = self.connections[indexPath.row]
         historyCell.selectionStyle = .None
 
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.historyCellTapped(_:)))
+        historyCell.tag = indexPath.row
+        historyCell.addGestureRecognizer(tapGesture)
+
         return historyCell
     }
 
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
 
-        if indexPath == self.expandIndexPath {
-            self.expandIndexPath = nil
-        } else {
-            self.expandIndexPath = indexPath
-        }
-
-        tableView.beginUpdates()
-        tableView.endUpdates()
-
-        tableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: UITableViewScrollPosition.Top, animated: true)
-
-//        // TODO: Actually show the mutual friends
-//        UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 5, options: [.CurveEaseOut, .AllowUserInteraction], animations: {
-//            tableView.cellForRowAtIndexPath(indexPath)?.frame.size.height = 200
-//            }, completion: nil)
-
+        // TODO: Actually show the mutual friends
     }
 
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Connections"
     }
 }
+
+//extension HistoryViewController: UIViewControllerPreviewingDelegate {
+//
+//    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+//
+//        let newLocation = self.view.convertPoint(location, toView: self.historyTableView)
+//        if let indexPath = self.historyTableView.indexPathForRowAtPoint(newLocation) {
+//
+//            print(newLocation)
+//            print(indexPath.row)
+//
+//            if let cell: HistoryTableViewCell = self.historyTableView.cellForRowAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? HistoryTableViewCell {
+//                let detailVC: HistoryDetailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("HistoryDetailViewController") as! HistoryDetailViewController
+//                detailVC.connection = self.connections[indexPath.row]
+//                detailVC.preferredContentSize = CGSize(width: 0, height: 300)
+//                previewingContext.sourceRect = cell.frame
+//                return detailVC
+//            }
+//        }
+//        return nil
+//    }
+//
+//    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+//        self.showViewController(viewControllerToCommit, sender: self)
+//    }
+//}
+
+
+
+

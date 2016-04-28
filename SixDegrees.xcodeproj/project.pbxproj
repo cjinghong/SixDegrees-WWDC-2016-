@@ -8,11 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		66160E681CB8A10A003A87AC /* UIViewController+JH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66160E671CB8A10A003A87AC /* UIViewController+JH.swift */; };
-		66160E6A1CB8A235003A87AC /* CNContact+JH.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66160E691CB8A235003A87AC /* CNContact+JH.swift */; };
 		66695E8E1CB61B80006E5489 /* SDGContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66695E8D1CB61B80006E5489 /* SDGContactsController.swift */; };
 		66695E921CB64D52006E5489 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66695E911CB64D52006E5489 /* Contacts.framework */; };
 		66695E941CB64D5A006E5489 /* ContactsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66695E931CB64D5A006E5489 /* ContactsUI.framework */; };
 		66695E981CB792A8006E5489 /* SDGBluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66695E971CB792A8006E5489 /* SDGBluetoothManager.swift */; };
+		667306291CD1AFE400FC3DDD /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667306281CD1AFE400FC3DDD /* SettingsViewController.swift */; };
+		6673062C1CD1BA2400FC3DDD /* SimulationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6673062B1CD1BA2400FC3DDD /* SimulationTableViewCell.swift */; };
 		667AFE861CCB105100D0DDE7 /* SDGTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667AFE851CCB105100D0DDE7 /* SDGTests.swift */; };
 		667B4FE71CCEFBE500B1B993 /* SDGConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667B4FE61CCEFBE500B1B993 /* SDGConnection.swift */; };
 		667B4FE91CCF0E6400B1B993 /* HistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 667B4FE81CCF0E6400B1B993 /* HistoryTableViewCell.swift */; };
@@ -44,13 +45,14 @@
 /* Begin PBXFileReference section */
 		58B07128BE31C2831D6AD06E /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		66160E671CB8A10A003A87AC /* UIViewController+JH.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+JH.swift"; sourceTree = "<group>"; };
-		66160E691CB8A235003A87AC /* CNContact+JH.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CNContact+JH.swift"; sourceTree = "<group>"; };
 		66695E891CB61A77006E5489 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		66695E8B1CB61A7A006E5489 /* AddressBookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBookUI.framework; path = System/Library/Frameworks/AddressBookUI.framework; sourceTree = SDKROOT; };
 		66695E8D1CB61B80006E5489 /* SDGContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGContactsController.swift; sourceTree = "<group>"; };
 		66695E911CB64D52006E5489 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		66695E931CB64D5A006E5489 /* ContactsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ContactsUI.framework; path = System/Library/Frameworks/ContactsUI.framework; sourceTree = SDKROOT; };
 		66695E971CB792A8006E5489 /* SDGBluetoothManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGBluetoothManager.swift; sourceTree = "<group>"; };
+		667306281CD1AFE400FC3DDD /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		6673062B1CD1BA2400FC3DDD /* SimulationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimulationTableViewCell.swift; sourceTree = "<group>"; };
 		667AFE851CCB105100D0DDE7 /* SDGTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGTests.swift; sourceTree = "<group>"; };
 		667B4FE61CCEFBE500B1B993 /* SDGConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDGConnection.swift; sourceTree = "<group>"; };
 		667B4FE81CCF0E6400B1B993 /* HistoryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryTableViewCell.swift; sourceTree = "<group>"; };
@@ -120,21 +122,46 @@
 			isa = PBXGroup;
 			children = (
 				66160E671CB8A10A003A87AC /* UIViewController+JH.swift */,
-				66160E691CB8A235003A87AC /* CNContact+JH.swift */,
 				668990F31CC23521001C6CB3 /* UIColor+JH.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
 		};
-		669C27C31CAF66EA00F6E08B /* ViewControllers */ = {
+		6673062A1CD1BA0A00FC3DDD /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				667306281CD1AFE400FC3DDD /* SettingsViewController.swift */,
+				6673062B1CD1BA2400FC3DDD /* SimulationTableViewCell.swift */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		6673062D1CD1BDD400FC3DDD /* History */ = {
+			isa = PBXGroup;
+			children = (
+				667B4FEA1CCF11BA00B1B993 /* HistoryViewController.swift */,
+				667B4FE81CCF0E6400B1B993 /* HistoryTableViewCell.swift */,
+			);
+			name = History;
+			sourceTree = "<group>";
+		};
+		6673062E1CD1BDE400FC3DDD /* Connection */ = {
 			isa = PBXGroup;
 			children = (
 				669C27C71CAF695200F6E08B /* LocateViewController.swift */,
 				66E6F3521CC7948700FA4BFF /* ConnectionsViewController.swift */,
+			);
+			name = Connection;
+			sourceTree = "<group>";
+		};
+		669C27C31CAF66EA00F6E08B /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
 				66C801681CA97DA7002C642A /* UserIconView.swift */,
 				668990F11CC22BE2001C6CB3 /* UserCollectionViewCell.swift */,
-				667B4FEA1CCF11BA00B1B993 /* HistoryViewController.swift */,
-				667B4FE81CCF0E6400B1B993 /* HistoryTableViewCell.swift */,
+				6673062E1CD1BDE400FC3DDD /* Connection */,
+				6673062D1CD1BDD400FC3DDD /* History */,
+				6673062A1CD1BA0A00FC3DDD /* Settings */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -361,10 +388,11 @@
 				667B4FE91CCF0E6400B1B993 /* HistoryTableViewCell.swift in Sources */,
 				667B4FEB1CCF11BA00B1B993 /* HistoryViewController.swift in Sources */,
 				66C801691CA97DA7002C642A /* UserIconView.swift in Sources */,
+				6673062C1CD1BA2400FC3DDD /* SimulationTableViewCell.swift in Sources */,
 				66C8014C1CA977F7002C642A /* SixDegrees.xcdatamodeld in Sources */,
 				669C27C81CAF695200F6E08B /* LocateViewController.swift in Sources */,
+				667306291CD1AFE400FC3DDD /* SettingsViewController.swift in Sources */,
 				668990F21CC22BE2001C6CB3 /* UserCollectionViewCell.swift in Sources */,
-				66160E6A1CB8A235003A87AC /* CNContact+JH.swift in Sources */,
 				668990F41CC23521001C6CB3 /* UIColor+JH.swift in Sources */,
 				66C801441CA977F7002C642A /* AppDelegate.swift in Sources */,
 				66695E8E1CB61B80006E5489 /* SDGContactsController.swift in Sources */,
