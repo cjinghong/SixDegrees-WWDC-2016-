@@ -33,7 +33,7 @@ class LocateViewController: UIViewController {
 
                 // Stop advertising and browsing for devices
                 self.bluetoothManager.stopBrowsing()
-                self.bluetoothManager.stopBrowsing()
+                self.bluetoothManager.stopAdvertising()
                 self.bluetoothManager.delegate = nil
 
             } else {
@@ -92,7 +92,6 @@ class LocateViewController: UIViewController {
 
         self.view.backgroundColor = UIColor.SDGLightBlue()
 
-        // Setup
         self.connectionFailedView.hidden = true
         self.searchingForDevicesLabel.hidden = true
         self.turnOnWifiReminderLabel.hidden = true
