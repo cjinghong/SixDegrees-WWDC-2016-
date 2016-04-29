@@ -13,7 +13,43 @@ import MultipeerConnectivity
 import MBProgressHUD
 import Pulsator
 
+enum SDGDisplayMode {
+    case Normal
+    case Simulated
+}
+
 class LocateViewController: UIViewController {
+
+    var displayMode: SDGDisplayMode! {
+        didSet {
+            if displayMode == SDGDisplayMode.Simulated {
+                self.simulationReminderTopConstraint.constant = 0
+
+                // Reset all data
+                self.userIconView.user = SDGUser.simulatedCurrentUser
+                self.discoveredUsers = [SDGUser.simulatedDiscoveredUser]
+                self.hideSearchingForNearbyDevices()
+                self.discoveredUsersCollectionView.reloadData()
+
+                // Stop advertising and browsing for devices
+                self.bluetoothManager.stopBrowsing()
+                self.bluetoothManager.stopBrowsing()
+                self.bluetoothManager.delegate = nil
+
+            } else {
+                self.simulationReminderTopConstraint.constant = -20
+
+                self.userIconView.user = SDGUser.currentUser
+                self.discoveredUsers.removeAll()
+                self.discoveredUsersCollectionView.reloadData()
+
+                // Start advertising and browsing for devices
+                self.bluetoothManager.delegate = self
+                self.bluetoothManager.startAdvertising()
+                self.bluetoothManager.startBrowsing()
+            }
+        }
+    }
 
     @IBOutlet weak var userIconView: UserIconView!
     @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
@@ -45,14 +81,16 @@ class LocateViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Set display mode
+        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
+        if simulationEnabled {
+            self.displayMode = SDGDisplayMode.Simulated
+        } else {
+            self.displayMode = SDGDisplayMode.Normal
+        }
+
         self.view.backgroundColor = UIColor.SDGLightBlue()
-
-        self.userIconView.user = SDGUser.currentUser
-        self.bluetoothManager.delegate = self
-
-        // Start advertising and browsing for devices
-        self.bluetoothManager.startAdvertising()
-        self.bluetoothManager.startBrowsing()
 
         // Setup
         self.connectionFailedView.hidden = true
@@ -73,8 +111,6 @@ class LocateViewController: UIViewController {
         let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.customizeAppearance(UIApplication.sharedApplication())
 
-        self.bluetoothManager.delegate = self
-
         // Store reference of the userIconHorizontalConstraint
         self.originalUserIconHorizontalConstraint = self.userIconHorizontalConstraint.constant
 
@@ -88,9 +124,15 @@ class LocateViewController: UIViewController {
         let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
         let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
         if simulationEnabled {
-            self.simulationReminderTopConstraint.constant = 0
+            // If display mode is not already simulated, simulate.
+            if self.displayMode != SDGDisplayMode.Simulated {
+                self.displayMode = SDGDisplayMode.Simulated
+            }
         } else {
-            self.simulationReminderTopConstraint.constant = -20
+            // If display mode is not already normal, make it normal.
+            if self.displayMode != SDGDisplayMode.Normal {
+                self.displayMode = SDGDisplayMode.Normal
+            }
         }
     }
 
@@ -123,12 +165,6 @@ class LocateViewController: UIViewController {
     // MARK: - Animation functions
     func showConnectionFailedView() {
 
-        // Grey subview
-        let greySubview: UIView = UIView(frame: self.view.bounds)
-        greySubview.backgroundColor = UIColor.blackColor()
-        greySubview.alpha = 0
-        self.view.addSubview(greySubview)
-
         // Error view
         self.connectionFailedView.alpha = 0
         self.connectionFailedView.transform = CGAffineTransformMakeScale(0.1, 0.1)
@@ -138,17 +174,14 @@ class LocateViewController: UIViewController {
         UIView.animateWithDuration(0.6, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 4, options: UIViewAnimationOptions.CurveEaseOut, animations: {
             self.connectionFailedView.transform = CGAffineTransformIdentity
             self.connectionFailedView.alpha = 1
-            greySubview.alpha = 0.7
 
             }, completion: {(success: Bool) in
                 UIView.animateWithDuration(0.6, delay: 3, usingSpringWithDamping: 0.4, initialSpringVelocity: 4, options: UIViewAnimationOptions.CurveEaseOut, animations: {
                     self.connectionFailedView.transform = CGAffineTransformMakeScale(0.1, 0.1)
                     self.connectionFailedView.alpha = 0
-                    greySubview.alpha = 0
 
                     }, completion: {(success: Bool) in
                         self.connectionFailedView.hidden = true
-                        greySubview.removeFromSuperview()
                 })
         })
     }
@@ -264,10 +297,8 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
                 }).first
 
                 if let user = user {
-                    // TODO: Take snippet, transition to another screen
                     let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ConnectionsViewController") as! ConnectionsViewController
                     connectionsVC.connectingUser = self.discoveredUsers[self.discoveredUsers.indexOf(user)!]
-//                    self.navigationController?.pushViewController(connectionsVC, animated: true)
                     self.presentViewController(connectionsVC, animated: true, completion: nil)
                 }
             })
@@ -349,13 +380,32 @@ extension LocateViewController: UICollectionViewDataSource, UICollectionViewDele
     }
 
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-
         let user: SDGUser = self.discoveredUsers[indexPath.row]
         let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Do you wish to connect with \(user.name)?", preferredStyle: UIAlertControllerStyle.Alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
-            self.bluetoothManager.invitePeer(user.peerId)
-        }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+
+        // Change action of OK button based on display mode
+        if self.displayMode == SDGDisplayMode.Normal {
+            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+                self.bluetoothManager.invitePeer(user.peerId)
+            }))
+        } else {
+
+            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+                // Stop for 1 sec, then present vc
+                self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                self.hud?.labelText = "Connecting"
+                let disptachTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * NSEC_PER_SEC))
+
+                dispatch_after(disptachTime, dispatch_get_main_queue(), {
+                    self.hud?.hide(true)
+                    let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ConnectionsViewController") as! ConnectionsViewController
+                    connectionsVC.connectingUser = self.discoveredUsers[self.discoveredUsers.indexOf(user)!]
+                    self.presentViewController(connectionsVC, animated: true, completion: nil)
+                })
+            }))
+        }
+
         self.presentViewController(alertController, animated: true, completion: nil)
     }
 

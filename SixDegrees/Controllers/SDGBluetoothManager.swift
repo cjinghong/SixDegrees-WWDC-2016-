@@ -60,6 +60,14 @@ class SDGBluetoothManager: NSObject {
         self.serviceBrowser.startBrowsingForPeers()
     }
 
+    func stopAdvertising() {
+        self.serviceAdvetiser.stopAdvertisingPeer()
+    }
+
+    func stopBrowsing() {
+        self.serviceBrowser.stopBrowsingForPeers()
+    }
+
     func invitePeer(peerId: MCPeerID) {
         self.serviceBrowser.invitePeer(peerId, toSession: self.session, withContext: nil, timeout: 10)
     }

@@ -19,9 +19,29 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="220" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CLy-Xa-Jaa">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <view key="tableHeaderView" contentMode="scaleToFill" id="kdq-zI-OqH" userLabel="Simulation view">
+                                    <rect key="frame" x="0.0" y="64" width="600" height="20"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Simulation is turned on. You can disable it in settings." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="LWL-Xg-JET">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="20"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="LWL-Xg-JET" secondAttribute="trailing" id="85G-jp-YdM"/>
+                                        <constraint firstItem="LWL-Xg-JET" firstAttribute="top" secondItem="kdq-zI-OqH" secondAttribute="top" id="Nrr-uy-W2Z"/>
+                                        <constraint firstAttribute="bottom" secondItem="LWL-Xg-JET" secondAttribute="bottom" id="cHN-PH-h8y"/>
+                                        <constraint firstItem="LWL-Xg-JET" firstAttribute="leading" secondItem="kdq-zI-OqH" secondAttribute="leading" id="xUa-qP-d7B"/>
+                                        <constraint firstAttribute="height" constant="20" id="z6q-Bw-GXN"/>
+                                    </constraints>
+                                </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="HistoryTableViewCell" rowHeight="220" id="qS3-I3-7jt" customClass="HistoryTableViewCell" customModule="SixDegrees" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="92" width="600" height="220"/>
+                                        <rect key="frame" x="0.0" y="112" width="600" height="220"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qS3-I3-7jt" id="DpV-83-DT5">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="219"/>
@@ -119,7 +139,7 @@
                                                             </constraints>
                                                         </view>
                                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dy6-M5-7oZ">
-                                                            <rect key="frame" x="8" y="116" width="194" height="80"/>
+                                                            <rect key="frame" x="8" y="116" width="460" height="80"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="80" id="J0f-4h-7ip"/>
@@ -167,12 +187,12 @@
                                                     </subviews>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
-                                                        <constraint firstItem="dy6-M5-7oZ" firstAttribute="trailing" secondItem="NdF-E8-hk6" secondAttribute="trailing" id="6nx-mq-SvP"/>
                                                         <constraint firstItem="NdF-E8-hk6" firstAttribute="centerY" secondItem="ZDc-uw-f5J" secondAttribute="centerY" id="7aA-kW-1Gh"/>
                                                         <constraint firstItem="Q3u-oH-Mig" firstAttribute="centerY" secondItem="ZDc-uw-f5J" secondAttribute="centerY" id="8l5-hk-Txn"/>
                                                         <constraint firstItem="p6M-kt-LY7" firstAttribute="centerY" secondItem="Uvf-Zj-i48" secondAttribute="centerY" id="CwU-9M-9Ss"/>
                                                         <constraint firstItem="6vt-4J-xqy" firstAttribute="leading" secondItem="Uvf-Zj-i48" secondAttribute="leading" constant="8" id="NIV-Qn-JLH"/>
                                                         <constraint firstItem="Q3u-oH-Mig" firstAttribute="centerX" secondItem="ZDc-uw-f5J" secondAttribute="centerX" id="StG-cT-4fd"/>
+                                                        <constraint firstItem="p6M-kt-LY7" firstAttribute="leading" secondItem="dy6-M5-7oZ" secondAttribute="trailing" constant="20" id="TbD-Yl-nvm"/>
                                                         <constraint firstItem="dy6-M5-7oZ" firstAttribute="leading" secondItem="Uvf-Zj-i48" secondAttribute="leading" constant="8" id="XWJ-C1-T4z"/>
                                                         <constraint firstItem="dy6-M5-7oZ" firstAttribute="top" secondItem="6vt-4J-xqy" secondAttribute="bottom" constant="30" id="aTd-uO-yOX"/>
                                                         <constraint firstItem="9Bg-z6-57f" firstAttribute="leading" secondItem="Uvf-Zj-i48" secondAttribute="leading" constant="8" id="aYs-Pb-Jaj"/>
@@ -268,7 +288,7 @@
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="BHs-pG-2Sv">
-                                <rect key="frame" x="0.0" y="72" width="600" height="203"/>
+                                <rect key="frame" x="0.0" y="84" width="600" height="191"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="10" id="Wxo-3H-Yaa">
                                     <size key="itemSize" width="113" height="112"/>
@@ -278,7 +298,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="UserCollectionViewCell" id="SMO-gi-2rd" customClass="UserCollectionViewCell" customModule="SixDegrees" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="46" width="113" height="112"/>
+                                        <rect key="frame" x="0.0" y="40" width="113" height="112"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="113" height="112"/>
@@ -347,8 +367,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6L1-94-QtI" userLabel="Simulation view">
                                 <rect key="frame" x="0.0" y="64" width="600" height="20"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Simulation is turned on. You can disable it in settings." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="IYV-Ec-gTd">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Simulation is turned on. You can disable it in settings." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="IYV-Ec-gTd">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="20"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -356,10 +376,10 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="IYV-Ec-gTd" firstAttribute="leading" secondItem="6L1-94-QtI" secondAttribute="leading" id="8Wu-pO-p6J"/>
-                                    <constraint firstItem="IYV-Ec-gTd" firstAttribute="top" secondItem="6L1-94-QtI" secondAttribute="top" id="YjP-8X-FAB"/>
-                                    <constraint firstAttribute="bottom" secondItem="IYV-Ec-gTd" secondAttribute="bottom" id="jZJ-VO-jpD"/>
-                                    <constraint firstAttribute="trailing" secondItem="IYV-Ec-gTd" secondAttribute="trailing" id="u7n-R4-LAP"/>
+                                    <constraint firstItem="IYV-Ec-gTd" firstAttribute="top" secondItem="6L1-94-QtI" secondAttribute="top" id="JvW-tw-mCN"/>
+                                    <constraint firstItem="IYV-Ec-gTd" firstAttribute="leading" secondItem="6L1-94-QtI" secondAttribute="leading" id="g5E-4b-k7F"/>
+                                    <constraint firstAttribute="trailing" secondItem="IYV-Ec-gTd" secondAttribute="trailing" id="lQ1-wY-6yT"/>
+                                    <constraint firstAttribute="bottom" secondItem="IYV-Ec-gTd" secondAttribute="bottom" id="oK0-ZQ-n9D"/>
                                     <constraint firstAttribute="height" constant="20" id="ufB-U4-yIR"/>
                                 </constraints>
                             </view>
@@ -367,7 +387,7 @@
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="UNT-nH-XZn" firstAttribute="leading" secondItem="x3c-nA-g2P" secondAttribute="leading" constant="8" id="02x-zZ-SCH"/>
-                            <constraint firstItem="BHs-pG-2Sv" firstAttribute="top" secondItem="Yu8-yI-gkL" secondAttribute="bottom" constant="8" id="312-f6-fUq"/>
+                            <constraint firstItem="BHs-pG-2Sv" firstAttribute="top" secondItem="Yu8-yI-gkL" secondAttribute="bottom" constant="20" id="312-f6-fUq"/>
                             <constraint firstItem="hmh-4s-y88" firstAttribute="centerY" secondItem="x3c-nA-g2P" secondAttribute="centerY" id="Aj9-ZP-ioe"/>
                             <constraint firstItem="e5O-1t-ZTS" firstAttribute="centerX" secondItem="x3c-nA-g2P" secondAttribute="centerX" id="Fib-mx-PU2"/>
                             <constraint firstItem="BHs-pG-2Sv" firstAttribute="leading" secondItem="x3c-nA-g2P" secondAttribute="leading" id="HjW-Iy-5Tr"/>
@@ -499,7 +519,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNM-82-7bf" userLabel="Simulation view">
                                 <rect key="frame" x="0.0" y="64" width="600" height="20"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Simulation is currently turned on. You can disable it in the settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Irl-AT-720">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Simulation is turned on. You can disable it in settings." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Irl-AT-720">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -688,7 +708,7 @@
                                                 </switch>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZC9-BL-oLP">
                                                     <rect key="frame" x="8" y="61" width="584" height="36"/>
-                                                    <string key="text">Turning simulation on will allows you experience the app without any real users. All users and connections made with simulation turned on are not real.</string>
+                                                    <string key="text">Turning simulation on allows you experience the app without any real users. All users and connections made with simulation turned on are not real.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>

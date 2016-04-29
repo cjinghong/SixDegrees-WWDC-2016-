@@ -8,8 +8,19 @@
 
 import UIKit
 import CoreData
+import Contacts
 
 class HistoryViewController: UIViewController {
+    var displayMode: SDGDisplayMode! {
+        didSet {
+            if displayMode == SDGDisplayMode.Simulated {
+                self.historyTableView.tableHeaderView?.frame.size.height = 20
+            } else {
+                self.historyTableView.tableHeaderView?.frame.size.height = 0
+            }
+        }
+    }
+
     let MOC: NSManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 
     var expandIndex: Int?
@@ -18,6 +29,17 @@ class HistoryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Set display mode
+        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
+        if simulationEnabled {
+            self.displayMode = SDGDisplayMode.Simulated
+        } else {
+            self.displayMode = SDGDisplayMode.Normal
+        }
+        // Setup table
+        self.historyTableView.separatorStyle = .None
 
 //        let connection1: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
 //        connection1.myUserName = "Chan Jing Hong"
@@ -35,15 +57,6 @@ class HistoryViewController: UIViewController {
 //        connection3.mutualUserNames = []
 //
 //        self.connections = [connection1, connection2, connection3]
-
-        // Register for 3D touch peek and pop
-//        if self.traitCollection.forceTouchCapability == .Available {
-//            self.registerForPreviewingWithDelegate(self, sourceView: self.view)
-//        }
-
-        // Setup table
-        self.historyTableView.separatorStyle = .None
-        self.fetchConnectionsFromCoreData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,7 +65,25 @@ class HistoryViewController: UIViewController {
     }
 
     override func viewWillAppear(animated: Bool) {
-        self.fetchConnectionsFromCoreData()
+        // Show/hide simulation enabled label
+        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
+
+        if simulationEnabled {
+            // If display mode is not already simulated, simulate.
+            if self.displayMode != SDGDisplayMode.Simulated {
+                self.displayMode = SDGDisplayMode.Simulated
+            }
+            // Give simulated data
+            self.createSimulatedConnections()
+
+        } else {
+            // If display mode is not already normal, make it normal.
+            if self.displayMode != SDGDisplayMode.Normal {
+                self.displayMode = SDGDisplayMode.Normal
+            }
+            self.fetchConnectionsFromCoreData()
+        }
     }
     
     func fetchConnectionsFromCoreData() {
@@ -66,6 +97,12 @@ class HistoryViewController: UIViewController {
         } catch {
             print("Error retrieving history")
         }
+    }
+
+    func createSimulatedConnections() {
+        let connection: SDGConnection = SDGConnection(date: NSDate(), myUsername: SDGUser.simulatedCurrentUser.name, targetUsername: SDGUser.simulatedDiscoveredUser.name, mutualUsernames: SDGUser.simulatedUsernames(), context: self.MOC, needSave: false)
+        self.connections = [connection]
+        self.historyTableView.reloadData()
     }
 
     func historyCellTapped(sender: UIGestureRecognizer?) {
@@ -82,7 +119,6 @@ class HistoryViewController: UIViewController {
             self.historyTableView.scrollToRowAtIndexPath(NSIndexPath(forRow: tag, inSection: 0), atScrollPosition: UITableViewScrollPosition.Middle, animated: true)
         }
     }
-
 
 }
 
@@ -125,31 +161,6 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-//extension HistoryViewController: UIViewControllerPreviewingDelegate {
-//
-//    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-//
-//        let newLocation = self.view.convertPoint(location, toView: self.historyTableView)
-//        if let indexPath = self.historyTableView.indexPathForRowAtPoint(newLocation) {
-//
-//            print(newLocation)
-//            print(indexPath.row)
-//
-//            if let cell: HistoryTableViewCell = self.historyTableView.cellForRowAtIndexPath(NSIndexPath(forRow: indexPath.row, inSection: 0)) as? HistoryTableViewCell {
-//                let detailVC: HistoryDetailViewController = self.storyboard?.instantiateViewControllerWithIdentifier("HistoryDetailViewController") as! HistoryDetailViewController
-//                detailVC.connection = self.connections[indexPath.row]
-//                detailVC.preferredContentSize = CGSize(width: 0, height: 300)
-//                previewingContext.sourceRect = cell.frame
-//                return detailVC
-//            }
-//        }
-//        return nil
-//    }
-//
-//    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
-//        self.showViewController(viewControllerToCommit, sender: self)
-//    }
-//}
 
 
 

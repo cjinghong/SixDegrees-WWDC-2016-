@@ -65,7 +65,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func simulationCellHeight() -> CGFloat {
-        let text: String = "Turning simulation on will allows you experience the app without any real users. All users and connections made with simulation turned on are not real."
+        let text: String = "Turning simulation on allows you experience the app without any real users. All users and connections made with simulation turned on are not real."
         let boundingRect: CGRect! = (text as NSString).boundingRectWithSize(CGSizeMake(UIScreen.mainScreen().bounds.width - 8 - 8, 9999), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName : UIFont.systemFontOfSize(15)], context: nil)
         let height: CGFloat = 17 + 36 + 8 + boundingRect.size.height + 17
         return height

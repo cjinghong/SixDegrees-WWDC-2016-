@@ -14,6 +14,28 @@ import CoreData
 
 class ConnectionsViewController: UIViewController {
 
+    var displayMode: SDGDisplayMode! {
+        didSet {
+            if displayMode == SDGDisplayMode.Simulated {
+                self.simulationReminderTopConstraint.constant = 0
+
+                self.userIconView.user = SDGUser.simulatedCurrentUser
+                self.connectingUserIconView.user = SDGUser.simulatedDiscoveredUser
+
+                // Changes the delegate to self
+                self.bluetoothManager.delegate = nil
+            } else {
+                self.simulationReminderTopConstraint.constant = -20
+
+                self.userIconView.user = SDGUser.currentUser
+                self.connectingUserIconView.user = self.connectingUser
+
+                // Changes the delegate to self
+                self.bluetoothManager.delegate = self
+            }
+        }
+    }
+
     @IBOutlet weak var connectingUserIconView: UserIconView!
     @IBOutlet weak var connectingUserHorizontalConstraint: NSLayoutConstraint!
     @IBOutlet weak var mutualUsersCollectionView: UICollectionView!
@@ -33,12 +55,14 @@ class ConnectionsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        self.userIconView.user = SDGUser.currentUser
-        self.connectingUserIconView.user = self.connectingUser
-
-        // Changes the delegate to self
-        self.bluetoothManager.delegate = self
+        // Show/hide simulation enabled label
+        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
+        if simulationEnabled {
+            self.displayMode = SDGDisplayMode.Simulated
+        } else {
+            self.displayMode = SDGDisplayMode.Normal
+        }
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -47,32 +71,44 @@ class ConnectionsViewController: UIViewController {
         // Customize app theme
         let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.customizeAppearance(UIApplication.sharedApplication())
-
-        // Show/hide simulation enabled label
-        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
-        if simulationEnabled {
-            self.simulationReminderTopConstraint.constant = 0
-        } else {
-            self.simulationReminderTopConstraint.constant = -20
-        }
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
 
-        // Send contacts
-        if let connectedPeer = self.bluetoothManager.session.connectedPeers.first {
-            SDGContactsController.sharedInstance.promptForAddressBookAccessIfNeeded { (granted) in
-                if !granted {
-                    SDGContactsController.sharedInstance.displayCantAddContactAlert(self)
-                } else {
-                    self.bluetoothManager.sendContactsToPeer(connectedPeer, contacts: SDGUser.currentUser.contacts ?? [])
+        if self.displayMode == SDGDisplayMode.Normal {
+            // Send contacts
+            if let connectedPeer = self.bluetoothManager.session.connectedPeers.first {
+                SDGContactsController.sharedInstance.promptForAddressBookAccessIfNeeded { (granted) in
+                    if !granted {
+                        SDGContactsController.sharedInstance.displayCantAddContactAlert(self)
+                    } else {
+                        self.bluetoothManager.sendContactsToPeer(connectedPeer, contacts: SDGUser.currentUser.contacts ?? [])
 
-                    self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                    self.hud?.labelText = "Finding connections...\nThis may take awhile"
+                        self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        self.hud?.labelText = "Finding connections"
+                    }
                 }
             }
+        } else {
+            self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            self.hud?.labelText = "Finding connections"
+
+            // Wait 5 seconds
+            // Compare contacts, and populate array
+            let mutualUsers: [SDGUser] = self.getSimulatedContactUsers()
+            self.mutualUsers = mutualUsers
+
+            let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(3 * NSEC_PER_SEC))
+            dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+                self.hud?.hide(true)
+                UIView.animateWithDuration(1, delay: 0, options: .CurveLinear, animations: {
+                    self.connectingUserHorizontalConstraint.constant -= 75
+                    self.userIconHorizontalConstraint.constant += 75
+                    self.mutualUsersCollectionView.reloadSections(NSIndexSet(index: 0))
+                    self.view.layoutIfNeeded()
+                    }, completion: nil)
+            })
         }
     }
 
@@ -87,6 +123,18 @@ class ConnectionsViewController: UIViewController {
 
         let contactsController: SDGContactsController = SDGContactsController.sharedInstance
         let matchedContacts: [CNContact] = contactsController.compareContactsWith(user.contacts ?? [])
+
+        for contact: CNContact in matchedContacts {
+            let matchedUsername: String = "\(contact.givenName) \(contact.familyName)"
+            let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername), color: UIColor.randomSDGColor())
+            connections.append(matchedUser)
+        }
+        return connections
+    }
+
+    func getSimulatedContactUsers() -> [SDGUser] {
+        var connections: [SDGUser] = []
+        let matchedContacts: [CNContact] = SDGUser.simulatedDiscoveredUser.contacts ?? []
 
         for contact: CNContact in matchedContacts {
             let matchedUsername: String = "\(contact.givenName) \(contact.familyName)"

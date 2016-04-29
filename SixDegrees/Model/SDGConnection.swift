@@ -40,6 +40,22 @@ class SDGConnection: NSManagedObject {
         }
     }
 
+    /// Using this init enables you to init an SDGConnection object without saving to Core Data
+    convenience init(date: NSDate, myUsername: String, targetUsername: String, mutualUsernames: [String], context: NSManagedObjectContext, needSave: Bool = true) {
+        let entity: NSEntityDescription = NSEntityDescription.entityForName("SDGConnection", inManagedObjectContext: context)!
+
+        if needSave {
+            self.init(entity: entity, insertIntoManagedObjectContext: context)
+        } else {
+            self.init(entity: entity, insertIntoManagedObjectContext: nil)
+        }
+
+        self.date = date
+        self.myUserName = myUsername
+        self.targetUserName = targetUsername
+        self.mutualUserNames = mutualUsernames
+    }
+
 //    init(myUserName: String, targetUserName: String, mutualUsers: [String] = []) {
 //        super.init(entity: <#T##NSEntityDescription#>, insertIntoManagedObjectContext: <#T##NSManagedObjectContext?#>)
 //

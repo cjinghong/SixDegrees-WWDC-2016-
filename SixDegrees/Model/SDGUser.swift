@@ -15,26 +15,52 @@ public class SDGUser {
 
     static let currentUser = SDGUser(peerId: MCPeerID(displayName: UIDevice.currentDevice().name), color: UIColor.SDGPeach())
 
+    // Simulation
+    static let simulatedCurrentUser = SDGUser(peerId: MCPeerID(displayName: UIDevice.currentDevice().name), color: UIColor.SDGPeach(), simulated: true)
+    static let simulatedDiscoveredUser = SDGUser(peerId: MCPeerID(displayName: "John Appleseed"), color: UIColor.SDGGreen(), simulated: true)
+
     var peerId: MCPeerID!
     var name: String!
     var contacts: [CNContact]?
 
     var color: UIColor?
 
-    // This is used to identify the user when matching contacts. Could be an email, phone number, or other details
-    // TODO: - Encrypt this?
-    var identifierString: String?
-
-//    init(peerId: MCPeerID) {
-//        self.peerId = peerId
-//        self.name = peerId.displayName
-//    }
-
     init(peerId: MCPeerID, color: UIColor) {
         self.peerId = peerId
         self.name = peerId.displayName
-
         self.color = color
+    }
+
+    // Initializing a simulated user is only allowed for self
+    private init(peerId: MCPeerID, color: UIColor, simulated: Bool) {
+        self.peerId = peerId
+        self.name = peerId.displayName
+        self.color = color
+
+        if simulated {
+            let contact: CNMutableContact = CNMutableContact()
+            contact.givenName = "Steve J"
+            contact.phoneNumbers.append(CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: "1234567890")))
+            let contact2: CNMutableContact = CNMutableContact()
+            contact2.givenName = "Bill A"
+            contact2.phoneNumbers.append(CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: "1234567890")))
+            let contact3: CNMutableContact = CNMutableContact()
+            contact3.givenName = "Bob B"
+            contact3.phoneNumbers.append(CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: "1234567890")))
+            // TODO: Create FAKE contacts.
+            self.contacts = [contact, contact2, contact3]
+        }
+    }
+
+    class func simulatedUsernames() -> [String] {
+        var connections: [String] = []
+        let matchedContacts: [CNContact] = SDGUser.simulatedDiscoveredUser.contacts ?? []
+
+        for contact: CNContact in matchedContacts {
+            let matchedUsername: String = "\(contact.givenName) \(contact.familyName)"
+            connections.append(matchedUsername)
+        }
+        return connections
     }
 
 }

@@ -8,6 +8,7 @@
 
 import XCTest
 import PhoneNumberKit
+import CoreData
 
 @testable import SixDegrees
 
@@ -53,4 +54,16 @@ class SDGTests: XCTestCase {
         }
     }
 
+    func testFetchingFromCoreData() {
+        let MOC: NSManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        let fetchRequest: NSFetchRequest = NSFetchRequest(entityName: "SDGConnection")
+
+        do {
+            let connections: [SDGConnection] = try MOC.executeFetchRequest(fetchRequest) as! [SDGConnection]
+        } catch {
+            print("error")
+        }
+
+
+    }
 }
