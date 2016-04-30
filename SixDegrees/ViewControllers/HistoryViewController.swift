@@ -26,6 +26,7 @@ class HistoryViewController: UIViewController {
     var expandIndex: Int?
     var connections: [SDGConnection] = []
     @IBOutlet weak var historyTableView: UITableView!
+    @IBOutlet weak var placeholderImageView: UIImageView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +58,10 @@ class HistoryViewController: UIViewController {
 //        connection3.mutualUserNames = []
 //
 //        self.connections = [connection1, connection2, connection3]
+
+        // Make placeholder white
+        self.placeholderImageView.image = self.placeholderImageView.image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        self.placeholderImageView.tintColor = UIColor.whiteColor()
     }
 
     override func didReceiveMemoryWarning() {
@@ -65,6 +70,8 @@ class HistoryViewController: UIViewController {
     }
 
     override func viewWillAppear(animated: Bool) {
+        self.view.bringSubviewToFront(self.historyTableView)
+
         // Show/hide simulation enabled label
         let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
         let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
@@ -126,7 +133,9 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.connections.count == 0 {
-            // TODO: Show placeholder
+            self.historyTableView.hidden = true
+        } else {
+            self.historyTableView.hidden = false
         }
         return self.connections.count
     }

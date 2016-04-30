@@ -41,7 +41,8 @@ class TutorialCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var tutorialImageView: UIImageView!
     @IBOutlet weak var greyView: UIView!
-    @IBOutlet weak var dismissButton: UIButton!
+    
+    @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var instructionLabel: UILabel!
 
     override func awakeFromNib() {
@@ -49,14 +50,14 @@ class TutorialCollectionViewCell: UICollectionViewCell {
         self.greyView.backgroundColor = UIColor.blackColor()
 
         self.instructionLabel.alpha = 0
-        self.dismissButton.hidden = true
+        self.doneButton.hidden = true
     }
 
     func showInstructions() {
         self.greyView.alpha = 0
         self.instructionLabel.alpha = 0
 
-        UIView.animateWithDuration(2, delay: 0, options: [UIViewAnimationOptions.CurveLinear, UIViewAnimationOptions.AllowUserInteraction], animations: {
+        UIView.animateWithDuration(1, delay: 0, options: [UIViewAnimationOptions.CurveLinear, UIViewAnimationOptions.AllowUserInteraction], animations: {
             self.greyView.alpha = 0.7
             }, completion: {(success: Bool) in
         })
@@ -69,14 +70,14 @@ class TutorialCollectionViewCell: UICollectionViewCell {
 
         // Show button if its the last screen
         if self.index == self.maximumIndex-1 {
-            self.dismissButton.alpha = 0
-            self.dismissButton.hidden = false
+            self.doneButton.alpha = 0
+            self.doneButton.hidden = false
 
             UIView.animateWithDuration(1, delay: 0.3, options: UIViewAnimationOptions.CurveLinear, animations: { 
-                self.dismissButton.alpha = 1
+                self.doneButton.alpha = 1
                 }, completion: nil)
         } else {
-            self.dismissButton.hidden = true
+            self.doneButton.hidden = true
         }
 
     }

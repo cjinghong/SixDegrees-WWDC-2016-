@@ -57,8 +57,7 @@ class TutorialViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
-    func dismiss(sender: AnyObject?) {
+    @IBAction func dismissButtonTapped(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 }
@@ -75,7 +74,7 @@ extension TutorialViewController: UICollectionViewDataSource, UICollectionViewDe
         cell.index = indexPath.row
         cell.tutorialImage = UIImage(named: self.tutorialImageNames[indexPath.row])!
 
-        cell.dismissButton.addTarget(self, action: #selector(self.dismiss(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        cell.doneButton.addTarget(self, action: #selector(self.dismissButtonTapped(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         return cell
     }
 

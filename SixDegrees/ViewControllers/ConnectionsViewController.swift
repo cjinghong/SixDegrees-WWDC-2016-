@@ -18,6 +18,7 @@ class ConnectionsViewController: UIViewController {
         didSet {
             if displayMode == SDGDisplayMode.Simulated {
                 self.simulationReminderTopConstraint.constant = 0
+                self.simulationReminderView.hidden = false
 
                 self.userIconView.user = SDGUser.simulatedCurrentUser
                 self.connectingUserIconView.user = SDGUser.simulatedDiscoveredUser
@@ -26,6 +27,7 @@ class ConnectionsViewController: UIViewController {
                 self.bluetoothManager.delegate = nil
             } else {
                 self.simulationReminderTopConstraint.constant = -20
+                self.simulationReminderView.hidden = true
 
                 self.userIconView.user = SDGUser.currentUser
                 self.connectingUserIconView.user = self.connectingUser
@@ -40,6 +42,7 @@ class ConnectionsViewController: UIViewController {
     @IBOutlet weak var connectingUserHorizontalConstraint: NSLayoutConstraint!
     @IBOutlet weak var mutualUsersCollectionView: UICollectionView!
 
+    @IBOutlet weak var simulationReminderView: UIView!
     @IBOutlet weak var simulationReminderTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var userIconView: UserIconView!
     @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
@@ -122,7 +125,7 @@ class ConnectionsViewController: UIViewController {
         var connections: [SDGUser] = []
 
         let contactsController: SDGContactsController = SDGContactsController.sharedInstance
-        let matchedContacts: [CNContact] = contactsController.compareContactsWith(user.contacts ?? [])
+        let matchedContacts: [CNContact] = contactsController.getCommonContactsWith(user.contacts ?? [])
 
         for contact: CNContact in matchedContacts {
             let matchedUsername: String = "\(contact.givenName) \(contact.familyName)"
@@ -172,8 +175,6 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
                 
                 let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "You have disconnected from \(peer.displayName). Please do not turn off the wifi of both the devices.", preferredStyle: UIAlertControllerStyle.Alert)
                 alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
-                    // Disconnect self, then pop back to vc.
-                    self.bluetoothManager.session.disconnect()
                     self.dismissViewControllerAnimated(true, completion: nil)
                 }))
                 self.presentViewController(alertController, animated: true, completion: nil)

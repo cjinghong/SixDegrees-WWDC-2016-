@@ -16,11 +16,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sadface" translatesAutoresizingMaskIntoConstraints="NO" id="62a-6T-50a">
+                                <rect key="frame" x="200" y="180" width="200" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="7Jv-Ss-koC"/>
+                                    <constraint firstAttribute="height" constant="200" id="qJp-LY-Vrs"/>
+                                </constraints>
+                            </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="220" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CLy-Xa-Jaa">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
+                                <color key="backgroundColor" red="0.61176470589999998" green="0.87450980389999999" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="kdq-zI-OqH" userLabel="Simulation view">
-                                    <rect key="frame" x="0.0" y="64" width="600" height="20"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="20"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Simulation is turned on. You can disable it in settings." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="LWL-Xg-JET">
@@ -41,7 +48,7 @@
                                 </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="HistoryTableViewCell" rowHeight="220" id="qS3-I3-7jt" customClass="HistoryTableViewCell" customModule="SixDegrees" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="112" width="600" height="220"/>
+                                        <rect key="frame" x="0.0" y="48" width="600" height="220"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qS3-I3-7jt" id="DpV-83-DT5">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="219"/>
@@ -237,18 +244,35 @@
                                     <outlet property="delegate" destination="BqR-q3-seb" id="Y7B-qQ-yvk"/>
                                 </connections>
                             </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Oops! You have no connections" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lf8-us-TyB">
+                                <rect key="frame" x="173" y="408" width="255" height="22"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.61176470588235299" green="0.87450980392156863" blue="0.96470588235294119" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="62a-6T-50a" firstAttribute="centerX" secondItem="cxm-is-n5y" secondAttribute="centerX" id="6tt-Dk-6Vd"/>
+                            <constraint firstItem="Lf8-us-TyB" firstAttribute="top" secondItem="62a-6T-50a" secondAttribute="bottom" constant="28" id="CcR-zS-nGq"/>
                             <constraint firstAttribute="trailing" secondItem="CLy-Xa-Jaa" secondAttribute="trailing" id="LGe-AB-7vt"/>
                             <constraint firstItem="Q13-LU-zGz" firstAttribute="top" secondItem="CLy-Xa-Jaa" secondAttribute="bottom" id="TvW-t4-GbZ"/>
+                            <constraint firstItem="Lf8-us-TyB" firstAttribute="centerX" secondItem="cxm-is-n5y" secondAttribute="centerX" id="X5G-fh-JZx"/>
                             <constraint firstItem="CLy-Xa-Jaa" firstAttribute="leading" secondItem="cxm-is-n5y" secondAttribute="leading" id="cs0-dd-iDf"/>
+                            <constraint firstItem="62a-6T-50a" firstAttribute="centerY" secondItem="cxm-is-n5y" secondAttribute="centerY" constant="-20" id="iIi-Xz-t5u"/>
+                            <constraint firstItem="CLy-Xa-Jaa" firstAttribute="top" secondItem="JRy-M6-rew" secondAttribute="bottom" id="jvd-zm-wZf"/>
                             <constraint firstItem="CLy-Xa-Jaa" firstAttribute="top" secondItem="cxm-is-n5y" secondAttribute="top" id="yy1-0n-Wf8"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="yy1-0n-Wf8"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="History" id="qvU-Cc-G7u"/>
                     <connections>
                         <outlet property="historyTableView" destination="CLy-Xa-Jaa" id="a6H-3c-gSi"/>
+                        <outlet property="placeholderImageView" destination="62a-6T-50a" id="oGr-4h-Y2e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZJV-dp-0Z7" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -560,6 +584,7 @@
                         <outlet property="disconnectButton" destination="guF-ci-Jc8" id="cBM-kY-O1l"/>
                         <outlet property="mutualUsersCollectionView" destination="AIh-bJ-Ufd" id="bgk-Ch-VHi"/>
                         <outlet property="simulationReminderTopConstraint" destination="SrL-vA-zb0" id="afN-dI-WcL"/>
+                        <outlet property="simulationReminderView" destination="PNM-82-7bf" id="dco-k7-qsi"/>
                         <outlet property="userIconHorizontalConstraint" destination="7kg-Ub-o0r" id="AqV-Lb-QhN"/>
                         <outlet property="userIconView" destination="VFX-RS-c5R" id="9HS-9J-Fhc"/>
                     </connections>
@@ -833,7 +858,7 @@
                                             <constraint firstAttribute="trailing" secondItem="FTB-qe-0v8" secondAttribute="trailing" id="qfw-m7-hVQ"/>
                                         </constraints>
                                         <connections>
-                                            <outlet property="dismissButton" destination="zvh-15-ceO" id="Tlw-gw-xY2"/>
+                                            <outlet property="doneButton" destination="zvh-15-ceO" id="2YV-ai-q9M"/>
                                             <outlet property="greyView" destination="LPj-fM-8bw" id="TxH-Sk-hfv"/>
                                             <outlet property="instructionLabel" destination="CXG-Aq-UNa" id="i6k-Uh-rgD"/>
                                             <outlet property="tutorialImageView" destination="FTB-qe-0v8" id="Jqa-49-S4S"/>
@@ -845,12 +870,22 @@
                                     <outlet property="delegate" destination="CEI-dH-zAB" id="6Da-h9-jP8"/>
                                 </connections>
                             </collectionView>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="7" translatesAutoresizingMaskIntoConstraints="NO" id="4Jb-DF-VTz">
+                            <pageControl opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="7" translatesAutoresizingMaskIntoConstraints="NO" id="4Jb-DF-VTz">
                                 <rect key="frame" x="8" y="555" width="584" height="37"/>
                             </pageControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cTB-nH-DPy">
+                                <rect key="frame" x="12" y="28" width="38" height="30"/>
+                                <state key="normal" title="Got it">
+                                    <color key="titleColor" red="0.97994692270992367" green="0.32792422203666582" blue="0.32885257593252309" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="dismissButtonTapped:" destination="CEI-dH-zAB" eventType="touchUpInside" id="NJz-AL-0on"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="cTB-nH-DPy" firstAttribute="top" secondItem="Q9f-Mk-oKx" secondAttribute="bottom" constant="8" id="3kL-j4-7I3"/>
                             <constraint firstAttribute="trailing" secondItem="4Jb-DF-VTz" secondAttribute="trailing" constant="8" id="Bs3-Xg-7bk"/>
                             <constraint firstAttribute="trailing" secondItem="RmM-3z-wg3" secondAttribute="trailing" id="CbU-AX-UNX"/>
                             <constraint firstItem="4Jb-DF-VTz" firstAttribute="leading" secondItem="v7l-TC-zJq" secondAttribute="leading" constant="8" id="VIS-QZ-Nqg"/>
@@ -858,6 +893,7 @@
                             <constraint firstItem="RmM-3z-wg3" firstAttribute="leading" secondItem="v7l-TC-zJq" secondAttribute="leading" id="dqN-PA-Rpa"/>
                             <constraint firstItem="RmM-3z-wg3" firstAttribute="top" secondItem="v7l-TC-zJq" secondAttribute="top" id="gpz-5S-WNo"/>
                             <constraint firstItem="fyt-ou-OiN" firstAttribute="top" secondItem="RmM-3z-wg3" secondAttribute="bottom" id="iZp-93-CNa"/>
+                            <constraint firstItem="cTB-nH-DPy" firstAttribute="leading" secondItem="v7l-TC-zJq" secondAttribute="leading" constant="12" id="tDp-wx-eMj"/>
                         </constraints>
                     </view>
                     <connections>
@@ -895,6 +931,7 @@
         <image name="face_sad" width="50" height="50"/>
         <image name="history" width="25" height="25"/>
         <image name="lifebuoy" width="50" height="50"/>
+        <image name="sadface" width="1437" height="1437"/>
         <image name="settings" width="25" height="25"/>
         <image name="simulation" width="50" height="50"/>
     </resources>
