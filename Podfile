@@ -7,9 +7,6 @@ pod 'MBProgressHUD', '~> 0.9.2'
 pod 'PhoneNumberKit', '~> 0.7'
 pod 'Pulsator'
 
-# pod "Alamofire";
-# pod "SwiftyJSON";
-
 target 'SixDegrees' do
 
 end

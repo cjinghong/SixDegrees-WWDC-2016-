@@ -74,7 +74,7 @@ extension UIColor {
         return UIColor(hexString: "#9CDFF6")!
     }
     class func SDGDarkBlue() -> UIColor {
-        return UIColor(hexString: "27B9EC")!
+        return UIColor(hexString: "#27B9EC")!
     }
 
     class func randomSDGColor() -> UIColor {

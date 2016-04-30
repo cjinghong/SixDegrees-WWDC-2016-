@@ -240,11 +240,10 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
             dispatch_async(dispatch_get_main_queue(), {
                 self.hud?.hide(true)
 
-                let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "You have disconnected from \(peerId.displayName). Please do not turn off the wifi of both the devices.", preferredStyle: UIAlertControllerStyle.Alert)
+                let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "\(peerId.displayName) have disconnected.", preferredStyle: UIAlertControllerStyle.Alert)
                 alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
                     // Disconnect self, then pop back to vc.
                     self.bluetoothManager.session.disconnect()
-                    self.dismissViewControllerAnimated(true, completion: nil)
                 }))
                 self.presentViewController(alertController, animated: true, completion: nil)
             })

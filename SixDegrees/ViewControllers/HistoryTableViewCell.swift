@@ -16,15 +16,18 @@ class HistoryTableViewCell: UITableViewCell {
             self.myUserIconView.user = connection.myUser
             self.targetUserIconView.user = connection.targetUser
 
-            if self.connection.mutualUsers.count <= 99 {
-                self.numberOfConnectionsLabel.text = "\(self.connection.mutualUsers.count)"
-                self.sadIconImageView.hidden = true
-            } else if self.connection.mutualUsers.count == 0 {
+            if self.connection.mutualUsers.count == 0 {
                 self.numberOfConnectionsLabel.text = ""
                 self.sadIconImageView.hidden = false
+                self.mutualUserCollectionView.hidden = true
+            } else if self.connection.mutualUsers.count <= 99 {
+                self.numberOfConnectionsLabel.text = "\(self.connection.mutualUsers.count)"
+                self.sadIconImageView.hidden = true
+                self.mutualUserCollectionView.hidden = false
             } else {
                 self.numberOfConnectionsLabel.text = "99+"
                 self.sadIconImageView.hidden = true
+                self.mutualUserCollectionView.hidden = false
             }
             let dateFormatter: NSDateFormatter = NSDateFormatter()
             dateFormatter.dateFormat = "MMM dd, hh:mm aa"

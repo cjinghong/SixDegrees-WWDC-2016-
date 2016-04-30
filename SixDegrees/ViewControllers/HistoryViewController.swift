@@ -24,7 +24,14 @@ class HistoryViewController: UIViewController {
     let MOC: NSManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 
     var expandIndex: Int?
-    var connections: [SDGConnection] = []
+    var connections: [SDGConnection] = [] {
+        didSet {
+            self.connections.sortInPlace { (aConnection: SDGConnection, bConnection: SDGConnection) -> Bool in
+                return aConnection.date.compare(bConnection.date) == NSComparisonResult.OrderedDescending
+            }
+            self.historyTableView.reloadData()
+        }
+    }
     @IBOutlet weak var historyTableView: UITableView!
     @IBOutlet weak var placeholderImageView: UIImageView!
 
@@ -99,7 +106,6 @@ class HistoryViewController: UIViewController {
         do {
             if let results: [SDGConnection] = try (self.MOC.executeFetchRequest(fetchRequest)) as? [SDGConnection] {
                 self.connections = results
-                self.historyTableView.reloadData()
             }
         } catch {
             print("Error retrieving history")
@@ -109,7 +115,6 @@ class HistoryViewController: UIViewController {
     func createSimulatedConnections() {
         let connection: SDGConnection = SDGConnection(date: NSDate(), myUsername: SDGUser.simulatedCurrentUser.name, targetUsername: SDGUser.simulatedDiscoveredUser.name, mutualUsernames: SDGUser.simulatedUsernames(), context: self.MOC, needSave: false)
         self.connections = [connection]
-        self.historyTableView.reloadData()
     }
 
     func historyCellTapped(sender: UIGestureRecognizer?) {
@@ -150,19 +155,14 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let historyCell: HistoryTableViewCell = tableView.dequeueReusableCellWithIdentifier("HistoryTableViewCell", forIndexPath: indexPath) as! HistoryTableViewCell
-        historyCell.connection = self.connections[indexPath.row]
         historyCell.selectionStyle = .None
+        historyCell.connection = self.connections[indexPath.row]
 
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.historyCellTapped(_:)))
         historyCell.tag = indexPath.row
         historyCell.addGestureRecognizer(tapGesture)
 
         return historyCell
-    }
-
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-
-        // TODO: Actually show the mutual friends
     }
 
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

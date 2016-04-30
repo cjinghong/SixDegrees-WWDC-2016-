@@ -17,7 +17,7 @@ class TutorialCollectionViewCell: UICollectionViewCell {
             case 0:
                 self.instructionLabel.text = "Searching for nearby users. Make sure the device's wifi is on. You don't have to be connected to the internet for this to work."
             case 1:
-                self.instructionLabel.text = "Available users will be shown on the screen"
+                self.instructionLabel.text = "Nearby users with the app running will be shown on the screen"
             case 2:
                 self.instructionLabel.text = "Tap on the user you would like to connect with"
             case 3:

@@ -145,6 +145,12 @@
                                                                 <constraint firstItem="pqw-2P-vM0" firstAttribute="centerX" secondItem="p6M-kt-LY7" secondAttribute="centerX" id="t9a-qm-yUV"/>
                                                             </constraints>
                                                         </view>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No common connections" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HEF-Yg-Uls">
+                                                            <rect key="frame" x="8" y="146" width="192" height="21"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dy6-M5-7oZ">
                                                             <rect key="frame" x="8" y="116" width="460" height="80"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -196,6 +202,7 @@
                                                     <constraints>
                                                         <constraint firstItem="NdF-E8-hk6" firstAttribute="centerY" secondItem="ZDc-uw-f5J" secondAttribute="centerY" id="7aA-kW-1Gh"/>
                                                         <constraint firstItem="Q3u-oH-Mig" firstAttribute="centerY" secondItem="ZDc-uw-f5J" secondAttribute="centerY" id="8l5-hk-Txn"/>
+                                                        <constraint firstItem="HEF-Yg-Uls" firstAttribute="centerY" secondItem="dy6-M5-7oZ" secondAttribute="centerY" id="CrN-8x-WkA"/>
                                                         <constraint firstItem="p6M-kt-LY7" firstAttribute="centerY" secondItem="Uvf-Zj-i48" secondAttribute="centerY" id="CwU-9M-9Ss"/>
                                                         <constraint firstItem="6vt-4J-xqy" firstAttribute="leading" secondItem="Uvf-Zj-i48" secondAttribute="leading" constant="8" id="NIV-Qn-JLH"/>
                                                         <constraint firstItem="Q3u-oH-Mig" firstAttribute="centerX" secondItem="ZDc-uw-f5J" secondAttribute="centerX" id="StG-cT-4fd"/>
@@ -204,6 +211,7 @@
                                                         <constraint firstItem="dy6-M5-7oZ" firstAttribute="top" secondItem="6vt-4J-xqy" secondAttribute="bottom" constant="30" id="aTd-uO-yOX"/>
                                                         <constraint firstItem="9Bg-z6-57f" firstAttribute="leading" secondItem="Uvf-Zj-i48" secondAttribute="leading" constant="8" id="aYs-Pb-Jaj"/>
                                                         <constraint firstItem="6vt-4J-xqy" firstAttribute="top" secondItem="9Bg-z6-57f" secondAttribute="bottom" constant="10" id="ctS-tV-uXs"/>
+                                                        <constraint firstItem="HEF-Yg-Uls" firstAttribute="leading" secondItem="Uvf-Zj-i48" secondAttribute="leading" constant="8" id="h7x-Hn-m8l"/>
                                                         <constraint firstItem="ZDc-uw-f5J" firstAttribute="centerY" secondItem="6vt-4J-xqy" secondAttribute="centerY" id="jgZ-HZ-epE"/>
                                                         <constraint firstItem="ZDc-uw-f5J" firstAttribute="leading" secondItem="6vt-4J-xqy" secondAttribute="trailing" constant="-8" id="mJI-JW-bu1"/>
                                                         <constraint firstAttribute="trailing" secondItem="p6M-kt-LY7" secondAttribute="trailing" constant="16" id="meK-yz-jEz"/>
@@ -792,7 +800,6 @@
         <!--Tutorial View Controller-->
         <scene sceneID="eu7-bu-BJJ">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ETD-4r-fTs" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="CEI-dH-zAB" customClass="TutorialViewController" customModule="SixDegrees" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Q9f-Mk-oKx"/>
@@ -901,6 +908,7 @@
                         <outlet property="tutorialCollectionView" destination="RmM-3z-wg3" id="Ti9-Bq-4Rz"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ETD-4r-fTs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2007" y="787"/>
         </scene>

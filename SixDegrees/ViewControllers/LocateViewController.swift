@@ -119,6 +119,8 @@ class LocateViewController: UIViewController {
             self.hideSearchingForNearbyDevices()
         }
 
+        self.restartBTServices()
+
         // Show/hide simulation enabled label
         let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
         let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
@@ -152,13 +154,23 @@ class LocateViewController: UIViewController {
     }
 
     // MARK: - Functions
-
     @IBAction func findConnections(sender: AnyObject) {
         if let contacts = SDGUser.currentUser.contacts {
             if let connectedPeer = self.bluetoothManager.session.connectedPeers.first {
                 self.bluetoothManager.sendContactsToPeer(connectedPeer, contacts: contacts)
             }
         }
+    }
+
+    func restartBTServices() {
+        self.bluetoothManager.stopBrowsing()
+        self.bluetoothManager.stopAdvertising()
+        self.discoveredUsers.removeAll()
+
+        self.bluetoothManager.startBrowsing()
+        self.bluetoothManager.startAdvertising()
+
+        self.bluetoothManager.delegate = self
     }
 
     // MARK: - Animation functions
