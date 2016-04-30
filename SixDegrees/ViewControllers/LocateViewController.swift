@@ -96,11 +96,17 @@ class LocateViewController: UIViewController {
         self.searchingForDevicesLabel.hidden = true
         self.turnOnWifiReminderLabel.hidden = true
 
+        // Setup pulsator
         self.pulsator.numPulse = 4
         self.pulsator.radius = self.view.frame.width/2 - 10
         self.pulsator.backgroundColor = UIColor.SDGDarkBlue().CGColor
         self.pulsator.frame.origin.x += 35
         self.pulsator.frame.origin.y += 35
+
+//         Setup interactive movement for collectionview
+//        let longPressGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongPressGesture(_:)))
+//        self.discoveredUsersCollectionView.addGestureRecognizer(longPressGesture)
+//        self.discoveredUsersCollectionView.clipsToBounds = false
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -119,7 +125,9 @@ class LocateViewController: UIViewController {
             self.hideSearchingForNearbyDevices()
         }
 
-        self.restartBTServices()
+        // Pulse
+        self.userIconView.layer.insertSublayer(self.pulsator, below: userIconView.iconImageView.layer)
+        self.pulsator.start()
 
         // Show/hide simulation enabled label
         let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
@@ -134,15 +142,12 @@ class LocateViewController: UIViewController {
             if self.displayMode != SDGDisplayMode.Normal {
                 self.displayMode = SDGDisplayMode.Normal
             }
+            // Restart bluetooth services if needed
+            self.restartBTServicesIfNeeded()
         }
     }
 
     override func viewDidAppear(animated: Bool) {
-
-        self.userIconView.layer.insertSublayer(self.pulsator, below: userIconView.iconImageView.layer)
-
-        self.pulsator.start()
-
         // Try to get access to all the contacts of the current device
         self.contactsController.promptForAddressBookAccessIfNeeded { (granted) in
             if !granted {
@@ -162,7 +167,8 @@ class LocateViewController: UIViewController {
         }
     }
 
-    func restartBTServices() {
+    /// Stops advertising and browsing, and starts again.
+    func restartBTServicesIfNeeded() {
         self.bluetoothManager.stopBrowsing()
         self.bluetoothManager.stopAdvertising()
         self.discoveredUsers.removeAll()
@@ -239,6 +245,23 @@ class LocateViewController: UIViewController {
                 self.turnOnWifiReminderLabel.hidden = true
         })
     }
+
+//    func handleLongPressGesture(gesture: UILongPressGestureRecognizer?) {
+//
+//        guard let location: CGPoint = gesture?.locationInView(self.discoveredUsersCollectionView) else {
+//            return
+//        }
+//
+//        if gesture?.state == .Began {
+//            if let selectedIndexPath: NSIndexPath = self.discoveredUsersCollectionView.indexPathForItemAtPoint(location) {
+//                self.discoveredUsersCollectionView.beginInteractiveMovementForItemAtIndexPath(selectedIndexPath)
+//            }
+//        } else if gesture?.state == .Changed {
+//            self.discoveredUsersCollectionView.updateInteractiveMovementTargetPosition(location)
+//        } else {
+//            self.discoveredUsersCollectionView.endInteractiveMovement()
+//        }
+//    }
 }
 
 // MARK: - SDGBluetoothManagerDelegate
@@ -256,6 +279,7 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
         let user: SDGUser = SDGUser(peerId: peer, color: UIColor.randomSDGColor())
         if !self.discoveredUsers.contains(user) {
             self.discoveredUsers.append(user)
+            self.discoveredUsersCollectionView.cancelInteractiveMovement()
             self.discoveredUsersCollectionView.reloadData()
         }
     }
@@ -420,7 +444,8 @@ extension LocateViewController: UICollectionViewDataSource, UICollectionViewDele
         self.presentViewController(alertController, animated: true, completion: nil)
     }
 
-
+    func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+    }
 }
 
 

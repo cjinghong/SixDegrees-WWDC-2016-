@@ -66,6 +66,10 @@ class ConnectionsViewController: UIViewController {
         } else {
             self.displayMode = SDGDisplayMode.Normal
         }
+
+        let longPressGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongPressGesture(_:)))
+        self.mutualUsersCollectionView.addGestureRecognizer(longPressGesture)
+        self.mutualUsersCollectionView.clipsToBounds = false
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -113,6 +117,10 @@ class ConnectionsViewController: UIViewController {
                     }, completion: nil)
             })
         }
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
     }
 
     override func didReceiveMemoryWarning() {
@@ -263,7 +271,28 @@ extension ConnectionsViewController: UICollectionViewDataSource, UICollectionVie
         return cell
     }
 
+    func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+
+    }
+
+    func handleLongPressGesture(gesture: UILongPressGestureRecognizer?) {
+
+        guard let location: CGPoint = gesture?.locationInView(self.mutualUsersCollectionView) else {
+            return
+        }
+
+        if gesture?.state == .Began {
+            if let selectedIndexPath: NSIndexPath = self.mutualUsersCollectionView.indexPathForItemAtPoint(location) {
+                self.mutualUsersCollectionView.beginInteractiveMovementForItemAtIndexPath(selectedIndexPath)
+            }
+        } else if gesture?.state == .Changed {
+            self.mutualUsersCollectionView.updateInteractiveMovementTargetPosition(location)
+        } else if gesture?.state == .Ended {
+            self.mutualUsersCollectionView.endInteractiveMovement()
+        }
+    }
 }
+
 
 
 
