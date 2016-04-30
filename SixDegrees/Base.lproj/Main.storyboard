@@ -469,8 +469,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ePG-8i-oKm" customClass="UserIconView" customModule="SixDegrees" customModuleProvider="target">
-                                <rect key="frame" x="265" y="126" width="70" height="70"/>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ePG-8i-oKm" customClass="UserIconView" customModule="SixDegrees" customModuleProvider="target">
+                                <rect key="frame" x="265" y="200" width="70" height="70"/>
                                 <color key="backgroundColor" red="0.84456380208333337" green="0.78496410419999996" blue="0.20567711359999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="70" id="ZY7-XY-BcN"/>
@@ -491,8 +491,8 @@
                                     <action selector="disconnect:" destination="uxH-81-kuC" eventType="touchUpInside" id="Cmh-DY-PCt"/>
                                 </connections>
                             </button>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VFX-RS-c5R" customClass="UserIconView" customModule="SixDegrees" customModuleProvider="target">
-                                <rect key="frame" x="265" y="421" width="70" height="70"/>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VFX-RS-c5R" customClass="UserIconView" customModule="SixDegrees" customModuleProvider="target">
+                                <rect key="frame" x="265" y="330" width="70" height="70"/>
                                 <color key="backgroundColor" red="0.47954644099999999" green="0.78496410419999996" blue="0.20567711359999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="70" id="TtP-iU-FGt"/>
@@ -552,8 +552,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PNM-82-7bf" userLabel="Simulation view">
                                 <rect key="frame" x="0.0" y="64" width="600" height="20"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Simulation is turned on. You can disable it in settings." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Irl-AT-720">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Simulation is turned on. You can disable it in settings." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Irl-AT-720">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="20"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -568,6 +568,48 @@
                                     <constraint firstItem="Irl-AT-720" firstAttribute="leading" secondItem="PNM-82-7bf" secondAttribute="leading" id="m6k-oC-qMw"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GZm-R7-XcG">
+                                <rect key="frame" x="8" y="92" width="584" height="80"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R7g-ZE-nyR">
+                                        <rect key="frame" x="148" y="15" width="74" height="22"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="badge" translatesAutoresizingMaskIntoConstraints="NO" id="xwl-73-X62">
+                                        <rect key="frame" x="230" y="0.0" width="45" height="72"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="72" id="A7a-WT-O7y"/>
+                                            <constraint firstAttribute="width" constant="45" id="Tjx-ka-nKh"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="mutual connections!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S6K-SC-wOy">
+                                        <rect key="frame" x="283" y="15" width="164" height="22"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hzP-Il-AK1">
+                                        <rect key="frame" x="243" y="15" width="19" height="22"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.22208159123113025" green="0.78413963905250228" blue="0.92549019610000005" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="hzP-Il-AK1" firstAttribute="centerX" secondItem="xwl-73-X62" secondAttribute="centerX" id="1Cv-YN-j4p"/>
+                                    <constraint firstItem="R7g-ZE-nyR" firstAttribute="top" secondItem="GZm-R7-XcG" secondAttribute="top" constant="15" id="CUy-wV-con"/>
+                                    <constraint firstItem="xwl-73-X62" firstAttribute="leading" secondItem="R7g-ZE-nyR" secondAttribute="trailing" constant="8" id="Hwc-V6-Nuh"/>
+                                    <constraint firstItem="hzP-Il-AK1" firstAttribute="top" secondItem="GZm-R7-XcG" secondAttribute="top" constant="15" id="Y22-uD-aEZ"/>
+                                    <constraint firstItem="xwl-73-X62" firstAttribute="centerX" secondItem="GZm-R7-XcG" secondAttribute="centerX" constant="-40" id="h38-Ix-GB7"/>
+                                    <constraint firstItem="S6K-SC-wOy" firstAttribute="leading" secondItem="xwl-73-X62" secondAttribute="trailing" constant="8" id="pPr-hc-o3P"/>
+                                    <constraint firstItem="S6K-SC-wOy" firstAttribute="top" secondItem="GZm-R7-XcG" secondAttribute="top" constant="15" id="tL0-tA-GXb"/>
+                                    <constraint firstItem="xwl-73-X62" firstAttribute="top" secondItem="GZm-R7-XcG" secondAttribute="top" id="w30-wo-AIT"/>
+                                    <constraint firstAttribute="height" constant="80" id="yUE-Va-8ol"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.61176470589999998" green="0.87450980389999999" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -576,10 +618,13 @@
                             <constraint firstItem="VFX-RS-c5R" firstAttribute="centerY" secondItem="ka3-T8-eTy" secondAttribute="centerY" constant="65" id="7kg-Ub-o0r"/>
                             <constraint firstAttribute="trailing" secondItem="guF-ci-Jc8" secondAttribute="trailing" constant="8" id="Flm-KQ-Bix"/>
                             <constraint firstItem="ePG-8i-oKm" firstAttribute="centerY" secondItem="ka3-T8-eTy" secondAttribute="centerY" constant="-65" id="Fra-a6-89s"/>
+                            <constraint firstAttribute="trailing" secondItem="GZm-R7-XcG" secondAttribute="trailing" constant="8" id="IJ1-Wd-SDZ"/>
                             <constraint firstAttribute="trailing" secondItem="PNM-82-7bf" secondAttribute="trailing" id="LIK-Hz-AXl"/>
                             <constraint firstItem="ePG-8i-oKm" firstAttribute="centerX" secondItem="ka3-T8-eTy" secondAttribute="centerX" id="QKJ-Qb-5Ab"/>
+                            <constraint firstItem="GZm-R7-XcG" firstAttribute="top" secondItem="PNM-82-7bf" secondAttribute="bottom" constant="8" id="RJO-k6-Kd8"/>
                             <constraint firstItem="PNM-82-7bf" firstAttribute="top" secondItem="Ent-IZ-DEn" secondAttribute="bottom" id="SrL-vA-zb0"/>
                             <constraint firstAttribute="trailing" secondItem="AIh-bJ-Ufd" secondAttribute="trailing" id="WbZ-OV-kNN"/>
+                            <constraint firstItem="GZm-R7-XcG" firstAttribute="leading" secondItem="ka3-T8-eTy" secondAttribute="leading" constant="8" id="X7k-G4-Wtg"/>
                             <constraint firstItem="AIh-bJ-Ufd" firstAttribute="leading" secondItem="ka3-T8-eTy" secondAttribute="leading" id="fxR-CA-g2g"/>
                             <constraint firstItem="U4B-5z-Qzf" firstAttribute="top" secondItem="guF-ci-Jc8" secondAttribute="bottom" constant="8" id="iNu-4g-QGl"/>
                             <constraint firstItem="AIh-bJ-Ufd" firstAttribute="centerX" secondItem="ka3-T8-eTy" secondAttribute="centerX" id="q2V-F1-bwo"/>
@@ -592,6 +637,8 @@
                         <outlet property="connectingUserIconView" destination="ePG-8i-oKm" id="cdS-Ke-eeg"/>
                         <outlet property="disconnectButton" destination="guF-ci-Jc8" id="cBM-kY-O1l"/>
                         <outlet property="mutualUsersCollectionView" destination="AIh-bJ-Ufd" id="bgk-Ch-VHi"/>
+                        <outlet property="numberOfConnectionsLabel" destination="hzP-Il-AK1" id="bTh-Y5-uGg"/>
+                        <outlet property="numberOfConnectionsView" destination="GZm-R7-XcG" id="lz3-Ox-oUZ"/>
                         <outlet property="simulationReminderTopConstraint" destination="SrL-vA-zb0" id="afN-dI-WcL"/>
                         <outlet property="simulationReminderView" destination="PNM-82-7bf" id="dco-k7-qsi"/>
                         <outlet property="userIconHorizontalConstraint" destination="7kg-Ub-o0r" id="AqV-Lb-QhN"/>

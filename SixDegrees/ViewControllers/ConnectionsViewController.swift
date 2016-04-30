@@ -47,6 +47,10 @@ class ConnectionsViewController: UIViewController {
     @IBOutlet weak var userIconView: UserIconView!
     @IBOutlet weak var userIconHorizontalConstraint: NSLayoutConstraint!
 
+    
+    @IBOutlet weak var numberOfConnectionsView: UIView!
+    @IBOutlet weak var numberOfConnectionsLabel: UILabel!
+
     @IBOutlet weak var disconnectButton: UIButton!
 
     var connectingUser: SDGUser!
@@ -66,6 +70,10 @@ class ConnectionsViewController: UIViewController {
         } else {
             self.displayMode = SDGDisplayMode.Normal
         }
+
+        // Hides number of connections
+        self.numberOfConnectionsView.alpha = 0
+        self.numberOfConnectionsView.layer.cornerRadius = 10
 
         let longPressGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongPressGesture(_:)))
         self.mutualUsersCollectionView.addGestureRecognizer(longPressGesture)
@@ -109,9 +117,16 @@ class ConnectionsViewController: UIViewController {
             let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(3 * NSEC_PER_SEC))
             dispatch_after(dispatchTime, dispatch_get_main_queue(), {
                 self.hud?.hide(true)
+
+                // Show number of users
+                self.numberOfConnectionsLabel.text = "\(self.mutualUsers.count)"
+
                 UIView.animateWithDuration(1, delay: 0, options: .CurveLinear, animations: {
                     self.connectingUserHorizontalConstraint.constant -= 75
                     self.userIconHorizontalConstraint.constant += 75
+
+                    self.numberOfConnectionsView.alpha = 1
+
                     self.mutualUsersCollectionView.reloadSections(NSIndexSet(index: 0))
                     self.view.layoutIfNeeded()
                     }, completion: nil)
@@ -225,9 +240,15 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
             dispatch_async(dispatch_get_main_queue(), {
                 self.hud?.hide(true)
 
+                // Show number of connections
+                self.numberOfConnectionsLabel.text = "\(self.mutualUsers.count)"
+
                 UIView.animateWithDuration(1, delay: 0, options: .CurveLinear, animations: {
                     self.connectingUserHorizontalConstraint.constant -= 75
                     self.userIconHorizontalConstraint.constant += 75
+
+                    self.numberOfConnectionsView.alpha = 1
+
                     self.mutualUsersCollectionView.reloadSections(NSIndexSet(index: 0))
                     self.view.layoutIfNeeded()
                     }, completion: nil)

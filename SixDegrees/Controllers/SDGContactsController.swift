@@ -95,57 +95,60 @@ class SDGContactsController {
             myContactsIsOuter = true
         }
 
-        for outerContact: CNContact in outerLoopContacts {
-//
+//        for outerContact: CNContact in outerLoopContacts {
 //            let matchedContact: CNContact? = innerLoopContacts.filter({ (innerContact: CNContact) -> Bool in
-//                var phoneNumberMatches: Bool = false
 //
-//                for outerLabeledValue in outerContact.phoneNumbers {
-//                    let matchedPhoneNumber: CNLabeledValue? = innerContact.phoneNumbers.filter({ (innerLabeledValue: CNLabeledValue) -> Bool in
-//
+//                for outerPhoneNumberValue in outerContact.phoneNumbers {
+//                    let matchedPhoneNumber: CNLabeledValue? = innerContact.phoneNumbers.filter({ (phoneNumberValue: CNLabeledValue) -> Bool in
 //                        var outerPhoneNumberString: String?
-//                        var innerPhoneNumberString: String?
+//                        var phoneNumberString: String?
 //
 //                        // Parse phone number
 //                        do {
-//                            let outerPhoneNumber: PhoneNumber = try PhoneNumber(rawNumber: (outerLabeledValue.value as? String) ?? "")
+//                            let outerPhoneNumber: PhoneNumber = try PhoneNumber(rawNumber: (outerPhoneNumberValue.value as? CNPhoneNumber)?.stringValue ?? "")
 //                            outerPhoneNumberString = outerPhoneNumber.toInternational()
-//                            let innerPhoneNumber: PhoneNumber = try PhoneNumber(rawNumber: (innerLabeledValue.value as? String) ?? "")
-//                            innerPhoneNumberString = innerPhoneNumber.toInternational()
+//                            let phoneNumber: PhoneNumber = try PhoneNumber(rawNumber: (phoneNumberValue.value as? CNPhoneNumber)?.stringValue ?? "")
+//                            phoneNumberString = phoneNumber.toInternational()
 //                        } catch {
 //                            // If failed to parse any contact, just strip the symbols and whitespaces
-//                            outerPhoneNumberString = (outerLabeledValue.value as? String)?.stringByTrimmingCharactersInSet(NSCharacterSet.symbolCharacterSet())
+//                            outerPhoneNumberString = ((outerPhoneNumberValue.value) as? CNPhoneNumber)?.stringValue.stringByTrimmingCharactersInSet(NSCharacterSet.symbolCharacterSet())
 //                            outerPhoneNumberString = outerPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
 //                            outerPhoneNumberString = outerPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
 //
-//                            innerPhoneNumberString = (innerLabeledValue.value as? String)?.stringByTrimmingCharactersInSet(NSCharacterSet.symbolCharacterSet())
-//                            innerPhoneNumberString = innerPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
-//                            innerPhoneNumberString = innerPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
+//                            phoneNumberString = ((phoneNumberValue.value) as? CNPhoneNumber)?.stringValue.stringByTrimmingCharactersInSet(NSCharacterSet.symbolCharacterSet())
+//                            phoneNumberString = phoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
+//                            phoneNumberString = phoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
 //                        }
-//                        return outerPhoneNumberString == innerPhoneNumberString
+//
+//                        if outerPhoneNumberString != nil && phoneNumberString != nil {
+//                            return outerPhoneNumberString == phoneNumberString
+//                        } else {
+//                            return false
+//                        }
 //                    }).first
 //
-//                    // Store a bool whether there is a matched phone number
 //                    if matchedPhoneNumber != nil {
-//                        phoneNumberMatches = true
-//                        break
-//                    } else {
-//                        phoneNumberMatches = false
+//                        return true
 //                    }
 //                }
-//                return phoneNumberMatches
+//                return false
 //            }).first
 //
 //            if matchedContact != nil {
 //                matchedContacts.append(matchedContact!)
 //            }
 //        }
-//
-//        return matchedContacts
-//    }
 
+
+        var outerLoopCount: Int = 0
+        for outerContact: CNContact in outerLoopContacts {
+            print("Outer Loop: \(outerLoopCount)")
+            outerLoopCount += 1
+            var innerLoopCount: Int = 0
             innerContactsLoop: for innerContact: CNContact in innerLoopContacts {
 
+                print("Inner Loop \(innerLoopCount)")
+                innerLoopCount += 1
                 // Comparing phone numbers
                 for outerContactPhoneNumberLV: CNLabeledValue in outerContact.phoneNumbers {
                     for innerContactPhoneNumberLV: CNLabeledValue in innerContact.phoneNumbers {

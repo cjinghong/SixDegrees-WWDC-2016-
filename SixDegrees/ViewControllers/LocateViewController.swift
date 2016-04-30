@@ -102,11 +102,6 @@ class LocateViewController: UIViewController {
         self.pulsator.backgroundColor = UIColor.SDGDarkBlue().CGColor
         self.pulsator.frame.origin.x += 35
         self.pulsator.frame.origin.y += 35
-
-//         Setup interactive movement for collectionview
-//        let longPressGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongPressGesture(_:)))
-//        self.discoveredUsersCollectionView.addGestureRecognizer(longPressGesture)
-//        self.discoveredUsersCollectionView.clipsToBounds = false
     }
 
     override func viewWillAppear(animated: Bool) {
