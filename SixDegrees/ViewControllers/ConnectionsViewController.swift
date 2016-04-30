@@ -145,8 +145,8 @@ class ConnectionsViewController: UIViewController {
 
     /// Compare the contacts with on the current device with another user
     func compareContacts(withUser user: SDGUser) -> [SDGUser] {
-        var connections: [SDGUser] = []
 
+        var connections: [SDGUser] = []
         let contactsController: SDGContactsController = SDGContactsController.sharedInstance
         let matchedContacts: [CNContact] = contactsController.getCommonContactsWith(user.contacts ?? [])
 
@@ -196,9 +196,8 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
             dispatch_async(dispatch_get_main_queue(), {
                 self.hud?.hide(true)
                 
-                let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "You have disconnected from \(peer.displayName). Please do not turn off the wifi of both the devices.", preferredStyle: UIAlertControllerStyle.Alert)
+                let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "\(peer.displayName) have disconnected.", preferredStyle: UIAlertControllerStyle.Alert)
                 alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
-                    self.dismissViewControllerAnimated(true, completion: nil)
                 }))
                 self.presentViewController(alertController, animated: true, completion: nil)
             })
@@ -271,7 +270,7 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
 
                 let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "\(peerId.displayName) have disconnected.", preferredStyle: UIAlertControllerStyle.Alert)
                 alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
-                    // Disconnect self, then pop back to vc.
+                    // Disconnect self
                     self.bluetoothManager.session.disconnect()
                 }))
                 self.presentViewController(alertController, animated: true, completion: nil)
