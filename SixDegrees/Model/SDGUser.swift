@@ -22,6 +22,8 @@ public class SDGUser {
     var name: String!
     var contacts: [CNContact]?
 
+    var identifier: String?
+
     var color: UIColor?
 
     init(peerId: MCPeerID, color: UIColor) {
@@ -39,14 +41,13 @@ public class SDGUser {
         if simulated {
             let contact: CNMutableContact = CNMutableContact()
             contact.givenName = "Steve J"
-            contact.phoneNumbers.append(CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: "1234567890")))
+            contact.phoneNumbers.append(CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: "245478451")))
             let contact2: CNMutableContact = CNMutableContact()
             contact2.givenName = "Bill A"
-            contact2.phoneNumbers.append(CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: "1234567890")))
+            contact2.phoneNumbers.append(CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: "478152489")))
             let contact3: CNMutableContact = CNMutableContact()
             contact3.givenName = "Bob B"
-            contact3.phoneNumbers.append(CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: "1234567890")))
-            // TODO: Create FAKE contacts.
+            contact3.phoneNumbers.append(CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: "794854215")))
             self.contacts = [contact, contact2, contact3]
         }
     }

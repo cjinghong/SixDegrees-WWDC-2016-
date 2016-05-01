@@ -75,6 +75,7 @@ class ConnectionsViewController: UIViewController {
         self.numberOfConnectionsView.alpha = 0
         self.numberOfConnectionsView.layer.cornerRadius = 10
 
+        // Add long press to collection view for reordering
         let longPressGesture: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongPressGesture(_:)))
         self.mutualUsersCollectionView.addGestureRecognizer(longPressGesture)
         self.mutualUsersCollectionView.clipsToBounds = false
@@ -153,6 +154,7 @@ class ConnectionsViewController: UIViewController {
         for contact: CNContact in matchedContacts {
             let matchedUsername: String = "\(contact.givenName) \(contact.familyName)"
             let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername), color: UIColor.randomSDGColor())
+            matchedUser.identifier = (contact.emailAddresses.first?.value as? String) ?? (contact.phoneNumbers.first?.value as! CNPhoneNumber).stringValue
             connections.append(matchedUser)
         }
         return connections
@@ -165,6 +167,7 @@ class ConnectionsViewController: UIViewController {
         for contact: CNContact in matchedContacts {
             let matchedUsername: String = "\(contact.givenName) \(contact.familyName)"
             let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername), color: UIColor.randomSDGColor())
+            matchedUser.identifier = (contact.emailAddresses.first?.value as? String) ?? (contact.phoneNumbers.first?.value as! CNPhoneNumber).stringValue
             connections.append(matchedUser)
         }
         return connections
@@ -291,8 +294,27 @@ extension ConnectionsViewController: UICollectionViewDataSource, UICollectionVie
         return cell
     }
 
-    func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
 
+        for i in 0..<collectionView.numberOfItemsInSection(0) {
+            if i != indexPath.row {
+                let cell: UserCollectionViewCell = collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: i, inSection: 0)) as! UserCollectionViewCell
+                if cell.detailsShowing == true {
+                    cell.hideDetails()
+                }
+            }
+        }
+
+        let cell: UserCollectionViewCell = collectionView.cellForItemAtIndexPath(indexPath) as! UserCollectionViewCell
+        if cell.detailsShowing {
+            cell.hideDetails()
+        } else {
+            cell.showDetails()
+        }
+    }
+
+    func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        swap(&self.mutualUsers[sourceIndexPath.row], &self.mutualUsers[destinationIndexPath.row])
     }
 
     func handleLongPressGesture(gesture: UILongPressGestureRecognizer?) {
@@ -312,7 +334,5 @@ extension ConnectionsViewController: UICollectionViewDataSource, UICollectionVie
         }
     }
 }
-
-
 
 
