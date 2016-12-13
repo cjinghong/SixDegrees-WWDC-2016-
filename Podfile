@@ -3,8 +3,11 @@ platform :ios, '8.0'
 # Uncomment this line if you're using Swift
 use_frameworks!
 
-pod 'MBProgressHUD', '~> 0.9.2'
-pod 'PhoneNumberKit', '~> 0.7'
+pod 'MBProgressHUD'
+
+source 'https://github.com/CocoaPods/Specs.git'
+pod 'PhoneNumberKit', '~> 1.2'
+
 pod 'Pulsator'
 
 target 'SixDegrees' do

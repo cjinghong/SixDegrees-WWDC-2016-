@@ -153,24 +153,27 @@ class SDGContactsController {
                 for outerContactPhoneNumberLV: CNLabeledValue in outerContact.phoneNumbers {
                     for innerContactPhoneNumberLV: CNLabeledValue in innerContact.phoneNumbers {
 
-                        let outerContactPhoneNumberValue: String? = (outerContactPhoneNumberLV.value as? CNPhoneNumber)?.stringValue
-                        let innerContactPhoneNumberValue: String? = (innerContactPhoneNumberLV.value as? CNPhoneNumber)?.stringValue
+                        let outerContactPhoneNumberValue: String = outerContactPhoneNumberLV.value.stringValue
+                        let innerContactPhoneNumberValue: String = innerContactPhoneNumberLV.value.stringValue
 
                         var outerPhoneNumberString: String?
                         var innerPhoneNumberString: String?
 
+                        let phoneNumberKit: PhoneNumberKit = PhoneNumberKit()
+
                         do {
-                            let outerPhoneNumber: PhoneNumber = try PhoneNumber(rawNumber: outerContactPhoneNumberValue ?? "")
-                            outerPhoneNumberString = outerPhoneNumber.toInternational()
-                            let innerPhoneNumber: PhoneNumber = try PhoneNumber(rawNumber: innerContactPhoneNumberValue ?? "")
-                            innerPhoneNumberString = innerPhoneNumber.toInternational()
+                            let outerPhoneNumber: PhoneNumber = try phoneNumberKit.parse(outerContactPhoneNumberValue)
+                            outerPhoneNumberString = phoneNumberKit.format(outerPhoneNumber, toType: .international)
+
+                            let innerPhoneNumber: PhoneNumber = try phoneNumberKit.parse(innerContactPhoneNumberValue)
+                            innerPhoneNumberString = phoneNumberKit.format(innerPhoneNumber, toType: .international)
                         } catch {
                             // If failed to parse any contact, just strip the symbols and whitespaces
-                            outerPhoneNumberString = outerContactPhoneNumberValue?.trimmingCharacters(in: CharacterSet.symbols)
+                            outerPhoneNumberString = outerContactPhoneNumberValue.trimmingCharacters(in: CharacterSet.symbols)
                             outerPhoneNumberString = outerPhoneNumberString?.replacingOccurrences(of: " ", with: "")
                             outerPhoneNumberString = outerPhoneNumberString?.replacingOccurrences(of: " ", with: "")
 
-                            innerPhoneNumberString = innerContactPhoneNumberValue?.trimmingCharacters(in: CharacterSet.symbols)
+                            innerPhoneNumberString = innerContactPhoneNumberValue.trimmingCharacters(in: CharacterSet.symbols)
                             innerPhoneNumberString = innerPhoneNumberString?.replacingOccurrences(of: " ", with: "")
                             innerPhoneNumberString = innerPhoneNumberString?.replacingOccurrences(of: " ", with: "")
                         }
@@ -191,7 +194,7 @@ class SDGContactsController {
 
                 for myEmail: CNLabeledValue in outerContact.emailAddresses {
                     for userEmail: CNLabeledValue in innerContact.emailAddresses {
-                        if (myEmail.value as? String) == (userEmail.value as? String) {
+                        if (myEmail.value as String) == (userEmail.value as String) {
                             if myContactsIsOuter == true {
                                 matchedContacts.append(outerContact)
                             } else {

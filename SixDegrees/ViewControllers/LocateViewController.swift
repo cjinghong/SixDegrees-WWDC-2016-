@@ -300,8 +300,7 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
         })
     }
 
-    func didReceiveInvitationFromPeer(_ peerId: MCPeerID, completionBlock: @escaping ((_ accept: Bool) -> Void)) {
-        
+    internal func didReceiveInvitationFromPeer(_ peerId: MCPeerID, completionBlock: @escaping ((Bool) -> Void)) {
         let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Invitation from \(peerId.displayName)", preferredStyle: UIAlertControllerStyle.alert)
         alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) in
             completionBlock(true)

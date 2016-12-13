@@ -11,7 +11,7 @@ import MultipeerConnectivity
 import Contacts
 
 protocol SDGBluetoothManagerDelegate {
-    func didReceiveInvitationFromPeer(_ peerId: MCPeerID, completionBlock:((_ accept: Bool)->Void))
+    func didReceiveInvitationFromPeer(_ peerId: MCPeerID, completionBlock: @escaping ((_ accept: Bool)->Void))
     func didReceiveContacts(_ contacts: [CNContact], fromPeer peer: MCPeerID)
     func foundPeer(_ peer: MCPeerID)
     func lostPeer(_ peer: MCPeerID)

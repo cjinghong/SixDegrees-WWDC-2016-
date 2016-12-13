@@ -154,7 +154,7 @@ class ConnectionsViewController: UIViewController {
         for contact: CNContact in matchedContacts {
             let matchedUsername: String = "\(contact.givenName) \(contact.familyName)"
             let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername), color: UIColor.randomSDGColor())
-            matchedUser.identifier = (contact.emailAddresses.first?.value as? String) ?? (contact.phoneNumbers.first?.value as! CNPhoneNumber).stringValue
+            matchedUser.identifier = (contact.emailAddresses.first?.value as? String) ?? (contact.phoneNumbers.first?.value.stringValue)
             connections.append(matchedUser)
         }
         return connections
@@ -167,7 +167,7 @@ class ConnectionsViewController: UIViewController {
         for contact: CNContact in matchedContacts {
             let matchedUsername: String = "\(contact.givenName) \(contact.familyName)"
             let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername), color: UIColor.randomSDGColor())
-            matchedUser.identifier = (contact.emailAddresses.first?.value as? String) ?? (contact.phoneNumbers.first?.value as! CNPhoneNumber).stringValue
+            matchedUser.identifier = (contact.emailAddresses.first?.value as? String) ?? (contact.phoneNumbers.first?.value.stringValue)
             connections.append(matchedUser)
         }
         return connections
@@ -207,7 +207,7 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
         }
     }
 
-    func didReceiveInvitationFromPeer(_ peerId: MCPeerID, completionBlock:((_ accept: Bool)->Void)) {
+    func didReceiveInvitationFromPeer(_ peerId: MCPeerID, completionBlock: @escaping ((_ accept: Bool)->Void)) {
         // Automatically reject invitation if aleady in a session
         completionBlock(false)
     }

@@ -101,12 +101,12 @@ class HistoryViewController: UIViewController {
     }
     
     func fetchConnectionsFromCoreData() {
-        let fetchRequest: NSFetchRequest = NSFetchRequest(entityName: "SDGConnection")
+        let fetchRequest: NSFetchRequest<SDGConnection> = NSFetchRequest(entityName: "SDGConnection")
+
 
         do {
-            if let results: [SDGConnection] = try (self.MOC.fetch(fetchRequest)) as? [SDGConnection] {
-                self.connections = results
-            }
+            let results: [SDGConnection] = try self.MOC.fetch(fetchRequest)
+            self.connections = results
         } catch {
             print("Error retrieving history")
         }
