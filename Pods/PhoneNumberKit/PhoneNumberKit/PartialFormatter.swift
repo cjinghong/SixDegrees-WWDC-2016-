@@ -15,12 +15,27 @@ public class PartialFormatter {
     let parser = PhoneNumberParser()
     let regex = RegularExpressions.sharedInstance
     
-    let defaultRegion: String
-    let defaultMetadata: MetadataTerritory?
+    var defaultRegion: String {
+        didSet {
+            updateMetadataForDefaultRegion()
+        }
+    }
 
+    func updateMetadataForDefaultRegion() {
+        if let regionMetadata = metadata.fetchMetadataForCountry(defaultRegion) {
+            defaultMetadata = metadata.fetchMainCountryMetadataForCode(regionMetadata.countryCode)
+        } else {
+            defaultMetadata = nil
+        }
+        currentMetadata = defaultMetadata
+    }
+
+    var defaultMetadata: MetadataTerritory?
     var currentMetadata: MetadataTerritory?
     var prefixBeforeNationalNumber =  String()
     var shouldAddSpaceAfterNationalPrefix = false
+    
+    var withPrefix = true
     
     //MARK: Status
 
@@ -39,8 +54,8 @@ public class PartialFormatter {
     - returns: PartialFormatter object
     */
     public convenience init() {
-        let region = PhoneNumberKit().defaultRegionCode()
-        self.init(region: region)
+        let defaultRegion = PhoneNumberKit().defaultRegionCode()
+        self.init(defaultRegion: defaultRegion)
     }
     
     /**
@@ -50,10 +65,10 @@ public class PartialFormatter {
      
      - returns: PartialFormatter object
      */
-    public init(region: String) {
-        defaultRegion = region
-        defaultMetadata = metadata.fetchMetadataForCountry(defaultRegion)
-        currentMetadata = defaultMetadata
+    public init(defaultRegion: String, withPrefix: Bool = true) {
+        self.defaultRegion = defaultRegion
+        updateMetadataForDefaultRegion()
+        self.withPrefix = withPrefix
     }
     
     /**
@@ -220,6 +235,11 @@ public class PartialFormatter {
             prefixBeforeNationalNumber.appendContentsOf(potentialCountryCodeString)
             prefixBeforeNationalNumber.appendContentsOf(" ")
         }
+        else if withPrefix == false && prefixBeforeNationalNumber.isEmpty {
+            let potentialCountryCodeString = String(currentMetadata?.countryCode)
+            prefixBeforeNationalNumber.appendContentsOf(potentialCountryCodeString)
+            prefixBeforeNationalNumber.appendContentsOf(" ")
+        }
         return processedNumber
     }
 
@@ -233,9 +253,7 @@ public class PartialFormatter {
                     tempPossibleFormats.append(format)
                     if let leadingDigitPattern = format.leadingDigitsPatterns?.last {
                         if (regex.stringPositionByRegex(leadingDigitPattern, string: String(rawNumber)) == 0) {
-//                            if (regex.matchesEntirely(format.pattern, string: String(rawNumber))) {
-                                possibleFormats.append(format)
-//                            }
+                            possibleFormats.append(format)
                         }
                     }
                     else {

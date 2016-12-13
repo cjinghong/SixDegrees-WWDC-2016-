@@ -1,5 +1,5 @@
 ![PhoneNumberKit](https://cloud.githubusercontent.com/assets/889949/10723260/5225c86c-7bb9-11e5-883c-9b42aa50ea27.png)
-
+[![Platform](https://img.shields.io/cocoapods/p/PhoneNumberKit.svg?maxAge=2592000)](http://cocoapods.org/?q=PhoneNumberKit)
 [![Build Status](https://travis-ci.org/marmelroy/PhoneNumberKit.svg?branch=master)](https://travis-ci.org/marmelroy/PhoneNumberKit) [![Version](http://img.shields.io/cocoapods/v/PhoneNumberKit.svg)](http://cocoapods.org/?q=PhoneNumberKit)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
@@ -52,7 +52,7 @@ let phoneNumbers = PhoneNumberKit().parseMultiple(rawNumberArray)
 let phoneNumbersCustomDefaultRegion = PhoneNumberKit().parseMultiple(rawNumberArray, region: "DE")
 ```
 
-To use the AsYouTypeFormatter, just replace your UITextField with a PhoneNumberTextField.
+To use the AsYouTypeFormatter, just replace your UITextField with a PhoneNumberTextField (if you are using Interface Builder make sure the module field is set to PhoneNumberKit).
 
 PhoneNumberTextField automatically formats phone numbers and gives the user full editing capabilities. If you want to customize you can use the PartialFormatter directly. The default region code is automatically computed but can be overridden if needed.  
 
@@ -85,6 +85,7 @@ phoneNumber.nationalNumber
 phoneNumber.numberExtension
 phoneNumber.rawNumber
 phoneNumber.type // e.g Mobile or Fixed
+phoneNumber.isValidNumber // Checks if number has a known type
 ```
 
 ### Setting up with Carthage
@@ -107,5 +108,5 @@ github "marmelroy/PhoneNumberKit"
 ### Setting up with [CocoaPods](http://cocoapods.org/?q=PhoneNumberKit)
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-pod 'PhoneNumberKit', '~> 0.7'
+pod 'PhoneNumberKit', '~> 0.8'
 ```

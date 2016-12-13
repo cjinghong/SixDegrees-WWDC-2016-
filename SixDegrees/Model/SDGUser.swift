@@ -10,12 +10,12 @@ import Foundation
 import MultipeerConnectivity
 import Contacts
 
-public class SDGUser {
+open class SDGUser {
 
-    static let currentUser = SDGUser(peerId: MCPeerID(displayName: UIDevice.currentDevice().name), color: UIColor.SDGPeach())
+    static let currentUser = SDGUser(peerId: MCPeerID(displayName: UIDevice.current.name), color: UIColor.SDGPeach())
 
     // Simulation
-    static let simulatedCurrentUser = SDGUser(peerId: MCPeerID(displayName: UIDevice.currentDevice().name), color: UIColor.SDGPeach(), simulated: true)
+    static let simulatedCurrentUser = SDGUser(peerId: MCPeerID(displayName: UIDevice.current.name), color: UIColor.SDGPeach(), simulated: true)
     static let simulatedDiscoveredUser = SDGUser(peerId: MCPeerID(displayName: "John Appleseed"), color: UIColor.SDGGreen(), simulated: true)
 
     var peerId: MCPeerID!
@@ -33,7 +33,7 @@ public class SDGUser {
     }
 
     // Initializing a simulated user is only allowed for self
-    private init(peerId: MCPeerID, color: UIColor, simulated: Bool) {
+    fileprivate init(peerId: MCPeerID, color: UIColor, simulated: Bool) {
         self.peerId = peerId
         self.name = peerId.displayName
         self.color = color

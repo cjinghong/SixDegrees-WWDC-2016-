@@ -13,7 +13,7 @@ import Contacts
 class HistoryViewController: UIViewController {
     var displayMode: SDGDisplayMode! {
         didSet {
-            if displayMode == SDGDisplayMode.Simulated {
+            if displayMode == SDGDisplayMode.simulated {
                 self.historyTableView.tableHeaderView?.frame.size.height = 20
             } else {
                 self.historyTableView.tableHeaderView?.frame.size.height = 0
@@ -21,13 +21,13 @@ class HistoryViewController: UIViewController {
         }
     }
 
-    let MOC: NSManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+    let MOC: NSManagedObjectContext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
 
     var expandIndex: Int?
     var connections: [SDGConnection] = [] {
         didSet {
-            self.connections.sortInPlace { (aConnection: SDGConnection, bConnection: SDGConnection) -> Bool in
-                return aConnection.date.compare(bConnection.date) == NSComparisonResult.OrderedDescending
+            self.connections.sort { (aConnection: SDGConnection, bConnection: SDGConnection) -> Bool in
+                return aConnection.date.compare(bConnection.date as Date) == ComparisonResult.orderedDescending
             }
             self.historyTableView.reloadData()
         }
@@ -39,15 +39,15 @@ class HistoryViewController: UIViewController {
         super.viewDidLoad()
 
         // Set display mode
-        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
+        let userDefaults: UserDefaults = UserDefaults.standard
+        let simulationEnabled: Bool = userDefaults.bool(forKey: SDGSimulationEnabled)
         if simulationEnabled {
-            self.displayMode = SDGDisplayMode.Simulated
+            self.displayMode = SDGDisplayMode.simulated
         } else {
-            self.displayMode = SDGDisplayMode.Normal
+            self.displayMode = SDGDisplayMode.normal
         }
         // Setup table
-        self.historyTableView.separatorStyle = .None
+        self.historyTableView.separatorStyle = .none
 
 //        let connection1: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
 //        connection1.myUserName = "Chan Jing Hong"
@@ -67,8 +67,8 @@ class HistoryViewController: UIViewController {
 //        self.connections = [connection1, connection2, connection3]
 
         // Make placeholder white
-        self.placeholderImageView.image = self.placeholderImageView.image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-        self.placeholderImageView.tintColor = UIColor.whiteColor()
+        self.placeholderImageView.image = self.placeholderImageView.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        self.placeholderImageView.tintColor = UIColor.white
     }
 
     override func didReceiveMemoryWarning() {
@@ -76,25 +76,25 @@ class HistoryViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    override func viewWillAppear(animated: Bool) {
-        self.view.bringSubviewToFront(self.historyTableView)
+    override func viewWillAppear(_ animated: Bool) {
+        self.view.bringSubview(toFront: self.historyTableView)
 
         // Show/hide simulation enabled label
-        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
+        let userDefaults: UserDefaults = UserDefaults.standard
+        let simulationEnabled: Bool = userDefaults.bool(forKey: SDGSimulationEnabled)
 
         if simulationEnabled {
             // If display mode is not already simulated, simulate.
-            if self.displayMode != SDGDisplayMode.Simulated {
-                self.displayMode = SDGDisplayMode.Simulated
+            if self.displayMode != SDGDisplayMode.simulated {
+                self.displayMode = SDGDisplayMode.simulated
             }
             // Give simulated data
             self.createSimulatedConnections()
 
         } else {
             // If display mode is not already normal, make it normal.
-            if self.displayMode != SDGDisplayMode.Normal {
-                self.displayMode = SDGDisplayMode.Normal
+            if self.displayMode != SDGDisplayMode.normal {
+                self.displayMode = SDGDisplayMode.normal
             }
             self.fetchConnectionsFromCoreData()
         }
@@ -104,7 +104,7 @@ class HistoryViewController: UIViewController {
         let fetchRequest: NSFetchRequest = NSFetchRequest(entityName: "SDGConnection")
 
         do {
-            if let results: [SDGConnection] = try (self.MOC.executeFetchRequest(fetchRequest)) as? [SDGConnection] {
+            if let results: [SDGConnection] = try (self.MOC.fetch(fetchRequest)) as? [SDGConnection] {
                 self.connections = results
             }
         } catch {
@@ -113,11 +113,11 @@ class HistoryViewController: UIViewController {
     }
 
     func createSimulatedConnections() {
-        let connection: SDGConnection = SDGConnection(date: NSDate(), myUsername: SDGUser.simulatedCurrentUser.name, targetUsername: SDGUser.simulatedDiscoveredUser.name, mutualUsernames: SDGUser.simulatedUsernames(), context: self.MOC, needSave: false)
+        let connection: SDGConnection = SDGConnection(date: Date(), myUsername: SDGUser.simulatedCurrentUser.name, targetUsername: SDGUser.simulatedDiscoveredUser.name, mutualUsernames: SDGUser.simulatedUsernames(), context: self.MOC, needSave: false)
         self.connections = [connection]
     }
 
-    func historyCellTapped(sender: UIGestureRecognizer?) {
+    func historyCellTapped(_ sender: UIGestureRecognizer?) {
 
         if let tag = sender?.view?.tag {
             if tag == self.expandIndex {
@@ -128,7 +128,7 @@ class HistoryViewController: UIViewController {
 
             self.historyTableView.beginUpdates()
             self.historyTableView.endUpdates()
-            self.historyTableView.scrollToRowAtIndexPath(NSIndexPath(forRow: tag, inSection: 0), atScrollPosition: UITableViewScrollPosition.Middle, animated: true)
+            self.historyTableView.scrollToRow(at: IndexPath(row: tag, section: 0), at: UITableViewScrollPosition.middle, animated: true)
         }
     }
 
@@ -136,16 +136,16 @@ class HistoryViewController: UIViewController {
 
 extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if self.connections.count == 0 {
-            self.historyTableView.hidden = true
+            self.historyTableView.isHidden = true
         } else {
-            self.historyTableView.hidden = false
+            self.historyTableView.isHidden = false
         }
         return self.connections.count
     }
 
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == self.expandIndex {
             return 220
         } else {
@@ -153,9 +153,9 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
 
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let historyCell: HistoryTableViewCell = tableView.dequeueReusableCellWithIdentifier("HistoryTableViewCell", forIndexPath: indexPath) as! HistoryTableViewCell
-        historyCell.selectionStyle = .None
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let historyCell: HistoryTableViewCell = tableView.dequeueReusableCell(withIdentifier: "HistoryTableViewCell", for: indexPath) as! HistoryTableViewCell
+        historyCell.selectionStyle = .none
         historyCell.connection = self.connections[indexPath.row]
 
         let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.historyCellTapped(_:)))
@@ -165,7 +165,7 @@ extension HistoryViewController: UITableViewDataSource, UITableViewDelegate {
         return historyCell
     }
 
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Connections"
     }
 }

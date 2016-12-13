@@ -16,9 +16,9 @@ class ConnectionsViewController: UIViewController {
 
     var displayMode: SDGDisplayMode! {
         didSet {
-            if displayMode == SDGDisplayMode.Simulated {
+            if displayMode == SDGDisplayMode.simulated {
                 self.simulationReminderTopConstraint.constant = 0
-                self.simulationReminderView.hidden = false
+                self.simulationReminderView.isHidden = false
 
                 self.userIconView.user = SDGUser.simulatedCurrentUser
                 self.connectingUserIconView.user = SDGUser.simulatedDiscoveredUser
@@ -27,7 +27,7 @@ class ConnectionsViewController: UIViewController {
                 self.bluetoothManager.delegate = nil
             } else {
                 self.simulationReminderTopConstraint.constant = -20
-                self.simulationReminderView.hidden = true
+                self.simulationReminderView.isHidden = true
 
                 self.userIconView.user = SDGUser.currentUser
                 self.connectingUserIconView.user = self.connectingUser
@@ -63,12 +63,12 @@ class ConnectionsViewController: UIViewController {
         super.viewDidLoad()
 
         // Show/hide simulation enabled label
-        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
+        let userDefaults: UserDefaults = UserDefaults.standard
+        let simulationEnabled: Bool = userDefaults.bool(forKey: SDGSimulationEnabled)
         if simulationEnabled {
-            self.displayMode = SDGDisplayMode.Simulated
+            self.displayMode = SDGDisplayMode.simulated
         } else {
-            self.displayMode = SDGDisplayMode.Normal
+            self.displayMode = SDGDisplayMode.normal
         }
 
         // Hides number of connections
@@ -81,18 +81,18 @@ class ConnectionsViewController: UIViewController {
         self.mutualUsersCollectionView.clipsToBounds = false
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         // Customize app theme
-        let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.customizeAppearance(UIApplication.sharedApplication())
+        let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.customizeAppearance(UIApplication.shared)
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if self.displayMode == SDGDisplayMode.Normal {
+        if self.displayMode == SDGDisplayMode.normal {
             // Send contacts
             if let connectedPeer = self.bluetoothManager.session.connectedPeers.first {
                 SDGContactsController.sharedInstance.promptForAddressBookAccessIfNeeded { (granted) in
@@ -101,13 +101,13 @@ class ConnectionsViewController: UIViewController {
                     } else {
                         self.bluetoothManager.sendContactsToPeer(connectedPeer, contacts: SDGUser.currentUser.contacts ?? [])
 
-                        self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        self.hud = MBProgressHUD.showAdded(to: self.view, animated: true)
                         self.hud?.labelText = "Finding connections"
                     }
                 }
             }
         } else {
-            self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            self.hud = MBProgressHUD.showAdded(to: self.view, animated: true)
             self.hud?.labelText = "Finding connections"
 
             // Wait 5 seconds
@@ -115,27 +115,27 @@ class ConnectionsViewController: UIViewController {
             let mutualUsers: [SDGUser] = self.getSimulatedContactUsers()
             self.mutualUsers = mutualUsers
 
-            let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(3 * NSEC_PER_SEC))
-            dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            let dispatchTime: DispatchTime = DispatchTime.now() + Double(Int64(3 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: dispatchTime, execute: {
                 self.hud?.hide(true)
 
                 // Show number of users
                 self.numberOfConnectionsLabel.text = "\(self.mutualUsers.count)"
 
-                UIView.animateWithDuration(1, delay: 0, options: .CurveLinear, animations: {
+                UIView.animate(withDuration: 1, delay: 0, options: .curveLinear, animations: {
                     self.connectingUserHorizontalConstraint.constant -= 75
                     self.userIconHorizontalConstraint.constant += 75
 
                     self.numberOfConnectionsView.alpha = 1
 
-                    self.mutualUsersCollectionView.reloadSections(NSIndexSet(index: 0))
+                    self.mutualUsersCollectionView.reloadSections(IndexSet(integer: 0))
                     self.view.layoutIfNeeded()
                     }, completion: nil)
             })
         }
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
 
@@ -173,46 +173,46 @@ class ConnectionsViewController: UIViewController {
         return connections
     }
 
-    @IBAction func disconnect(sender: AnyObject) {
-        let alertController: UIAlertController = UIAlertController(title: "Disconnect", message: "Are you sure you want to disconnect from the current session?", preferredStyle: UIAlertControllerStyle.Alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+    @IBAction func disconnect(_ sender: AnyObject) {
+        let alertController: UIAlertController = UIAlertController(title: "Disconnect", message: "Are you sure you want to disconnect from the current session?", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) in
             // Disconnect self, then pop back to vc.
             self.bluetoothManager.session.disconnect()
-            self.dismissViewControllerAnimated(true, completion: nil)
+            self.dismiss(animated: true, completion: nil)
         }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { (action: UIAlertAction) in
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: { (action: UIAlertAction) in
         }))
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
 
 }
 
 extension ConnectionsViewController: SDGBluetoothManagerDelegate {
 
-    func foundPeer(peer: MCPeerID) {
+    func foundPeer(_ peer: MCPeerID) {
         return
     }
 
-    func lostPeer(peer: MCPeerID) {
+    func lostPeer(_ peer: MCPeerID) {
         // If the lost peer is the connecting user, disconnect
         if peer == self.connectingUser.peerId {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 self.hud?.hide(true)
                 
-                let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "\(peer.displayName) have disconnected.", preferredStyle: UIAlertControllerStyle.Alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+                let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "\(peer.displayName) have disconnected.", preferredStyle: UIAlertControllerStyle.alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) in
                 }))
-                self.presentViewController(alertController, animated: true, completion: nil)
+                self.present(alertController, animated: true, completion: nil)
             })
         }
     }
 
-    func didReceiveInvitationFromPeer(peerId: MCPeerID, completionBlock:((accept: Bool)->Void)) {
+    func didReceiveInvitationFromPeer(_ peerId: MCPeerID, completionBlock:((_ accept: Bool)->Void)) {
         // Automatically reject invitation if aleady in a session
-        completionBlock(accept: false)
+        completionBlock(false)
     }
 
-    func didReceiveContacts(contacts: [CNContact], fromPeer peer: MCPeerID) {
+    func didReceiveContacts(_ contacts: [CNContact], fromPeer peer: MCPeerID) {
         self.connectingUser.contacts = contacts
 
         // Compare contacts, and populate array
@@ -220,9 +220,9 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
         self.mutualUsers = mutualUsers
 
         // Save connection to Core Data
-        let MOC: NSManagedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-        let connection: SDGConnection = NSEntityDescription.insertNewObjectForEntityForName("SDGConnection", inManagedObjectContext: MOC) as! SDGConnection
-        connection.date = NSDate()
+        let MOC: NSManagedObjectContext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+        let connection: SDGConnection = NSEntityDescription.insertNewObject(forEntityName: "SDGConnection", into: MOC) as! SDGConnection
+        connection.date = Date()
         connection.myUserName = SDGUser.currentUser.name
         connection.targetUserName = self.connectingUser.name
         
@@ -239,24 +239,24 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
 
         // TODO: Draw connections with collection view to be able to see multiple connections
         if !mutualUsers.isEmpty {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 self.hud?.hide(true)
 
                 // Show number of connections
                 self.numberOfConnectionsLabel.text = "\(self.mutualUsers.count)"
 
-                UIView.animateWithDuration(1, delay: 0, options: .CurveLinear, animations: {
+                UIView.animate(withDuration: 1, delay: 0, options: .curveLinear, animations: {
                     self.connectingUserHorizontalConstraint.constant -= 75
                     self.userIconHorizontalConstraint.constant += 75
 
                     self.numberOfConnectionsView.alpha = 1
 
-                    self.mutualUsersCollectionView.reloadSections(NSIndexSet(index: 0))
+                    self.mutualUsersCollectionView.reloadSections(IndexSet(integer: 0))
                     self.view.layoutIfNeeded()
                     }, completion: nil)
                 })
         } else {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 self.hud?.hide(true)
 
                 self.showSimpleAlert("Connection", message: "No common connection.")
@@ -264,19 +264,19 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
         }
     }
 
-    func peerDidChangeState(peerId: MCPeerID, state: MCSessionState) {
+    func peerDidChangeState(_ peerId: MCPeerID, state: MCSessionState) {
         // If state is not connected, pop back to previous vc
 
-        if state != .Connected {
-            dispatch_async(dispatch_get_main_queue(), {
+        if state != .connected {
+            DispatchQueue.main.async(execute: {
                 self.hud?.hide(true)
 
-                let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "\(peerId.displayName) have disconnected.", preferredStyle: UIAlertControllerStyle.Alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+                let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "\(peerId.displayName) have disconnected.", preferredStyle: UIAlertControllerStyle.alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) in
                     // Disconnect self
                     self.bluetoothManager.session.disconnect()
                 }))
-                self.presentViewController(alertController, animated: true, completion: nil)
+                self.present(alertController, animated: true, completion: nil)
             })
         }
     }
@@ -284,28 +284,28 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
 
 extension ConnectionsViewController: UICollectionViewDataSource, UICollectionViewDelegate {
 
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.mutualUsers.count
     }
 
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell: UserCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("UserCollectionViewCell", forIndexPath: indexPath) as! UserCollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell: UserCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "UserCollectionViewCell", for: indexPath) as! UserCollectionViewCell
         cell.user = self.mutualUsers[indexPath.row]
         return cell
     }
 
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-        for i in 0..<collectionView.numberOfItemsInSection(0) {
+        for i in 0..<collectionView.numberOfItems(inSection: 0) {
             if i != indexPath.row {
-                let cell: UserCollectionViewCell = collectionView.cellForItemAtIndexPath(NSIndexPath(forItem: i, inSection: 0)) as! UserCollectionViewCell
+                let cell: UserCollectionViewCell = collectionView.cellForItem(at: IndexPath(item: i, section: 0)) as! UserCollectionViewCell
                 if cell.detailsShowing == true {
                     cell.hideDetails()
                 }
             }
         }
 
-        let cell: UserCollectionViewCell = collectionView.cellForItemAtIndexPath(indexPath) as! UserCollectionViewCell
+        let cell: UserCollectionViewCell = collectionView.cellForItem(at: indexPath) as! UserCollectionViewCell
         if cell.detailsShowing {
             cell.hideDetails()
         } else {
@@ -313,23 +313,23 @@ extension ConnectionsViewController: UICollectionViewDataSource, UICollectionVie
         }
     }
 
-    func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         swap(&self.mutualUsers[sourceIndexPath.row], &self.mutualUsers[destinationIndexPath.row])
     }
 
-    func handleLongPressGesture(gesture: UILongPressGestureRecognizer?) {
+    func handleLongPressGesture(_ gesture: UILongPressGestureRecognizer?) {
 
-        guard let location: CGPoint = gesture?.locationInView(self.mutualUsersCollectionView) else {
+        guard let location: CGPoint = gesture?.location(in: self.mutualUsersCollectionView) else {
             return
         }
 
-        if gesture?.state == .Began {
-            if let selectedIndexPath: NSIndexPath = self.mutualUsersCollectionView.indexPathForItemAtPoint(location) {
-                self.mutualUsersCollectionView.beginInteractiveMovementForItemAtIndexPath(selectedIndexPath)
+        if gesture?.state == .began {
+            if let selectedIndexPath: IndexPath = self.mutualUsersCollectionView.indexPathForItem(at: location) {
+                self.mutualUsersCollectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
             }
-        } else if gesture?.state == .Changed {
+        } else if gesture?.state == .changed {
             self.mutualUsersCollectionView.updateInteractiveMovementTargetPosition(location)
-        } else if gesture?.state == .Ended {
+        } else if gesture?.state == .ended {
             self.mutualUsersCollectionView.endInteractiveMovement()
         }
     }

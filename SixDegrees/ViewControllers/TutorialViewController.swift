@@ -27,7 +27,7 @@ class TutorialViewController: UIViewController {
         super.viewDidLoad()
 
         if let flowLayout: UICollectionViewFlowLayout = self.tutorialCollectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-            flowLayout.itemSize = CGSize(width: UIScreen.mainScreen().bounds.size.width, height: UIScreen.mainScreen().bounds.size.height)
+            flowLayout.itemSize = CGSize(width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height)
         }
     }
 
@@ -57,28 +57,28 @@ class TutorialViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-    @IBAction func dismissButtonTapped(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func dismissButtonTapped(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
 extension TutorialViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.tutorialImageNames.count
     }
 
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell: TutorialCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("TutorialCollectionViewCell", forIndexPath: indexPath) as! TutorialCollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell: TutorialCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "TutorialCollectionViewCell", for: indexPath) as! TutorialCollectionViewCell
         cell.maximumIndex = self.tutorialImageNames.count
         cell.index = indexPath.row
         cell.tutorialImage = UIImage(named: self.tutorialImageNames[indexPath.row])!
 
-        cell.doneButton.addTarget(self, action: #selector(self.dismissButtonTapped(_:)), forControlEvents: UIControlEvents.TouchUpInside)
+        cell.doneButton.addTarget(self, action: #selector(self.dismissButtonTapped(_:)), for: UIControlEvents.touchUpInside)
         return cell
     }
 
-    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if let cell: TutorialCollectionViewCell = cell as? TutorialCollectionViewCell {
             cell.showInstructions()
         }
@@ -86,8 +86,8 @@ extension TutorialViewController: UICollectionViewDataSource, UICollectionViewDe
 
     // Change page control paging
 
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if let indexPath = self.tutorialCollectionView.indexPathsForVisibleItems().first {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        if let indexPath = self.tutorialCollectionView.indexPathsForVisibleItems.first {
             self.pageControl.currentPage = indexPath.row
         }
     }

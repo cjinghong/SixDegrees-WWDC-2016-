@@ -12,7 +12,7 @@ import MultipeerConnectivity
 
 class SDGConnection: NSManagedObject {
 
-    @NSManaged var date: NSDate
+    @NSManaged var date: Date
     @NSManaged var myUserName: String
     @NSManaged var targetUserName: String
     @NSManaged var mutualUserNames: [String]
@@ -41,13 +41,13 @@ class SDGConnection: NSManagedObject {
     }
 
     /// Using this init enables you to init an SDGConnection object without saving to Core Data
-    convenience init(date: NSDate, myUsername: String, targetUsername: String, mutualUsernames: [String], context: NSManagedObjectContext, needSave: Bool = true) {
-        let entity: NSEntityDescription = NSEntityDescription.entityForName("SDGConnection", inManagedObjectContext: context)!
+    convenience init(date: Date, myUsername: String, targetUsername: String, mutualUsernames: [String], context: NSManagedObjectContext, needSave: Bool = true) {
+        let entity: NSEntityDescription = NSEntityDescription.entity(forEntityName: "SDGConnection", in: context)!
 
         if needSave {
-            self.init(entity: entity, insertIntoManagedObjectContext: context)
+            self.init(entity: entity, insertInto: context)
         } else {
-            self.init(entity: entity, insertIntoManagedObjectContext: nil)
+            self.init(entity: entity, insertInto: nil)
         }
 
         self.date = date

@@ -18,35 +18,35 @@ class HistoryTableViewCell: UITableViewCell {
 
             if self.connection.mutualUsers.count == 0 {
                 self.numberOfConnectionsLabel.text = ""
-                self.sadIconImageView.hidden = false
-                self.mutualUserCollectionView.hidden = true
+                self.sadIconImageView.isHidden = false
+                self.mutualUserCollectionView.isHidden = true
             } else if self.connection.mutualUsers.count <= 99 {
                 self.numberOfConnectionsLabel.text = "\(self.connection.mutualUsers.count)"
-                self.sadIconImageView.hidden = true
-                self.mutualUserCollectionView.hidden = false
+                self.sadIconImageView.isHidden = true
+                self.mutualUserCollectionView.isHidden = false
             } else {
                 self.numberOfConnectionsLabel.text = "99+"
-                self.sadIconImageView.hidden = true
-                self.mutualUserCollectionView.hidden = false
+                self.sadIconImageView.isHidden = true
+                self.mutualUserCollectionView.isHidden = false
             }
-            let dateFormatter: NSDateFormatter = NSDateFormatter()
+            let dateFormatter: DateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMM dd, hh:mm aa"
-            self.dateLabel.text = dateFormatter.stringFromDate(connection.date)
+            self.dateLabel.text = dateFormatter.string(from: connection.date as Date)
 
             self.mutualUserCollectionView.dataSource = self
             self.mutualUserCollectionView.delegate = self
-            self.mutualUserCollectionView.reloadSections(NSIndexSet(index: 0))
+            self.mutualUserCollectionView.reloadSections(IndexSet(integer: 0))
 
             // UI Stuff
             // Drop shadow on number of connections
             self.numberOfConnectionsLabel.layer.shadowOpacity = 1
             self.numberOfConnectionsLabel.layer.shadowRadius = 0
-            self.numberOfConnectionsLabel.layer.shadowColor = UIColor.blackColor().CGColor
+            self.numberOfConnectionsLabel.layer.shadowColor = UIColor.black.cgColor
             self.numberOfConnectionsLabel.layer.shadowOffset = CGSize(width: -1, height: 1)
 
             // Make sad icon white
-            self.sadIconImageView.image = self.sadIconImageView.image?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-            self.sadIconImageView.tintColor = UIColor.whiteColor()
+            self.sadIconImageView.image = self.sadIconImageView.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+            self.sadIconImageView.tintColor = UIColor.white
 
             // Bring the 2 views infront. 
             // For some reason the dot view managed to go above them
@@ -78,20 +78,20 @@ class HistoryTableViewCell: UITableViewCell {
         self.animateDot()
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
 
     func animateDot() {
         let minimumScale: CGFloat = 0.5
 
-        self.dotView.transform = CGAffineTransformMakeScale(minimumScale, minimumScale)
+        self.dotView.transform = CGAffineTransform(scaleX: minimumScale, y: minimumScale)
         self.dotHorizontalConstraint.constant = -self.lineView.frame.width/2
         self.layoutIfNeeded()
 
         // Go from left to center
-        UIView.animateWithDuration(0.5, delay: 1, options: [.CurveLinear, .AllowUserInteraction], animations: {
-            self.dotView.transform = CGAffineTransformIdentity
+        UIView.animate(withDuration: 0.5, delay: 1, options: [.curveLinear, .allowUserInteraction], animations: {
+            self.dotView.transform = CGAffineTransform.identity
             self.dotHorizontalConstraint.constant = 0
 
             // Change to a color in between
@@ -102,8 +102,8 @@ class HistoryTableViewCell: UITableViewCell {
         }) { (success: Bool) in
 
             // From center to right
-            UIView.animateWithDuration(0.5, delay: 0, options: [.CurveEaseOut, .AllowUserInteraction], animations: {
-                self.dotView.transform = CGAffineTransformMakeScale(minimumScale, minimumScale)
+            UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseOut, .allowUserInteraction], animations: {
+                self.dotView.transform = CGAffineTransform(scaleX: minimumScale, y: minimumScale)
                 self.dotHorizontalConstraint.constant = self.lineView.frame.width/2
 
                 self.lineView.backgroundColor = self.targetUserIconView.iconBackgroundColor
@@ -113,8 +113,8 @@ class HistoryTableViewCell: UITableViewCell {
                 }, completion: { (success: Bool) in
 
                     // From right to center
-                    UIView.animateWithDuration(0.5, delay: 0, options: [.CurveLinear, .AllowUserInteraction], animations: {
-                        self.dotView.transform = CGAffineTransformIdentity
+                    UIView.animate(withDuration: 0.5, delay: 0, options: [.curveLinear, .allowUserInteraction], animations: {
+                        self.dotView.transform = CGAffineTransform.identity
                         self.dotHorizontalConstraint.constant = 0
 
                         // Change to a color in between
@@ -125,8 +125,8 @@ class HistoryTableViewCell: UITableViewCell {
                     }) { (success: Bool) in
 
                         // From center to left
-                        UIView.animateWithDuration(0.5, delay: 0, options: [.CurveEaseOut, .AllowUserInteraction], animations: {
-                            self.dotView.transform = CGAffineTransformMakeScale(minimumScale, minimumScale)
+                        UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseOut, .allowUserInteraction], animations: {
+                            self.dotView.transform = CGAffineTransform(scaleX: minimumScale, y: minimumScale)
                             self.dotHorizontalConstraint.constant = -self.lineView.frame.width/2
 
                             // Change to a color in between
@@ -145,12 +145,12 @@ class HistoryTableViewCell: UITableViewCell {
 
 extension HistoryTableViewCell: UICollectionViewDataSource, UICollectionViewDelegate {
 
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.connection.mutualUsers.count
     }
 
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell: UserCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("UserCollectionViewCell", forIndexPath: indexPath) as! UserCollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell: UserCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "UserCollectionViewCell", for: indexPath) as! UserCollectionViewCell
         cell.user = self.connection.mutualUsers[indexPath.row]
         return cell
     }

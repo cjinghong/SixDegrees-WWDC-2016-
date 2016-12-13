@@ -47,22 +47,22 @@ class TutorialCollectionViewCell: UICollectionViewCell {
 
     override func awakeFromNib() {
         self.greyView.alpha = 0
-        self.greyView.backgroundColor = UIColor.blackColor()
+        self.greyView.backgroundColor = UIColor.black
 
         self.instructionLabel.alpha = 0
-        self.doneButton.hidden = true
+        self.doneButton.isHidden = true
     }
 
     func showInstructions() {
         self.greyView.alpha = 0
         self.instructionLabel.alpha = 0
 
-        UIView.animateWithDuration(1, delay: 0, options: [UIViewAnimationOptions.CurveLinear, UIViewAnimationOptions.AllowUserInteraction], animations: {
+        UIView.animate(withDuration: 1, delay: 0, options: [UIViewAnimationOptions.curveLinear, UIViewAnimationOptions.allowUserInteraction], animations: {
             self.greyView.alpha = 0.7
             }, completion: {(success: Bool) in
         })
 
-        UIView.animateWithDuration(1, delay: 0, options: [UIViewAnimationOptions.CurveLinear, UIViewAnimationOptions.AllowUserInteraction], animations: { 
+        UIView.animate(withDuration: 1, delay: 0, options: [UIViewAnimationOptions.curveLinear, UIViewAnimationOptions.allowUserInteraction], animations: { 
             self.instructionLabel.alpha = 1
         }) { (success: Bool) in
 
@@ -71,13 +71,13 @@ class TutorialCollectionViewCell: UICollectionViewCell {
         // Show button if its the last screen
         if self.index == self.maximumIndex-1 {
             self.doneButton.alpha = 0
-            self.doneButton.hidden = false
+            self.doneButton.isHidden = false
 
-            UIView.animateWithDuration(1, delay: 0.3, options: UIViewAnimationOptions.CurveLinear, animations: { 
+            UIView.animate(withDuration: 1, delay: 0.3, options: UIViewAnimationOptions.curveLinear, animations: { 
                 self.doneButton.alpha = 1
                 }, completion: nil)
         } else {
-            self.doneButton.hidden = true
+            self.doneButton.isHidden = true
         }
 
     }

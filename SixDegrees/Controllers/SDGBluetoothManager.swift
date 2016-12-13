@@ -11,25 +11,25 @@ import MultipeerConnectivity
 import Contacts
 
 protocol SDGBluetoothManagerDelegate {
-    func didReceiveInvitationFromPeer(peerId: MCPeerID, completionBlock:((accept: Bool)->Void))
-    func didReceiveContacts(contacts: [CNContact], fromPeer peer: MCPeerID)
-    func foundPeer(peer: MCPeerID)
-    func lostPeer(peer: MCPeerID)
+    func didReceiveInvitationFromPeer(_ peerId: MCPeerID, completionBlock:((_ accept: Bool)->Void))
+    func didReceiveContacts(_ contacts: [CNContact], fromPeer peer: MCPeerID)
+    func foundPeer(_ peer: MCPeerID)
+    func lostPeer(_ peer: MCPeerID)
 
-    func peerDidChangeState(peerId: MCPeerID, state: MCSessionState)
+    func peerDidChangeState(_ peerId: MCPeerID, state: MCSessionState)
 }
 
 class SDGBluetoothManager: NSObject {
 
     static let sharedInstance = SDGBluetoothManager()
     
-    private let ServiceType = "sixdegrees-cjh"
-    private let myPeerId = MCPeerID(displayName: UIDevice.currentDevice().name)
+    fileprivate let ServiceType = "sixdegrees-cjh"
+    fileprivate let myPeerId = MCPeerID(displayName: UIDevice.current.name)
 
     var session: MCSession!
 
-    private let serviceAdvetiser: MCNearbyServiceAdvertiser
-    private let serviceBrowser: MCNearbyServiceBrowser
+    fileprivate let serviceAdvetiser: MCNearbyServiceAdvertiser
+    fileprivate let serviceBrowser: MCNearbyServiceBrowser
 
     var peersFound: [MCPeerID] = []
 
@@ -38,7 +38,7 @@ class SDGBluetoothManager: NSObject {
     override init() {
         self.serviceAdvetiser = MCNearbyServiceAdvertiser(peer: self.myPeerId, discoveryInfo: nil, serviceType: ServiceType)
         self.serviceBrowser = MCNearbyServiceBrowser(peer: self.myPeerId, serviceType: ServiceType)
-        self.session = MCSession(peer: self.myPeerId, securityIdentity: nil, encryptionPreference: .Required)
+        self.session = MCSession(peer: self.myPeerId, securityIdentity: nil, encryptionPreference: .required)
 
         super.init()
 
@@ -68,14 +68,14 @@ class SDGBluetoothManager: NSObject {
         self.serviceBrowser.stopBrowsingForPeers()
     }
 
-    func invitePeer(peerId: MCPeerID) {
-        self.serviceBrowser.invitePeer(peerId, toSession: self.session, withContext: nil, timeout: 10)
+    func invitePeer(_ peerId: MCPeerID) {
+        self.serviceBrowser.invitePeer(peerId, to: self.session, withContext: nil, timeout: 10)
     }
 
-    func sendContactsToPeer(peerId: MCPeerID, contacts: [CNContact]) {
-        let contactsData: NSData = NSKeyedArchiver.archivedDataWithRootObject(contacts)
+    func sendContactsToPeer(_ peerId: MCPeerID, contacts: [CNContact]) {
+        let contactsData: Data = NSKeyedArchiver.archivedData(withRootObject: contacts)
         do {
-            try self.session.sendData(NSKeyedArchiver.archivedDataWithRootObject(contactsData), toPeers: self.session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
+            try self.session.send(NSKeyedArchiver.archivedData(withRootObject: contactsData), toPeers: self.session.connectedPeers, with: MCSessionSendDataMode.reliable)
         } catch {
             print("Unable to send contacts data to \(peerId.displayName)")
         }
@@ -86,7 +86,7 @@ class SDGBluetoothManager: NSObject {
 
 extension SDGBluetoothManager : MCNearbyServiceAdvertiserDelegate {
 
-    func advertiser(advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: NSData?, invitationHandler: (Bool, MCSession) -> Void) {
+    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         print("Receive invitation from peer: \(peerID)")
 
         self.delegate?.didReceiveInvitationFromPeer(peerID, completionBlock: { (accept) in
@@ -100,28 +100,28 @@ extension SDGBluetoothManager : MCNearbyServiceAdvertiserDelegate {
         })
     }
 
-    func advertiser(advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: NSError) {
+    func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
         print("Did not start advertising peer: \(error.localizedDescription)")
     }
 }
 
 extension SDGBluetoothManager : MCNearbyServiceBrowserDelegate {
 
-    func browser(browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
+    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
         print("Found peer: \(peerID)")
         self.peersFound.append(peerID)
         self.delegate?.foundPeer(peerID)
     }
 
-    func browser(browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
+    func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         print("Lost peer: \(peerID)")
-        if let index: Int = self.peersFound.indexOf(peerID) {
-            self.peersFound.removeAtIndex(index)
+        if let index: Int = self.peersFound.index(of: peerID) {
+            self.peersFound.remove(at: index)
             self.delegate?.lostPeer(peerID)
         }
     }
 
-    func browser(browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: NSError) {
+    func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
         print("Did not start browsing: \(error.localizedDescription)")
     }
 }
@@ -129,11 +129,11 @@ extension SDGBluetoothManager : MCNearbyServiceBrowserDelegate {
 extension MCSessionState {
     func toString() -> String {
         switch self {
-        case .NotConnected:
+        case .notConnected:
             return "Not Connected"
-        case .Connected:
+        case .connected:
             return "Connected"
-        case .Connecting:
+        case .connecting:
             return "Connecting"
         }
     }
@@ -141,32 +141,32 @@ extension MCSessionState {
 
 extension SDGBluetoothManager : MCSessionDelegate {
 
-    func session(session: MCSession, peer peerID: MCPeerID, didChangeState state: MCSessionState) {
+    func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         print("Peer: \(peerID) Changed state: \(state.toString())")
         self.delegate?.peerDidChangeState(peerID, state: state)
     }
 
-    func session(session: MCSession, didReceiveCertificate certificate: [AnyObject]?, fromPeer peerID: MCPeerID, certificateHandler: (Bool) -> Void) {
+    func session(_ session: MCSession, didReceiveCertificate certificate: [Any]?, fromPeer peerID: MCPeerID, certificateHandler: @escaping (Bool) -> Void) {
         certificateHandler(true)
     }
 
-    func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
-        if let contactsData: NSData = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSData {
-            if let contacts: [CNContact] = NSKeyedUnarchiver.unarchiveObjectWithData(contactsData) as? [CNContact] {
+    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
+        if let contactsData: Data = NSKeyedUnarchiver.unarchiveObject(with: data) as? Data {
+            if let contacts: [CNContact] = NSKeyedUnarchiver.unarchiveObject(with: contactsData) as? [CNContact] {
                 self.delegate?.didReceiveContacts(contacts, fromPeer: peerID)
             }
         }
     }
 
-    func session(session: MCSession, didReceiveStream stream: NSInputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
         print("Received stream: \(stream)")
     }
 
-    func session(session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, withProgress progress: NSProgress) {
+    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
         print("Start receiving resource: \(resourceName)")
     }
 
-    func session(session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, atURL localURL: NSURL, withError error: NSError?) {
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?) {
         print("Finished receiving resource: \(resourceName)")
     }
 }

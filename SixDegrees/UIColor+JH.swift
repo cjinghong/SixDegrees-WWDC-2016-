@@ -14,31 +14,31 @@ extension UIColor {
     public convenience init?(hexString: String, alpha: Float = 1.0) {
         var hexCode = hexString
         if hexCode.hasPrefix("#") {
-            hexCode = hexCode.substringFromIndex(hexCode.startIndex.advancedBy(1))
+            hexCode = hexCode.substring(from: hexCode.characters.index(hexCode.startIndex, offsetBy: 1))
         }
 
         // Check for valid hex string
-        if hexCode.rangeOfString("(^[0-9A-Fa-f]{6}$)|(^[0-9A-Fa-f]{3}$)", options: .RegularExpressionSearch) != nil {
+        if hexCode.range(of: "(^[0-9A-Fa-f]{6}$)|(^[0-9A-Fa-f]{3}$)", options: .regularExpression) != nil {
             // Pad short 3 character hex strings
             if hexCode.characters.count == 3 {
-                let redHex: String   = hexCode.substringToIndex(hexCode.startIndex.advancedBy(1))
-                let greenHex: String = hexCode.substringWithRange(Range(start: hexCode.startIndex.advancedBy(1), end: hexCode.startIndex.advancedBy(2)))
-                let blueHex: String  = hexCode.substringFromIndex(hexCode.startIndex.advancedBy(2))
+                let redHex: String   = hexCode.substring(to: hexCode.characters.index(hexCode.startIndex, offsetBy: 1))
+                let greenHex: String = hexCode.substring(with: (hexCode.characters.index(hexCode.startIndex, offsetBy: 1) ..< hexCode.characters.index(hexCode.startIndex, offsetBy: 2)))
+                let blueHex: String  = hexCode.substring(from: hexCode.characters.index(hexCode.startIndex, offsetBy: 2))
 
                 hexCode = redHex + redHex + greenHex + greenHex + blueHex + blueHex
             }
 
-            let redHex: String   = hexCode.substringToIndex(hexCode.startIndex.advancedBy(2))
-            let greenHex: String = hexCode.substringWithRange(Range(start: hexCode.startIndex.advancedBy(2), end: hexCode.startIndex.advancedBy(4)))
-            let blueHex: String  = hexCode.substringFromIndex(hexCode.startIndex.advancedBy(4))
+            let redHex: String   = hexCode.substring(to: hexCode.characters.index(hexCode.startIndex, offsetBy: 2))
+            let greenHex: String = hexCode.substring(with: (hexCode.characters.index(hexCode.startIndex, offsetBy: 2) ..< hexCode.characters.index(hexCode.startIndex, offsetBy: 4)))
+            let blueHex: String  = hexCode.substring(from: hexCode.characters.index(hexCode.startIndex, offsetBy: 4))
 
             var redInt: CUnsignedInt = 0
             var greenInt: CUnsignedInt = 0
             var blueInt: CUnsignedInt = 0
 
-            NSScanner(string: redHex).scanHexInt(&redInt)
-            NSScanner(string: greenHex).scanHexInt(&greenInt)
-            NSScanner(string: blueHex).scanHexInt(&blueInt)
+            Scanner(string: redHex).scanHexInt32(&redInt)
+            Scanner(string: greenHex).scanHexInt32(&greenInt)
+            Scanner(string: blueHex).scanHexInt32(&blueInt)
 
             self.init(red: CGFloat(redInt) / 255.0,
                       green: CGFloat(greenInt) / 255.0,
@@ -93,15 +93,15 @@ extension UIColor {
         }
     }
 
-    class func midColor(colorA: UIColor, colorB: UIColor) -> UIColor? {
+    class func midColor(_ colorA: UIColor, colorB: UIColor) -> UIColor? {
         let percent: Double = 0.5 // 50%, middle gradient value between the 2 colors
 
         let componentsA = colorA.rgb()
         let componentsB = colorB.rgb()
 
-        var resultRed: Double = Double(componentsA?.red ?? 0) + percent * (Double(componentsB?.red ?? 0) - Double(componentsA?.red ?? 0));
-        var resultGreen: Double = Double(componentsA?.green ?? 0) + percent * (Double(componentsB?.green ?? 0) - Double(componentsA?.green ?? 0));
-        var resultBlue: Double = Double(componentsA?.blue ?? 0) + percent * (Double(componentsB?.blue ?? 0) - Double(componentsA?.blue ?? 0));
+        let resultRed: Double = Double(componentsA?.red ?? 0) + percent * (Double(componentsB?.red ?? 0) - Double(componentsA?.red ?? 0));
+        let resultGreen: Double = Double(componentsA?.green ?? 0) + percent * (Double(componentsB?.green ?? 0) - Double(componentsA?.green ?? 0));
+        let resultBlue: Double = Double(componentsA?.blue ?? 0) + percent * (Double(componentsB?.blue ?? 0) - Double(componentsA?.blue ?? 0));
 
         let color: UIColor = UIColor(red: CGFloat(resultRed) / 255.0,
                                      green: CGFloat(resultGreen) / 255.0,

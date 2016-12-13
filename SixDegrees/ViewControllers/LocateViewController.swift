@@ -14,15 +14,15 @@ import MBProgressHUD
 import Pulsator
 
 enum SDGDisplayMode {
-    case Normal
-    case Simulated
+    case normal
+    case simulated
 }
 
 class LocateViewController: UIViewController {
 
     var displayMode: SDGDisplayMode! {
         didSet {
-            if displayMode == SDGDisplayMode.Simulated {
+            if displayMode == SDGDisplayMode.simulated {
                 self.simulationReminderTopConstraint.constant = 0
 
                 // Reset all data
@@ -71,8 +71,8 @@ class LocateViewController: UIViewController {
     var originalChosenUserIconFrame: CGRect?
 
     // Collectionview animation variables
-    var userOriginalIndexPath: NSIndexPath?
-    var userCurrentIndexPath: NSIndexPath?
+    var userOriginalIndexPath: IndexPath?
+    var userCurrentIndexPath: IndexPath?
 
     // Loading HUD
     var hud: MBProgressHUD?
@@ -82,34 +82,34 @@ class LocateViewController: UIViewController {
         super.viewDidLoad()
 
         // Set display mode
-        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
+        let userDefaults: UserDefaults = UserDefaults.standard
+        let simulationEnabled: Bool = userDefaults.bool(forKey: SDGSimulationEnabled)
         if simulationEnabled {
-            self.displayMode = SDGDisplayMode.Simulated
+            self.displayMode = SDGDisplayMode.simulated
         } else {
-            self.displayMode = SDGDisplayMode.Normal
+            self.displayMode = SDGDisplayMode.normal
         }
 
         self.view.backgroundColor = UIColor.SDGLightBlue()
 
-        self.connectionFailedView.hidden = true
-        self.searchingForDevicesLabel.hidden = true
-        self.turnOnWifiReminderLabel.hidden = true
+        self.connectionFailedView.isHidden = true
+        self.searchingForDevicesLabel.isHidden = true
+        self.turnOnWifiReminderLabel.isHidden = true
 
         // Setup pulsator
         self.pulsator.numPulse = 4
         self.pulsator.radius = self.view.frame.width/2 - 10
-        self.pulsator.backgroundColor = UIColor.SDGDarkBlue().CGColor
+        self.pulsator.backgroundColor = UIColor.SDGDarkBlue().cgColor
         self.pulsator.frame.origin.x += 35
         self.pulsator.frame.origin.y += 35
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         // Customize app theme
-        let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.customizeAppearance(UIApplication.sharedApplication())
+        let appDelegate: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.customizeAppearance(UIApplication.shared)
 
         // Store reference of the userIconHorizontalConstraint
         self.originalUserIconHorizontalConstraint = self.userIconHorizontalConstraint.constant
@@ -125,24 +125,24 @@ class LocateViewController: UIViewController {
         self.pulsator.start()
 
         // Show/hide simulation enabled label
-        let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
-        let simulationEnabled: Bool = userDefaults.boolForKey(SDGSimulationEnabled)
+        let userDefaults: UserDefaults = UserDefaults.standard
+        let simulationEnabled: Bool = userDefaults.bool(forKey: SDGSimulationEnabled)
         if simulationEnabled {
             // If display mode is not already simulated, simulate.
-            if self.displayMode != SDGDisplayMode.Simulated {
-                self.displayMode = SDGDisplayMode.Simulated
+            if self.displayMode != SDGDisplayMode.simulated {
+                self.displayMode = SDGDisplayMode.simulated
             }
         } else {
             // If display mode is not already normal, make it normal.
-            if self.displayMode != SDGDisplayMode.Normal {
-                self.displayMode = SDGDisplayMode.Normal
+            if self.displayMode != SDGDisplayMode.normal {
+                self.displayMode = SDGDisplayMode.normal
             }
             // Restart bluetooth services if needed
             self.restartBTServicesIfNeeded()
         }
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         // Try to get access to all the contacts of the current device
         self.contactsController.promptForAddressBookAccessIfNeeded { (granted) in
             if !granted {
@@ -154,7 +154,7 @@ class LocateViewController: UIViewController {
     }
 
     // MARK: - Functions
-    @IBAction func findConnections(sender: AnyObject) {
+    @IBAction func findConnections(_ sender: AnyObject) {
         if let contacts = SDGUser.currentUser.contacts {
             if let connectedPeer = self.bluetoothManager.session.connectedPeers.first {
                 self.bluetoothManager.sendContactsToPeer(connectedPeer, contacts: contacts)
@@ -179,35 +179,35 @@ class LocateViewController: UIViewController {
 
         // Error view
         self.connectionFailedView.alpha = 0
-        self.connectionFailedView.transform = CGAffineTransformMakeScale(0.1, 0.1)
-        self.connectionFailedView.hidden = false
+        self.connectionFailedView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        self.connectionFailedView.isHidden = false
 
         // Animation block
-        UIView.animateWithDuration(0.6, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 4, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-            self.connectionFailedView.transform = CGAffineTransformIdentity
+        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.4, initialSpringVelocity: 4, options: UIViewAnimationOptions.curveEaseOut, animations: {
+            self.connectionFailedView.transform = CGAffineTransform.identity
             self.connectionFailedView.alpha = 1
 
             }, completion: {(success: Bool) in
-                UIView.animateWithDuration(0.6, delay: 3, usingSpringWithDamping: 0.4, initialSpringVelocity: 4, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-                    self.connectionFailedView.transform = CGAffineTransformMakeScale(0.1, 0.1)
+                UIView.animate(withDuration: 0.6, delay: 3, usingSpringWithDamping: 0.4, initialSpringVelocity: 4, options: UIViewAnimationOptions.curveEaseOut, animations: {
+                    self.connectionFailedView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
                     self.connectionFailedView.alpha = 0
 
                     }, completion: {(success: Bool) in
-                        self.connectionFailedView.hidden = true
+                        self.connectionFailedView.isHidden = true
                 })
         })
     }
 
     func showSearchingForNearbyDevices() {
         self.searchingForDevicesLabel.alpha = 0
-        self.searchingForDevicesLabel.hidden = false
+        self.searchingForDevicesLabel.isHidden = false
 
-        UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: { 
+        UIView.animate(withDuration: 0.5, delay: 0, options: UIViewAnimationOptions.curveLinear, animations: { 
             self.searchingForDevicesLabel.alpha = 1
         }) { (success: Bool) in
             // Wait 10 seconds, if users still empty, suggest to turn on wifi
-            let time = dispatch_time(DISPATCH_TIME_NOW, Int64(10 * NSEC_PER_SEC))
-            dispatch_after(time, dispatch_get_main_queue(), {
+            let time = DispatchTime.now() + Double(Int64(10 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: time, execute: {
                 if self.discoveredUsers.isEmpty {
                     self.showTurnOnWifiReminderLabel()
                 }
@@ -217,27 +217,27 @@ class LocateViewController: UIViewController {
 
     func hideSearchingForNearbyDevices() {
         self.hideTurnOnWifiReminderLabel()
-        UIView.animateWithDuration(0.3, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
+        UIView.animate(withDuration: 0.3, delay: 0, options: UIViewAnimationOptions.curveLinear, animations: {
             self.searchingForDevicesLabel.alpha = 0
         }) { (success: Bool) in
-                self.searchingForDevicesLabel.hidden = true
+                self.searchingForDevicesLabel.isHidden = true
         }
     }
 
     func showTurnOnWifiReminderLabel() {
         self.turnOnWifiReminderLabel.alpha = 0
-        self.turnOnWifiReminderLabel.hidden = false
+        self.turnOnWifiReminderLabel.isHidden = false
 
-        UIView.animateWithDuration(0.5, animations: {
+        UIView.animate(withDuration: 0.5, animations: {
             self.turnOnWifiReminderLabel.alpha = 1
             }, completion: nil)
     }
 
     func hideTurnOnWifiReminderLabel() {
-        UIView.animateWithDuration(0.3, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             self.turnOnWifiReminderLabel.alpha = 0
             }, completion: {(success: Bool) in
-                self.turnOnWifiReminderLabel.hidden = true
+                self.turnOnWifiReminderLabel.isHidden = true
         })
     }
 
@@ -262,8 +262,8 @@ class LocateViewController: UIViewController {
 // MARK: - SDGBluetoothManagerDelegate
 extension LocateViewController : SDGBluetoothManagerDelegate {
 
-    func foundPeer(peer: MCPeerID) {
-        dispatch_async(dispatch_get_main_queue(), {
+    func foundPeer(_ peer: MCPeerID) {
+        DispatchQueue.main.async(execute: {
             if self.discoveredUsers.isEmpty {
                 self.showSearchingForNearbyDevices()
             } else {
@@ -279,19 +279,19 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
         }
     }
 
-    func lostPeer(peer: MCPeerID) {
+    func lostPeer(_ peer: MCPeerID) {
 
         for user in self.discoveredUsers {
             if user.peerId == peer {
                 // Animation should be pushed to the main queue
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.discoveredUsers.removeAtIndex(self.discoveredUsers.indexOf(user)!)
-                    self.discoveredUsersCollectionView.reloadSections(NSIndexSet(indexesInRange: NSMakeRange(0, self.discoveredUsersCollectionView.numberOfSections())))
+                DispatchQueue.main.async(execute: {
+                    self.discoveredUsers.remove(at: self.discoveredUsers.index(of: user)!)
+                    self.discoveredUsersCollectionView.reloadSections(IndexSet(integersIn: NSMakeRange(0, self.discoveredUsersCollectionView.numberOfSections).toRange()!))
                 })
             }
         }
 
-        dispatch_async(dispatch_get_main_queue(), {
+        DispatchQueue.main.async(execute: {
             if self.discoveredUsers.isEmpty {
                 self.showSearchingForNearbyDevices()
             } else {
@@ -300,26 +300,26 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
         })
     }
 
-    func didReceiveInvitationFromPeer(peerId: MCPeerID, completionBlock: ((accept: Bool) -> Void)) {
+    func didReceiveInvitationFromPeer(_ peerId: MCPeerID, completionBlock: @escaping ((_ accept: Bool) -> Void)) {
         
-        let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Invitation from \(peerId.displayName)", preferredStyle: UIAlertControllerStyle.Alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
-            completionBlock(accept: true)
+        let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Invitation from \(peerId.displayName)", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) in
+            completionBlock(true)
         }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { (action: UIAlertAction) in
-            completionBlock(accept: false)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: { (action: UIAlertAction) in
+            completionBlock(false)
         }))
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
 
-    func didReceiveContacts(contacts: [CNContact], fromPeer peer: MCPeerID) {
+    func didReceiveContacts(_ contacts: [CNContact], fromPeer peer: MCPeerID) {
         return
     }
 
-    func peerDidChangeState(peerId: MCPeerID, state: MCSessionState) {
-        if state == .Connected {
+    func peerDidChangeState(_ peerId: MCPeerID, state: MCSessionState) {
+        if state == .connected {
             // Animation should be pushed to the main queue
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 self.hud?.hide(true)
 
                 let user = self.discoveredUsers.filter({ (aUser: SDGUser) -> Bool in
@@ -327,40 +327,40 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
                 }).first
 
                 if let user = user {
-                    let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ConnectionsViewController") as! ConnectionsViewController
-                    connectionsVC.connectingUser = self.discoveredUsers[self.discoveredUsers.indexOf(user)!]
-                    self.presentViewController(connectionsVC, animated: true, completion: nil)
+                    let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewController(withIdentifier: "ConnectionsViewController") as! ConnectionsViewController
+                    connectionsVC.connectingUser = self.discoveredUsers[self.discoveredUsers.index(of: user)!]
+                    self.present(connectionsVC, animated: true, completion: nil)
                 }
             })
-        } else if state == .Connecting {
+        } else if state == .connecting {
             let user: SDGUser? = self.discoveredUsers.filter({ (user: SDGUser) -> Bool in
                 user.peerId == peerId
             }).first
 
             // Animation should be pushed to the main queue
             // Fade out all cells, except the connecting user
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 if let user = user {
 
-                    for i in 0..<self.discoveredUsersCollectionView.numberOfItemsInSection(0) {
-                        if i != self.discoveredUsers.indexOf(user)! {
-                            let cell: UICollectionViewCell = self.discoveredUsersCollectionView.cellForItemAtIndexPath(NSIndexPath(forItem: i, inSection: 0))!
-                            UIView.animateWithDuration(1, delay: 0, options: UIViewAnimationOptions.CurveLinear, animations: {
+                    for i in 0..<self.discoveredUsersCollectionView.numberOfItems(inSection: 0) {
+                        if i != self.discoveredUsers.index(of: user)! {
+                            let cell: UICollectionViewCell = self.discoveredUsersCollectionView.cellForItem(at: IndexPath(item: i, section: 0))!
+                            UIView.animate(withDuration: 1, delay: 0, options: UIViewAnimationOptions.curveLinear, animations: {
                                 cell.alpha = 0
                             }, completion: nil)
                         }
                     }
                 }
-                self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                self.hud = MBProgressHUD.showAdded(to: self.view, animated: true)
                 self.hud?.labelText = "Connecting"
             })
-        } else if state == .NotConnected {
-            dispatch_async(dispatch_get_main_queue(), {
+        } else if state == .notConnected {
+            DispatchQueue.main.async(execute: {
                 self.hud?.hide(true)
                 self.showConnectionFailedView()
             })
         } else {
-            dispatch_async(dispatch_get_main_queue(), {
+            DispatchQueue.main.async(execute: {
                 self.hud?.hide(true)
             })
         }
@@ -370,76 +370,76 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
 // MARK: - CollectionView Datasource and Delegate
 extension LocateViewController: UICollectionViewDataSource, UICollectionViewDelegate {
 
-    func indexPathForClosestCell() -> NSIndexPath? {
+    func indexPathForClosestCell() -> IndexPath? {
         let screenCenterX: CGFloat = self.view.center.x
         let bottomOfCollectionView: CGFloat = self.discoveredUsersCollectionView.frame.origin.x + self.discoveredUsersCollectionView.frame.size.height - 8 // Give extra 8 pixels so it wouldnt go outside of the collecitonview
 
         let closestPointInView: CGPoint = CGPoint(x: screenCenterX, y: bottomOfCollectionView)
-        let closestPointInCollectionView: CGPoint = self.view.convertPoint(closestPointInView, toView: self.discoveredUsersCollectionView)
+        let closestPointInCollectionView: CGPoint = self.view.convert(closestPointInView, to: self.discoveredUsersCollectionView)
 
-        return self.discoveredUsersCollectionView.indexPathForItemAtPoint(closestPointInCollectionView)
+        return self.discoveredUsersCollectionView.indexPathForItem(at: closestPointInCollectionView)
     }
 
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.discoveredUsers.count
     }
 
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell: UserCollectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("UserCollectionViewCell", forIndexPath: indexPath) as! UserCollectionViewCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell: UserCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "UserCollectionViewCell", for: indexPath) as! UserCollectionViewCell
 
         // Reset cell
-        cell.hidden = false
+        cell.isHidden = false
         if indexPath.row < self.discoveredUsers.count {
             cell.user = self.discoveredUsers[indexPath.row]
         } else {
-            cell.hidden = true
+            cell.isHidden = true
         }
         return cell
     }
 
-    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         // Animate cell appearing
         cell.alpha = 0
-        cell.transform = CGAffineTransformMakeScale(0.5, 0.5)
+        cell.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
 
-        UIView.animateWithDuration(1, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.2, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-            cell.transform = CGAffineTransformIdentity
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.3, initialSpringVelocity: 0.2, options: UIViewAnimationOptions.curveEaseOut, animations: {
+            cell.transform = CGAffineTransform.identity
             cell.alpha = 1
         }) { (success: Bool) in
         }
     }
 
-    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let user: SDGUser = self.discoveredUsers[indexPath.row]
-        let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Do you wish to connect with \(user.name)?", preferredStyle: UIAlertControllerStyle.Alert)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Do you wish to connect with \(user.name)?", preferredStyle: UIAlertControllerStyle.alert)
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
 
         // Change action of OK button based on display mode
-        if self.displayMode == SDGDisplayMode.Normal {
-            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+        if self.displayMode == SDGDisplayMode.normal {
+            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) in
                 self.bluetoothManager.invitePeer(user.peerId)
             }))
         } else {
 
-            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action: UIAlertAction) in
+            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) in
                 // Stop for 1 sec, then present vc
-                self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                self.hud = MBProgressHUD.showAdded(to: self.view, animated: true)
                 self.hud?.labelText = "Connecting"
-                let disptachTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * NSEC_PER_SEC))
+                let disptachTime: DispatchTime = DispatchTime.now() + Double(Int64(2 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC)
 
-                dispatch_after(disptachTime, dispatch_get_main_queue(), {
+                DispatchQueue.main.asyncAfter(deadline: disptachTime, execute: {
                     self.hud?.hide(true)
-                    let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewControllerWithIdentifier("ConnectionsViewController") as! ConnectionsViewController
-                    connectionsVC.connectingUser = self.discoveredUsers[self.discoveredUsers.indexOf(user)!]
-                    self.presentViewController(connectionsVC, animated: true, completion: nil)
+                    let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewController(withIdentifier: "ConnectionsViewController") as! ConnectionsViewController
+                    connectionsVC.connectingUser = self.discoveredUsers[self.discoveredUsers.index(of: user)!]
+                    self.present(connectionsVC, animated: true, completion: nil)
                 })
             }))
         }
 
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
     }
 
-    func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
     }
 }
 

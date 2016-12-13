@@ -14,24 +14,24 @@ class SimulationTableViewCell: UITableViewCell {
 
     @IBOutlet weak var simulationSwitch: UISwitch!
 
-    let userDefaults: NSUserDefaults = NSUserDefaults.standardUserDefaults()
+    let userDefaults: UserDefaults = UserDefaults.standard
 
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
 
-        self.simulationSwitch.on = self.userDefaults.boolForKey(SDGSimulationEnabled)
+        self.simulationSwitch.isOn = self.userDefaults.bool(forKey: SDGSimulationEnabled)
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
 
-    @IBAction func simulationSwitchChanged(sender: AnyObject) {
+    @IBAction func simulationSwitchChanged(_ sender: AnyObject) {
         // Save to user defaults
-        self.userDefaults.setBool(sender.on, forKey: SDGSimulationEnabled)
+        self.userDefaults.set(sender.isOn, forKey: SDGSimulationEnabled)
         self.userDefaults.synchronize()
     }
 }

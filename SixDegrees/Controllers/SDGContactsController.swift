@@ -19,14 +19,14 @@ class SDGContactsController {
     lazy var contacts: [CNContact] = {
         let contactStore = self.contactStore
         let keysToFetch = [
-            CNContactFormatter.descriptorForRequiredKeysForStyle(CNContactFormatterStyle.FullName),
+            CNContactFormatter.descriptorForRequiredKeys(for: CNContactFormatterStyle.fullName),
             CNContactEmailAddressesKey,
-            CNContactPhoneNumbersKey]
+            CNContactPhoneNumbersKey] as [Any]
 
         // Get all containers
         var containers: [CNContainer] = []
         do {
-            containers = try contactStore.containersMatchingPredicate(nil)
+            containers = try contactStore.containers(matching: nil)
         } catch {
             print("Error fetching containers.")
         }
@@ -35,10 +35,10 @@ class SDGContactsController {
 
         // Loop though containers and append contacts to results
         for container in containers {
-            let fetchPredicate = CNContact.predicateForContactsInContainerWithIdentifier(container.identifier)
+            let fetchPredicate = CNContact.predicateForContactsInContainer(withIdentifier: container.identifier)
             do {
-                let containerResults: [CNContact] = try contactStore.unifiedContactsMatchingPredicate(fetchPredicate, keysToFetch: keysToFetch)
-                results.appendContentsOf(containerResults)
+                let containerResults: [CNContact] = try contactStore.unifiedContacts(matching: fetchPredicate, keysToFetch: keysToFetch as! [CNKeyDescriptor])
+                results.append(contentsOf: containerResults)
             } catch {
                 print("Error fetching results for container")
             }
@@ -47,30 +47,30 @@ class SDGContactsController {
         return results
     }()
 
-    func promptForAddressBookAccessIfNeeded(completionBlock: ((granted: Bool) -> Void)) {
-        let authorizationStatus: CNAuthorizationStatus = CNContactStore.authorizationStatusForEntityType(CNEntityType.Contacts)
+    func promptForAddressBookAccessIfNeeded(_ completionBlock: @escaping ((_ granted: Bool) -> Void)) {
+        let authorizationStatus: CNAuthorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
 
         switch authorizationStatus {
-        case .Denied, .NotDetermined:
-            self.contactStore.requestAccessForEntityType(CNEntityType.Contacts, completionHandler: { (granted: Bool, error: NSError?) in
-                completionBlock(granted: granted)
-            })
+        case .denied, .notDetermined:
+            self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (granted: Bool, error: NSError?) in
+                completionBlock(granted)
+            } as! (Bool, Error?) -> Void)
         default:
-            completionBlock(granted: true)
+            completionBlock(true)
         }
     }
 
-    func displayCantAddContactAlert(viewController: UIViewController) {
-        let noAccessToContactAlert: UIAlertController = UIAlertController(title: "Cannot access contacts", message: "You need to give this app permission to access contacts for it to work properly", preferredStyle: UIAlertControllerStyle.Alert)
-        noAccessToContactAlert.addAction(UIAlertAction(title: "Settings", style: .Default , handler: { (action: UIAlertAction) in
-            let url: NSURL = NSURL(string: UIApplicationOpenSettingsURLString)!
-            UIApplication.sharedApplication().openURL(url)
+    func displayCantAddContactAlert(_ viewController: UIViewController) {
+        let noAccessToContactAlert: UIAlertController = UIAlertController(title: "Cannot access contacts", message: "You need to give this app permission to access contacts for it to work properly", preferredStyle: UIAlertControllerStyle.alert)
+        noAccessToContactAlert.addAction(UIAlertAction(title: "Settings", style: .default , handler: { (action: UIAlertAction) in
+            let url: URL = URL(string: UIApplicationOpenSettingsURLString)!
+            UIApplication.shared.openURL(url)
         }))
-        noAccessToContactAlert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil))
+        noAccessToContactAlert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
     }
 
     /// Returns a list of common contacts.
-    func getCommonContactsWith(targetUserContacts: [CNContact]) -> [CNContact] {
+    func getCommonContactsWith(_ targetUserContacts: [CNContact]) -> [CNContact] {
 
         var matchedContacts: [CNContact] = []
 
@@ -166,13 +166,13 @@ class SDGContactsController {
                             innerPhoneNumberString = innerPhoneNumber.toInternational()
                         } catch {
                             // If failed to parse any contact, just strip the symbols and whitespaces
-                            outerPhoneNumberString = outerContactPhoneNumberValue?.stringByTrimmingCharactersInSet(NSCharacterSet.symbolCharacterSet())
-                            outerPhoneNumberString = outerPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
-                            outerPhoneNumberString = outerPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
+                            outerPhoneNumberString = outerContactPhoneNumberValue?.trimmingCharacters(in: CharacterSet.symbols)
+                            outerPhoneNumberString = outerPhoneNumberString?.replacingOccurrences(of: " ", with: "")
+                            outerPhoneNumberString = outerPhoneNumberString?.replacingOccurrences(of: " ", with: "")
 
-                            innerPhoneNumberString = innerContactPhoneNumberValue?.stringByTrimmingCharactersInSet(NSCharacterSet.symbolCharacterSet())
-                            innerPhoneNumberString = innerPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
-                            innerPhoneNumberString = innerPhoneNumberString?.stringByReplacingOccurrencesOfString(" ", withString: "")
+                            innerPhoneNumberString = innerContactPhoneNumberValue?.trimmingCharacters(in: CharacterSet.symbols)
+                            innerPhoneNumberString = innerPhoneNumberString?.replacingOccurrences(of: " ", with: "")
+                            innerPhoneNumberString = innerPhoneNumberString?.replacingOccurrences(of: " ", with: "")
                         }
 
                         if outerPhoneNumberString != nil && innerPhoneNumberString != nil {

@@ -23,21 +23,21 @@ class UserCollectionViewCell: UICollectionViewCell {
     var detailsShowing: Bool = false
 
     override func awakeFromNib() {
-        self.speechBubbleView?.hidden = true
+        self.speechBubbleView?.isHidden = true
     }
 
     func showDetails() {
-        self.speechBubbleView?.transform = CGAffineTransformMakeScale(0.1, 0.1)
-        self.speechBubbleView?.hidden = false
+        self.speechBubbleView?.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        self.speechBubbleView?.isHidden = false
 
         if let identifierLabel = self.identifierLabel {
             identifierLabel.text = self.user?.identifier ?? "Hi, I'm \(self.user!.name!)"
-            self.speechBubbleView!.bringSubviewToFront(identifierLabel)
+            self.speechBubbleView!.bringSubview(toFront: identifierLabel)
         }
 
 
-        UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 20, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-            self.speechBubbleView?.transform = CGAffineTransformIdentity
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 20, options: UIViewAnimationOptions.curveEaseOut, animations: {
+            self.speechBubbleView?.transform = CGAffineTransform.identity
             }, completion: {(success: Bool) in
         })
 
@@ -45,12 +45,12 @@ class UserCollectionViewCell: UICollectionViewCell {
     }
 
     func hideDetails() {
-        UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 20, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-            self.speechBubbleView?.transform = CGAffineTransformMakeScale(0, 0)
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.2, initialSpringVelocity: 20, options: UIViewAnimationOptions.curveEaseOut, animations: {
+            self.speechBubbleView?.transform = CGAffineTransform(scaleX: 0, y: 0)
             self.layoutIfNeeded()
             
             }, completion: {(success: Bool) in
-                self.speechBubbleView?.hidden = true
+                self.speechBubbleView?.isHidden = true
         })
         
         self.detailsShowing = false
