@@ -337,13 +337,13 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0810;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Chan Jing Hong";
 				TargetAttributes = {
 					66C8013F1CA977F7002C642A = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = FZ33ZRHKL4;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 0820;
 					};
 					66C801561CA977F7002C642A = {
 						CreatedOnToolsVersion = 7.3;
@@ -691,6 +691,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5A5C0FD86EDD8431BBAD6171 /* Pods-SixDegreesTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = SixDegreesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -704,6 +705,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 49C297B79FACF06E5BB313B3 /* Pods-SixDegreesTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = SixDegreesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

@@ -1,5 +1,5 @@
 PODS:
-  - MBProgressHUD (0.9.2)
+  - MBProgressHUD (1.0.0)
   - PhoneNumberKit (1.2.0):
     - PhoneNumberKit/PhoneNumberKitCore (= 1.2.0)
     - PhoneNumberKit/UIKit (= 1.2.0)
@@ -14,7 +14,7 @@ DEPENDENCIES:
   - Pulsator
 
 SPEC CHECKSUMS:
-  MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
+  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   PhoneNumberKit: 59da40656353c5267aa69a3ae3b240c4e57cff97
   Pulsator: 0df1d24c09354555be8f4c386ba7c4df297690eb
 
