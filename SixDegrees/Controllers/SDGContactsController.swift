@@ -51,10 +51,11 @@ class SDGContactsController {
         let authorizationStatus: CNAuthorizationStatus = CNContactStore.authorizationStatus(for: CNEntityType.contacts)
 
         switch authorizationStatus {
+
         case .denied, .notDetermined:
-            self.contactStore.requestAccess(for: CNEntityType.contacts, completionHandler: { (granted: Bool, error: NSError?) in
+            self.contactStore.requestAccess(for: .contacts, completionHandler: { (granted: Bool, error: Error?) in
                 completionBlock(granted)
-            } as! (Bool, Error?) -> Void)
+            })
         default:
             completionBlock(true)
         }
