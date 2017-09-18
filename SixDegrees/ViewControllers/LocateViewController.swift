@@ -319,7 +319,7 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
         if state == .connected {
             // Animation should be pushed to the main queue
             DispatchQueue.main.async(execute: {
-                self.hud?.hide(true)
+                self.hud?.hide(animated: true)
 
                 let user = self.discoveredUsers.filter({ (aUser: SDGUser) -> Bool in
                     return aUser.peerId == peerId
@@ -351,16 +351,16 @@ extension LocateViewController : SDGBluetoothManagerDelegate {
                     }
                 }
                 self.hud = MBProgressHUD.showAdded(to: self.view, animated: true)
-                self.hud?.labelText = "Connecting"
+                self.hud?.label.text = "Connecting"
             })
         } else if state == .notConnected {
             DispatchQueue.main.async(execute: {
-                self.hud?.hide(true)
+                self.hud?.hide(animated: true)
                 self.showConnectionFailedView()
             })
         } else {
             DispatchQueue.main.async(execute: {
-                self.hud?.hide(true)
+                self.hud?.hide(animated: true)
             })
         }
     }
@@ -410,7 +410,7 @@ extension LocateViewController: UICollectionViewDataSource, UICollectionViewDele
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let user: SDGUser = self.discoveredUsers[indexPath.row]
-        let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Do you wish to connect with \(user.name)?", preferredStyle: UIAlertControllerStyle.alert)
+        let alertController: UIAlertController = UIAlertController(title: "Connect", message: "Do you wish to connect with \(user.name ?? "")?", preferredStyle: UIAlertControllerStyle.alert)
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
 
         // Change action of OK button based on display mode
@@ -423,11 +423,11 @@ extension LocateViewController: UICollectionViewDataSource, UICollectionViewDele
             alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) in
                 // Stop for 1 sec, then present vc
                 self.hud = MBProgressHUD.showAdded(to: self.view, animated: true)
-                self.hud?.labelText = "Connecting"
+                self.hud?.label.text = "Connecting"
                 let disptachTime: DispatchTime = DispatchTime.now() + Double(Int64(2 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC)
 
                 DispatchQueue.main.asyncAfter(deadline: disptachTime, execute: {
-                    self.hud?.hide(true)
+                    self.hud?.hide(animated: true)
                     let connectionsVC: ConnectionsViewController = self.storyboard?.instantiateViewController(withIdentifier: "ConnectionsViewController") as! ConnectionsViewController
                     connectionsVC.connectingUser = self.discoveredUsers[self.discoveredUsers.index(of: user)!]
                     self.present(connectionsVC, animated: true, completion: nil)

@@ -102,13 +102,13 @@ class ConnectionsViewController: UIViewController {
                         self.bluetoothManager.sendContactsToPeer(connectedPeer, contacts: SDGUser.currentUser.contacts ?? [])
 
                         self.hud = MBProgressHUD.showAdded(to: self.view, animated: true)
-                        self.hud?.labelText = "Finding connections"
+                        self.hud?.label.text = "Finding connections"
                     }
                 }
             }
         } else {
             self.hud = MBProgressHUD.showAdded(to: self.view, animated: true)
-            self.hud?.labelText = "Finding connections"
+            self.hud?.label.text = "Finding connections"
 
             // Wait 5 seconds
             // Compare contacts, and populate array
@@ -117,7 +117,7 @@ class ConnectionsViewController: UIViewController {
 
             let dispatchTime: DispatchTime = DispatchTime.now() + Double(Int64(3 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC)
             DispatchQueue.main.asyncAfter(deadline: dispatchTime, execute: {
-                self.hud?.hide(true)
+                self.hud?.hide(animated: true)
 
                 // Show number of users
                 self.numberOfConnectionsLabel.text = "\(self.mutualUsers.count)"
@@ -154,7 +154,7 @@ class ConnectionsViewController: UIViewController {
         for contact: CNContact in matchedContacts {
             let matchedUsername: String = "\(contact.givenName) \(contact.familyName)"
             let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername), color: UIColor.randomSDGColor())
-            matchedUser.identifier = (contact.emailAddresses.first?.value as? String) ?? (contact.phoneNumbers.first?.value.stringValue)
+            matchedUser.identifier = (contact.emailAddresses.first?.value as String?) ?? (contact.phoneNumbers.first?.value.stringValue)
             connections.append(matchedUser)
         }
         return connections
@@ -167,7 +167,7 @@ class ConnectionsViewController: UIViewController {
         for contact: CNContact in matchedContacts {
             let matchedUsername: String = "\(contact.givenName) \(contact.familyName)"
             let matchedUser: SDGUser = SDGUser(peerId: MCPeerID(displayName: matchedUsername), color: UIColor.randomSDGColor())
-            matchedUser.identifier = (contact.emailAddresses.first?.value as? String) ?? (contact.phoneNumbers.first?.value.stringValue)
+            matchedUser.identifier = (contact.emailAddresses.first?.value as String?) ?? (contact.phoneNumbers.first?.value.stringValue)
             connections.append(matchedUser)
         }
         return connections
@@ -197,7 +197,7 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
         // If the lost peer is the connecting user, disconnect
         if peer == self.connectingUser.peerId {
             DispatchQueue.main.async(execute: {
-                self.hud?.hide(true)
+                self.hud?.hide(animated: true)
                 
                 let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "\(peer.displayName) have disconnected.", preferredStyle: UIAlertControllerStyle.alert)
                 alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) in
@@ -240,7 +240,7 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
         // TODO: Draw connections with collection view to be able to see multiple connections
         if !mutualUsers.isEmpty {
             DispatchQueue.main.async(execute: {
-                self.hud?.hide(true)
+                self.hud?.hide(animated: true)
 
                 // Show number of connections
                 self.numberOfConnectionsLabel.text = "\(self.mutualUsers.count)"
@@ -257,7 +257,7 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
                 })
         } else {
             DispatchQueue.main.async(execute: {
-                self.hud?.hide(true)
+                self.hud?.hide(animated: true)
 
                 self.showSimpleAlert("Connection", message: "No common connection.")
             })
@@ -269,7 +269,7 @@ extension ConnectionsViewController: SDGBluetoothManagerDelegate {
 
         if state != .connected {
             DispatchQueue.main.async(execute: {
-                self.hud?.hide(true)
+                self.hud?.hide(animated: true)
 
                 let alertController: UIAlertController = UIAlertController(title: "Disconnected", message: "\(peerId.displayName) have disconnected.", preferredStyle: UIAlertControllerStyle.alert)
                 alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: { (action: UIAlertAction) in

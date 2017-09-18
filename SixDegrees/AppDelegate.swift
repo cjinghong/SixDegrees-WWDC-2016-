@@ -118,7 +118,6 @@ extension AppDelegate {
      Applies Six degrees theme color across app
      */
     func customizeAppearance(_ application: UIApplication) {
-        application.setStatusBarStyle(UIStatusBarStyle.lightContent, animated: false)
         let color: UIColor = UIColor.SDGDarkBlue()
 
         // UINavigationBar
@@ -136,8 +135,6 @@ extension AppDelegate {
      Resets theme color across app
      */
     func resetAppearance(_ application: UIApplication) {
-        application.setStatusBarStyle(UIStatusBarStyle.default, animated: false)
-
         // UINavigationBar
         let navBarAppearance = UINavigationBar.appearance()
         navBarAppearance.barTintColor = nil
